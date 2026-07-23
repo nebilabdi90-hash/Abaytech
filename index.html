@@ -7,37 +7,59 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0b0c10" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f6f7fa" media="(prefers-color-scheme: light)">
-  <title>Abay Tech</title>
+  <title>Abay Tech · Packages</title>
+  <!-- Font Awesome for professional icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root {
       --bg: #0b0c10;
       --surface: #1a1b22;
       --surface-raised: #22232c;
-      --border: rgba(255,255,255,0.08);
+      --border: rgba(255, 255, 255, 0.08);
       --text-primary: #f0f1f4;
       --text-secondary: #a0a3ad;
       --text-tertiary: #6b6f7a;
       --text-quaternary: #484c56;
       --accent: #3b82f6;
-      --p-node: rgba(59,130,246,0.8);
-      --p-line: rgba(59,130,246,0.18);
+      --p-node: rgba(59, 130, 246, 0.8);
+      --p-line: rgba(59, 130, 246, 0.18);
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --bronze: #cd7f32;
+      --silver: #c0c0c0;
+      --gold: #ffd700;
+      --platinum: #e5e4e2;
+      --diamond: #b9f2ff;
+      --bronze-glow: rgba(205, 127, 50, 0.25);
+      --silver-glow: rgba(192, 192, 192, 0.25);
+      --gold-glow: rgba(255, 215, 0, 0.25);
+      --platinum-glow: rgba(229, 228, 226, 0.25);
+      --diamond-glow: rgba(185, 242, 255, 0.25);
     }
     :root.light {
       --bg: #f6f7fa;
       --surface: #ffffff;
       --surface-raised: #ffffff;
-      --border: rgba(0,0,0,0.08);
+      --border: rgba(0, 0, 0, 0.08);
       --text-primary: #0f1115;
       --text-secondary: #5a5e68;
       --text-tertiary: #8a8f9a;
       --text-quaternary: #b0b5bf;
       --accent: #1d4ed8;
-      --p-node: rgba(29,78,216,0.45);
-      --p-line: rgba(29,78,216,0.12);
+      --p-node: rgba(29, 78, 216, 0.45);
+      --p-line: rgba(29, 78, 216, 0.12);
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-    html, body { height: 100%; width: 100%; overflow: hidden; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+    }
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
     body {
       font-family: var(--font-sans);
       color: var(--text-primary);
@@ -46,7 +68,6 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Scrolling container */
     .portal {
       position: relative;
       overflow-y: auto;
@@ -63,14 +84,15 @@
       overflow: hidden !important;
     }
 
-    /* Canvas stays fixed behind everything, sized to viewport */
     canvas {
       position: fixed;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       z-index: 0;
-      pointer-events: none;  /* allow scroll / clicks on elements above */
+      pointer-events: none;
+      transition: filter 0.6s ease, opacity 0.6s ease;
     }
 
     .layer {
@@ -83,7 +105,7 @@
       align-items: center;
     }
 
-    /* Bubble (top bar) */
+    /* Bubble */
     .bubble-wrap {
       position: sticky;
       top: 0;
@@ -106,30 +128,74 @@
       border: 1px solid var(--border);
       transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
-    .bubble-wrap.scrolled .bubble { transform: scale(0.92); }
-    .logo { font-size: 15px; font-weight: 500; letter-spacing: 0.02em; color: var(--text-primary); }
+    .bubble-wrap.scrolled .bubble {
+      transform: scale(0.92);
+    }
+    .logo {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s ease;
+    }
+    .logo:hover {
+      color: var(--accent);
+    }
+    .logo small {
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-left: 6px;
+    }
 
     .tgl {
-      width: 32px; height: 32px; border-radius: 999px; border: none;
-      background: transparent; color: var(--text-secondary);
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      padding: 0; transition: color 0.15s ease, transform 60ms ease;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: color 0.15s ease, transform 60ms ease;
     }
-    .tgl:active { transform: scale(0.92); }
+    .tgl:active {
+      transform: scale(0.92);
+    }
 
-    /* Hero text */
+    /* Hero */
     .hero {
       text-align: center;
-      padding: 32px 20px 24px;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      padding: 32px 20px 20px;
+      transition: opacity 0.4s ease, transform 0.4s ease;
       max-width: 420px;
     }
-    .hero h1 { font-size: 28px; font-weight: 500; line-height: 1.12; margin: 0 0 12px; }
-    .tag { font-size: 15px; color: var(--text-secondary); line-height: 1.4; margin: 0 0 16px; }
-    .sub { font-size: 14px; color: var(--text-tertiary); line-height: 1.5; margin: 0; }
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1.12;
+      margin: 0 0 12px;
+    }
+    .hero .tag {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      margin: 0 0 12px;
+    }
+    .hero .sub {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+      margin: 0;
+    }
 
-    /* Card (normal state) */
-    .card {
+    /* Auth card */
+    .auth-card {
       position: relative;
       background: var(--surface-raised);
       border: 1px solid var(--border);
@@ -137,20 +203,510 @@
       overflow: hidden;
       max-width: 340px;
       width: calc(100% - 48px);
-      margin: 0 auto 80px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      margin: 0 auto 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease, max-height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
       z-index: 2;
     }
+    .auth-card.hidden {
+      max-height: 0;
+      opacity: 0;
+      transform: scale(0.96);
+      margin: 0 auto 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
 
-    /* Modal overlay (hidden by default) */
-    .modal-overlay {
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.15s ease, transform 80ms ease;
+      font-family: inherit;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .tab:active {
+      transform: scale(0.96);
+    }
+    .tab.active {
+      color: var(--text-primary);
+    }
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px 2px 0 0;
+    }
+    .track {
+      display: flex;
+      width: 200%;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .panel {
+      width: 50%;
+      padding: 16px;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      background: var(--surface);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    }
+    .field:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
+      transform: scale(1.01);
+    }
+    .field svg {
+      flex-shrink: 0;
+      color: var(--text-tertiary);
+    }
+    .field input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 15px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-weight: 400;
+      min-width: 0;
+    }
+    .field input::placeholder {
+      color: var(--text-quaternary);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: var(--text-primary);
+      color: var(--bg);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: opacity 0.15s ease, transform 80ms ease, background 0.2s ease;
+      font-family: inherit;
+    }
+    .btn:active {
+      transform: scale(0.96);
+      opacity: 0.9;
+    }
+    .btn:hover {
+      opacity: 0.95;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-accent:hover {
+      background: color-mix(in srgb, var(--accent) 85%, black);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover {
+      background: var(--surface);
+    }
+
+    .social-sep {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 14px 0 10px;
+      color: var(--text-tertiary);
+      font-size: 13px;
+    }
+    .social-sep::before,
+    .social-sep::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .social-row {
+      display: flex;
+      gap: 12px;
+    }
+    .social-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s ease, transform 80ms ease, background 0.15s ease;
+      font-family: inherit;
+    }
+    .social-btn:active {
+      transform: scale(0.96);
+    }
+    .social-btn:hover {
+      border-color: var(--text-tertiary);
+    }
+
+    /* ----- DASHBOARD (packages) ----- */
+    .dashboard {
+      width: 100%;
+      max-width: 900px;
+      padding: 0 20px 40px;
+      transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+    }
+    .dashboard.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .dashboard-header h2 {
+      font-size: 26px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .dashboard-header p {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+    .dashboard-header .user-email {
+      color: var(--text-tertiary);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .dashboard-header .logout-btn {
+      margin-top: 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s ease, transform 80ms ease;
+    }
+    .dashboard-header .logout-btn:hover {
+      background: var(--surface);
+    }
+    .dashboard-header .logout-btn:active {
+      transform: scale(0.96);
+    }
+
+    .package-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .package-card {
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px 16px 18px;
+      text-align: center;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: default;
+      overflow: hidden;
+    }
+    .package-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, var(--p-glow, transparent) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+    .package-card:hover::before {
+      opacity: 1;
+    }
+    .package-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+    }
+    .package-card .badge {
+      position: absolute;
+      top: -8px;
+      right: 12px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      z-index: 2;
+    }
+    .package-card .icon {
+      font-size: 38px;
+      margin-bottom: 6px;
+      line-height: 1;
+      transition: transform 0.3s ease;
+    }
+    .package-card:hover .icon {
+      transform: scale(1.12) rotate(-4deg);
+    }
+    .package-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .package-card .price {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 4px 0;
+    }
+    .package-card .price small {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+    }
+    .package-card .features {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 8px 0 14px;
+      flex: 1;
+    }
+    .package-card .features span {
+      display: block;
+    }
+    .package-card .purchase-btn {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 80ms ease, opacity 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+      background: var(--text-primary);
+      color: var(--bg);
+    }
+    .package-card .purchase-btn:active {
+      transform: scale(0.96);
+    }
+    .package-card .purchase-btn:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+    .package-card .purchase-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Package colors & glows */
+    .package-card.bronze {
+      border-color: color-mix(in srgb, var(--bronze) 40%, var(--border));
+      --p-glow: var(--bronze-glow);
+    }
+    .package-card.bronze .price {
+      color: var(--bronze);
+    }
+    .package-card.bronze .purchase-btn:hover {
+      background: var(--bronze);
+      color: #fff;
+    }
+    .package-card.silver {
+      border-color: color-mix(in srgb, var(--silver) 40%, var(--border));
+      --p-glow: var(--silver-glow);
+    }
+    .package-card.silver .price {
+      color: var(--silver);
+    }
+    .package-card.silver .purchase-btn:hover {
+      background: var(--silver);
+      color: #000;
+    }
+    .package-card.gold {
+      border-color: color-mix(in srgb, var(--gold) 40%, var(--border));
+      --p-glow: var(--gold-glow);
+    }
+    .package-card.gold .price {
+      color: var(--gold);
+    }
+    .package-card.gold .purchase-btn:hover {
+      background: var(--gold);
+      color: #000;
+    }
+    .package-card.platinum {
+      border-color: color-mix(in srgb, var(--platinum) 40%, var(--border));
+      --p-glow: var(--platinum-glow);
+    }
+    .package-card.platinum .price {
+      color: var(--platinum);
+    }
+    .package-card.platinum .purchase-btn:hover {
+      background: var(--platinum);
+      color: #000;
+    }
+    .package-card.diamond {
+      border-color: color-mix(in srgb, var(--diamond) 40%, var(--border));
+      --p-glow: var(--diamond-glow);
+    }
+    .package-card.diamond .price {
+      color: var(--diamond);
+    }
+    .package-card.diamond .purchase-btn:hover {
+      background: var(--diamond);
+      color: #000;
+    }
+
+    /* ----- PURCHASE MODAL ----- */
+    .purchase-modal-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 50;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      padding: 20px;
+    }
+    .purchase-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .purchase-modal {
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 32px 28px 28px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+      transform: translateY(30px) scale(0.95);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+      text-align: center;
+    }
+    .purchase-modal-overlay.active .purchase-modal {
+      transform: translateY(0) scale(1);
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+    }
+    .purchase-modal .pkg-icon {
+      font-size: 52px;
+      margin-bottom: 8px;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .purchase-modal .pkg-icon:hover {
+      transform: scale(1.08) rotate(-6deg);
+    }
+    .purchase-modal h3 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .purchase-modal .price-tag {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 8px 0 12px;
+      transition: color 0.3s ease;
+    }
+    .purchase-modal .price-tag small {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+    }
+    .purchase-modal p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .purchase-modal .actions {
+      display: flex;
+      gap: 12px;
+    }
+    .purchase-modal .actions .btn {
+      flex: 1;
+      transition: transform 80ms ease, opacity 0.15s ease, background 0.2s ease;
+    }
+    .purchase-modal .actions .btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .purchase-modal .actions .btn-secondary:hover {
+      background: var(--surface);
+    }
+    .purchase-modal .actions .btn-accent {
+      background: var(--accent);
+      color: #fff;
+    }
+    .purchase-modal .actions .btn-accent:hover {
+      background: color-mix(in srgb, var(--accent) 85%, black);
+    }
+
+    /* ----- FOCUS MODAL (input popup) ----- */
+    .focus-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 55;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -159,13 +715,11 @@
       transition: opacity 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       padding: 16px;
     }
-    .modal-overlay.active {
+    .focus-modal-overlay.active {
       opacity: 1;
       pointer-events: auto;
     }
-
-    /* Card inside the modal */
-    .modal-card {
+    .focus-modal-card {
       position: relative;
       background: var(--surface-raised);
       border: 1px solid var(--border);
@@ -173,95 +727,379 @@
       overflow: hidden;
       width: 100%;
       max-width: 340px;
-      box-shadow: 0 25px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.08);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
       transform: translateY(30px) scale(0.95);
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
     }
-    .modal-overlay.active .modal-card {
+    .focus-modal-overlay.active .focus-modal-card {
       transform: translateY(0) scale(1);
+      box-shadow: 0 35px 90px rgba(0, 0, 0, 0.4);
     }
-
-    /* When modal is active, hide background stuff */
-    .modal-active .bubble-wrap,
-    .modal-active .hero,
-    .modal-active .footer-desc,
-    .modal-active .card {
-      opacity: 0;
-      pointer-events: none;
+    .focus-modal-card .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
     }
-
-    .tabs { display: flex; border-bottom: 1px solid var(--border); }
-    .tab {
-      flex: 1; padding: 14px; border: none; background: transparent;
-      color: var(--text-secondary); font-size: 15px; font-weight: 500;
-      cursor: pointer; position: relative;
+    .focus-modal-card .tab {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
       transition: color 0.15s ease, transform 80ms ease;
       font-family: inherit;
       -webkit-user-select: none;
       user-select: none;
     }
-    .tab:active { transform: scale(0.96); }
-    .tab.active { color: var(--text-primary); }
-    .tab.active::after {
-      content: ""; position: absolute; bottom: 0; left: 20%; right: 20%;
-      height: 2px; background: var(--accent); border-radius: 2px 2px 0 0;
+    .focus-modal-card .tab:active {
+      transform: scale(0.96);
     }
-    .track { display: flex; width: 200%; transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-    .panel { width: 50%; padding: 16px; }
-
-    .field {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 12px; border: 1px solid var(--border);
-      border-radius: 12px; margin-bottom: 12px;
+    .focus-modal-card .tab.active {
+      color: var(--text-primary);
+    }
+    .focus-modal-card .tab.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px 2px 0 0;
+    }
+    .focus-modal-card .track {
+      display: flex;
+      width: 200%;
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .focus-modal-card .panel {
+      width: 50%;
+      padding: 16px;
+    }
+    .focus-modal-card .field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
       background: var(--surface);
-      transition: border-color 0.15s ease, box-shadow 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .field:focus-within {
+    .focus-modal-card .field:focus-within {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
     }
-    .field svg { flex-shrink: 0; color: var(--text-tertiary); }
-    .field input {
-      flex: 1; border: none; background: transparent; outline: none;
-      font-size: 15px; color: var(--text-primary); font-family: inherit;
-      font-weight: 400; min-width: 0;
+    .focus-modal-card .field svg {
+      flex-shrink: 0;
+      color: var(--text-tertiary);
     }
-    .field input::placeholder { color: var(--text-quaternary); }
-
-    .btn {
-      width: 100%; padding: 12px; border: none; border-radius: 12px;
-      background: var(--text-primary); color: var(--bg);
-      font-size: 15px; font-weight: 500; cursor: pointer;
+    .focus-modal-card .field input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 15px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-weight: 400;
+      min-width: 0;
+    }
+    .focus-modal-card .field input::placeholder {
+      color: var(--text-quaternary);
+    }
+    .focus-modal-card .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: var(--text-primary);
+      color: var(--bg);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
       margin-top: 4px;
       transition: opacity 0.15s ease, transform 80ms ease, background 0.2s ease;
       font-family: inherit;
     }
-    .btn:active { transform: scale(0.96); opacity: 0.9; }
-    .btn:hover { opacity: 0.95; }
-
-    .social-sep {
-      display: flex; align-items: center; gap: 12px;
-      margin: 14px 0 10px; color: var(--text-tertiary);
+    .focus-modal-card .btn:active {
+      transform: scale(0.96);
+      opacity: 0.9;
+    }
+    .focus-modal-card .btn:hover {
+      opacity: 0.95;
+    }
+    .focus-modal-card .social-sep {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 14px 0 10px;
+      color: var(--text-tertiary);
       font-size: 13px;
     }
-    .social-sep::before, .social-sep::after {
-      content: ""; flex: 1; height: 1px; background: var(--border);
+    .focus-modal-card .social-sep::before,
+    .focus-modal-card .social-sep::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
     }
-    .social-row { display: flex; gap: 12px; }
-    .social-btn {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      gap: 8px; padding: 10px; border: 1px solid var(--border);
-      border-radius: 12px; background: var(--surface);
-      color: var(--text-secondary); font-size: 14px; font-weight: 500;
-      cursor: pointer; transition: border-color 0.15s ease, transform 80ms ease, background 0.15s ease;
+    .focus-modal-card .social-row {
+      display: flex;
+      gap: 12px;
+    }
+    .focus-modal-card .social-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s ease, transform 80ms ease, background 0.15s ease;
       font-family: inherit;
     }
-    .social-btn:active { transform: scale(0.96); }
-    .social-btn:hover { border-color: var(--text-tertiary); }
+    .focus-modal-card .social-btn:active {
+      transform: scale(0.96);
+    }
+    .focus-modal-card .social-btn:hover {
+      border-color: var(--text-tertiary);
+    }
 
+    /* ----- ADMIN PANEL (hidden, triggered by triple-tap) ----- */
+    .admin-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 70;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      padding: 20px;
+    }
+    .admin-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .admin-panel {
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 28px 24px 24px;
+      max-width: 560px;
+      width: 100%;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+      transform: translateY(30px) scale(0.95);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .admin-overlay.active .admin-panel {
+      transform: translateY(0) scale(1);
+    }
+    .admin-panel h2 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .admin-panel .sub {
+      color: var(--text-tertiary);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+    .admin-panel .user-list {
+      margin: 12px 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .admin-panel .user-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      flex-wrap: wrap;
+    }
+    .admin-panel .user-item:last-child {
+      border-bottom: 0;
+    }
+    .admin-panel .user-item .email {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .admin-panel .user-item .packages {
+      color: var(--text-tertiary);
+      font-size: 12px;
+      margin: 4px 0;
+      width: 100%;
+    }
+    .admin-panel .user-item .remove-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: background 0.15s ease, transform 80ms ease;
+      font-family: inherit;
+      margin-left: auto;
+    }
+    .admin-panel .user-item .remove-btn:hover {
+      background: rgba(239, 68, 68, 0.12);
+    }
+    .admin-panel .user-item .remove-btn:active {
+      transform: scale(0.92);
+    }
+    .admin-panel .add-user {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .admin-panel .add-user input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .admin-panel .add-user input:focus {
+      border-color: var(--accent);
+    }
+    .admin-panel .add-user button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      transition: opacity 0.15s ease, transform 80ms ease;
+    }
+    .admin-panel .add-user button:active {
+      transform: scale(0.96);
+    }
+    .admin-panel .close-admin {
+      margin-top: 16px;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s ease, transform 80ms ease;
+    }
+    .admin-panel .close-admin:hover {
+      background: var(--surface);
+    }
+    .admin-panel .close-admin:active {
+      transform: scale(0.96);
+    }
+    .admin-panel .empty-msg {
+      color: var(--text-tertiary);
+      font-size: 14px;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    /* Admin login mini modal */
+    .admin-login-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 75;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 20px;
+    }
+    .admin-login-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .admin-login-box {
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px 24px;
+      max-width: 340px;
+      width: 100%;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+      transform: translateY(20px) scale(0.95);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .admin-login-overlay.active .admin-login-box {
+      transform: translateY(0) scale(1);
+    }
+    .admin-login-box h3 {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .admin-login-box .sub {
+      color: var(--text-tertiary);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .admin-login-box .field {
+      margin-bottom: 14px;
+    }
+    .admin-login-box .btn {
+      margin-top: 0;
+    }
+    .admin-login-box .error {
+      color: #ef4444;
+      font-size: 13px;
+      margin-top: 8px;
+      text-align: center;
+      display: none;
+    }
+    .admin-login-box .error.show {
+      display: block;
+    }
+
+    /* Footer */
     .footer-desc {
       text-align: center;
-      padding: 40px 24px 24px;
+      padding: 30px 24px 12px;
       max-width: 420px;
       width: 100%;
       transition: opacity 0.3s ease;
@@ -270,371 +1108,959 @@
       font-size: 13px;
       color: var(--text-tertiary);
       line-height: 1.5;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .footer-desc a {
       color: var(--text-secondary);
       text-decoration: none;
     }
+    .footer-desc a:hover {
+      text-decoration: underline;
+    }
 
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 24px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      font-size: 14px;
+      color: var(--text-primary);
+      z-index: 100;
+      opacity: 0;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+      pointer-events: none;
+      max-width: 90%;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Responsive */
     @media (max-width: 480px) {
-      .hero h1 { font-size: 24px; }
-      .hero { padding: 20px 20px 16px; }
+      .hero h1 {
+        font-size: 24px;
+      }
+      .hero {
+        padding: 20px 20px 14px;
+      }
+      .package-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .package-card {
+        padding: 16px 12px 14px;
+      }
+      .package-card .icon {
+        font-size: 30px;
+      }
+      .package-card h3 {
+        font-size: 16px;
+      }
+      .package-card .price {
+        font-size: 18px;
+      }
+      .dashboard-header h2 {
+        font-size: 22px;
+      }
+      .purchase-modal {
+        padding: 24px 18px 20px;
+      }
+      .admin-panel {
+        padding: 20px 16px 16px;
+      }
+    }
+    @media (max-width: 380px) {
+      .package-grid {
+        grid-template-columns: 1fr;
+        max-width: 280px;
+        margin: 0 auto;
+      }
     }
   </style>
 </head>
 <body>
-<div class="portal" id="portal">
-  <canvas id="c"></canvas>
-  <div class="layer" id="layer">
-    <div class="bubble-wrap" id="bubbleWrap">
-      <div class="bubble">
-        <span class="logo">Abay Tech</span>
-        <button class="tgl" id="themeBtn" aria-label="Switch to light theme">
-          <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10.2441 3.1709C11.0067 3.02014 11.4972 3.8589 11.1953 4.5752C8.57859 10.7854 13.2146 15.4214 19.4248 12.8047C20.1411 12.5028 20.9799 12.9933 20.8291 13.7559C20.0124 17.8859 16.3697 21 12 21C7.02945 21 3.00001 16.9706 3 12C3 7.63028 6.11411 3.98763 10.2441 3.1709ZM8.99609 5.4541C6.51967 6.59266 4.7998 9.09697 4.7998 12C4.79982 15.9764 8.02356 19.2002 12 19.2002C14.903 19.2002 17.4073 17.4803 18.5459 15.0039C15.5117 15.8069 12.6488 15.1937 10.7275 13.2725C8.8063 11.3512 8.19311 8.48829 8.99609 5.4541ZM16.5 5.09961C16.9968 5.09982 17.3992 5.50324 17.3994 6V6.59961H18C18.4968 6.59982 18.8992 7.00324 18.8994 7.5C18.8992 7.99672 18.4967 8.3992 18 8.39941H17.3994V9C17.3992 9.49675 16.9967 9.8992 16.5 9.89941C16.0033 9.8992 15.5998 9.49674 15.5996 9V8.39941H15C14.5033 8.3992 14.0998 7.99672 14.0996 7.5C14.0998 7.00324 14.5032 6.59982 15 6.59961H15.5996V6C15.5998 5.50324 16.0032 5.09982 16.5 5.09961Z" fill="currentColor"/>
-          </svg>
-          <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
-            <g clip-path="url(#s)">
-              <path d="M12.9 1.7999C12.9 1.30285 12.4971 0.899902 12 0.899902C11.5029 0.899902 11.1 1.30285 11.1 1.7999V2.7999C11.1 3.29696 11.5029 3.6999 12 3.6999C12.4971 3.6999 12.9 3.29696 12.9 2.7999V1.7999Z" fill="currentColor"/>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M6.1 11.9999C6.1 8.7414 8.74152 6.09988 12 6.09988C15.2585 6.09988 17.9 8.7414 17.9 11.9999C17.9 15.2584 15.2585 17.8999 12 17.8999C8.74152 17.8999 6.1 15.2584 6.1 11.9999ZM12 7.89988C9.73563 7.89988 7.9 9.73551 7.9 11.9999C7.9 14.2642 9.73563 16.0999 12 16.0999C14.2644 16.0999 16.1 14.2642 16.1 11.9999C16.1 9.73551 14.2644 7.89988 12 7.89988Z" fill="currentColor"/>
-              <path d="M0.899994 11.9999C0.899994 11.5028 1.30294 11.0999 1.79999 11.0999H2.79999C3.29705 11.0999 3.69999 11.5028 3.69999 11.9999C3.69999 12.4969 3.29705 12.8999 2.79999 12.8999H1.79999C1.30294 12.8999 0.899994 12.4969 0.899994 11.9999Z" fill="currentColor"/>
-              <path d="M12 20.2991C12.4971 20.2991 12.9 20.702 12.9 21.1991V22.1991C12.9 22.6961 12.4971 23.0991 12 23.0991C11.5029 23.0991 11.1 22.6961 11.1 22.1991V21.1991C11.1 20.702 11.5029 20.2991 12 20.2991Z" fill="currentColor"/>
-              <path d="M21.2016 11.0999C20.7045 11.0999 20.3016 11.5028 20.3016 11.9999C20.3016 12.4969 20.7045 12.8999 21.2016 12.8999H22.2016C22.6986 12.8999 23.1016 12.4969 23.1016 11.9999C23.1016 11.5028 22.6986 11.0999 22.2016 11.0999H21.2016Z" fill="currentColor"/>
-              <path d="M20.1995 3.79903C20.551 4.1505 20.551 4.72035 20.1995 5.07182L19.4924 5.77893C19.141 6.1304 18.5711 6.1304 18.2196 5.77893C17.8682 5.42746 17.8682 4.85761 18.2196 4.50614L18.9268 3.79903C19.2782 3.44756 19.8481 3.44756 20.1995 3.79903Z" fill="currentColor"/>
-              <path d="M19.4942 18.2215C19.1427 17.87 18.5729 17.87 18.2214 18.2215C17.87 18.573 17.87 19.1428 18.2214 19.4943L18.9285 20.2014C19.28 20.5529 19.8498 20.5529 20.2013 20.2014C20.5528 19.8499 20.5528 19.2801 20.2013 18.9286L19.4942 18.2215Z" fill="currentColor"/>
-              <path d="M5.78079 18.2213C6.13227 18.5727 6.13227 19.1426 5.78079 19.4941L5.07369 20.2012C4.72222 20.5526 4.15237 20.5526 3.8009 20.2012C3.44942 19.8497 3.44942 19.2798 3.8009 18.9284L4.508 18.2213C4.85947 17.8698 5.42932 17.8698 5.78079 18.2213Z" fill="currentColor"/>
-              <path d="M5.07077 3.79912C4.7193 3.44764 4.14945 3.44764 3.79798 3.79912C3.4465 4.15059 3.4465 4.72044 3.79798 5.07191L4.50508 5.77901C4.85655 6.13049 5.4264 6.13049 5.77787 5.77902C6.12935 5.42754 6.12935 4.85769 5.77787 4.50622L5.07077 3.79912Z" fill="currentColor"/>
-            </g>
-            <defs><clipPath id="s"><rect width="24" height="24" fill="white"/></clipPath></defs>
-          </svg>
-        </button>
+  <div class="portal" id="portal">
+    <canvas id="c"></canvas>
+    <div class="layer" id="layer">
+
+      <!-- Bubble -->
+      <div class="bubble-wrap" id="bubbleWrap">
+        <div class="bubble">
+          <span class="logo" id="logoTrigger">Abay Tech <small id="userBadge"></small></span>
+          <button class="tgl" id="themeBtn" aria-label="Switch to light theme">
+            <svg id="iconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10.2441 3.1709C11.0067 3.02014 11.4972 3.8589 11.1953 4.5752C8.57859 10.7854 13.2146 15.4214 19.4248 12.8047C20.1411 12.5028 20.9799 12.9933 20.8291 13.7559C20.0124 17.8859 16.3697 21 12 21C7.02945 21 3.00001 16.9706 3 12C3 7.63028 6.11411 3.98763 10.2441 3.1709ZM8.99609 5.4541C6.51967 6.59266 4.7998 9.09697 4.7998 12C4.79982 15.9764 8.02356 19.2002 12 19.2002C14.903 19.2002 17.4073 17.4803 18.5459 15.0039C15.5117 15.8069 12.6488 15.1937 10.7275 13.2725C8.8063 11.3512 8.19311 8.48829 8.99609 5.4541ZM16.5 5.09961C16.9968 5.09982 17.3992 5.50324 17.3994 6V6.59961H18C18.4968 6.59982 18.8992 7.00324 18.8994 7.5C18.8992 7.99672 18.4967 8.3992 18 8.39941H17.3994V9C17.3992 9.49675 16.9967 9.8992 16.5 9.89941C16.0033 9.8992 15.5998 9.49674 15.5996 9V8.39941H15C14.5033 8.3992 14.0998 7.99672 14.0996 7.5C14.0998 7.00324 14.5032 6.59982 15 6.59961H15.5996V6C15.5998 5.50324 16.0032 5.09982 16.5 5.09961Z" fill="currentColor"/>
+            </svg>
+            <svg id="iconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+              <g clip-path="url(#s)">
+                <path d="M12.9 1.7999C12.9 1.30285 12.4971 0.899902 12 0.899902C11.5029 0.899902 11.1 1.30285 11.1 1.7999V2.7999C11.1 3.29696 11.5029 3.6999 12 3.6999C12.4971 3.6999 12.9 3.29696 12.9 2.7999V1.7999Z" fill="currentColor"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.1 11.9999C6.1 8.7414 8.74152 6.09988 12 6.09988C15.2585 6.09988 17.9 8.7414 17.9 11.9999C17.9 15.2584 15.2585 17.8999 12 17.8999C8.74152 17.8999 6.1 15.2584 6.1 11.9999ZM12 7.89988C9.73563 7.89988 7.9 9.73551 7.9 11.9999C7.9 14.2642 9.73563 16.0999 12 16.0999C14.2644 16.0999 16.1 14.2642 16.1 11.9999C16.1 9.73551 14.2644 7.89988 12 7.89988Z" fill="currentColor"/>
+                <path d="M0.899994 11.9999C0.899994 11.5028 1.30294 11.0999 1.79999 11.0999H2.79999C3.29705 11.0999 3.69999 11.5028 3.69999 11.9999C3.69999 12.4969 3.29705 12.8999 2.79999 12.8999H1.79999C1.30294 12.8999 0.899994 12.4969 0.899994 11.9999Z" fill="currentColor"/>
+                <path d="M12 20.2991C12.4971 20.2991 12.9 20.702 12.9 21.1991V22.1991C12.9 22.6961 12.4971 23.0991 12 23.0991C11.5029 23.0991 11.1 22.6961 11.1 22.1991V21.1991C11.1 20.702 11.5029 20.2991 12 20.2991Z" fill="currentColor"/>
+                <path d="M21.2016 11.0999C20.7045 11.0999 20.3016 11.5028 20.3016 11.9999C20.3016 12.4969 20.7045 12.8999 21.2016 12.8999H22.2016C22.6986 12.8999 23.1016 12.4969 23.1016 11.9999C23.1016 11.5028 22.6986 11.0999 22.2016 11.0999H21.2016Z" fill="currentColor"/>
+                <path d="M20.1995 3.79903C20.551 4.1505 20.551 4.72035 20.1995 5.07182L19.4924 5.77893C19.141 6.1304 18.5711 6.1304 18.2196 5.77893C17.8682 5.42746 17.8682 4.85761 18.2196 4.50614L18.9268 3.79903C19.2782 3.44756 19.8481 3.44756 20.1995 3.79903Z" fill="currentColor"/>
+                <path d="M19.4942 18.2215C19.1427 17.87 18.5729 17.87 18.2214 18.2215C17.87 18.573 17.87 19.1428 18.2214 19.4943L18.9285 20.2014C19.28 20.5529 19.8498 20.5529 20.2013 20.2014C20.5528 19.8499 20.5528 19.2801 20.2013 18.9286L19.4942 18.2215Z" fill="currentColor"/>
+                <path d="M5.78079 18.2213C6.13227 18.5727 6.13227 19.1426 5.78079 19.4941L5.07369 20.2012C4.72222 20.5526 4.15237 20.5526 3.8009 20.2012C3.44942 19.8497 3.44942 19.2798 3.8009 18.9284L4.508 18.2213C4.85947 17.8698 5.42932 17.8698 5.78079 18.2213Z" fill="currentColor"/>
+                <path d="M5.07077 3.79912C4.7193 3.44764 4.14945 3.44764 3.79798 3.79912C3.4465 4.15059 3.4465 4.72044 3.79798 5.07191L4.50508 5.77901C4.85655 6.13049 5.4264 6.13049 5.77787 5.77902C6.12935 5.42754 6.12935 4.85769 5.77787 4.50622L5.07077 3.79912Z" fill="currentColor"/>
+              </g>
+              <defs><clipPath id="s"><rect width="24" height="24" fill="white"/></clipPath></defs>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div class="hero" id="hero">
+        <h1>Make your time earn money for you</h1>
+        <p class="tag">Make steps, go modern. Transition your daily digital patterns into an optimized asset generator.</p>
+        <p class="sub">Step into an automated framework where time converts directly to digital yield. Secure, immediate, and built for the modern economy.</p>
+      </div>
+
+      <!-- Auth Card -->
+      <div class="auth-card" id="authCard">
+        <div class="tabs">
+          <button class="tab active" data-tab="0">Sign up</button>
+          <button class="tab" data-tab="1">Log in</button>
+        </div>
+        <div class="track" id="authTrack">
+          <!-- Sign Up -->
+          <div class="panel">
+            <div class="field">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11.9997 12.8779C16.0197 12.878 19.4393 15.3848 20.7048 18.8828C21.0812 19.9234 20.2782 20.8962 19.2038 21.0137L18.9861 21.0264H5.0134L4.79562 21.0137C3.7213 20.8961 2.91743 19.9233 3.29367 18.8828C4.55905 15.3847 7.9797 12.8781 11.9997 12.8779ZM11.9997 14.6777C8.84467 14.6779 6.17462 16.5794 5.09152 19.2256H18.9079C17.8248 16.5793 15.1549 14.6778 11.9997 14.6777ZM12.2312 3.00586C14.6088 3.1264 16.4997 5.09239 16.4997 7.5L16.4939 7.73145C16.3734 10.1091 14.4073 11.9999 11.9997 12C9.59225 11.9998 7.62604 10.109 7.50558 7.73145L7.49973 7.5C7.49973 5.01485 9.51462 3.00021 11.9997 3L12.2312 3.00586ZM11.9997 4.7998C10.5087 4.80001 9.29953 6.00896 9.29953 7.5C9.29953 8.99104 10.5087 10.2 11.9997 10.2002C13.4908 10.2001 14.6999 8.99112 14.6999 7.5C14.6999 6.00888 13.4908 4.79989 11.9997 4.7998Z" fill="currentColor"/></svg>
+              <input type="text" id="signupName" placeholder="Full name" aria-label="Full name">
+            </div>
+            <div class="field">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#m)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="m"><rect width="24" height="24" fill="white"/></clipPath></defs></svg>
+              <input type="email" id="signupEmail" placeholder="Email address" aria-label="Email address">
+            </div>
+            <div class="field">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16.0404 12C16.0404 9.76874 14.2313 7.9596 12.0001 7.9596C9.76883 7.9596 7.95972 9.76874 7.95972 12C7.95972 14.2313 9.76883 16.0404 12.0001 16.0404C14.2313 16.0404 16.0404 14.2313 16.0404 12ZM14.2222 12C14.2222 13.2271 13.2271 14.2222 12 14.2222C10.7729 14.2222 9.77783 13.2271 9.77783 12C9.77783 10.7729 10.7729 9.77778 12 9.77778C13.2271 9.77778 14.2222 10.7729 14.2222 12Z" fill="currentColor"/><path d="M9.91145 21.8009C9.29001 21.6797 8.76914 21.2612 8.50632 20.6922L8.07372 19.7556C7.88838 19.3544 7.43553 19.1048 6.95371 19.1549L5.89572 19.2647C5.2733 19.3293 4.64823 19.114 4.22298 18.6611C3.74343 18.1504 3.32454 17.6037 2.97033 17.0181C2.61571 16.4318 2.32839 15.8106 2.10407 15.1566C1.89769 14.5549 2.02148 13.8954 2.4089 13.3902L3.0376 12.5704C3.30043 12.2277 3.30042 11.7722 3.03758 11.4295L2.40413 10.6035C2.01474 10.0958 1.891 9.43198 2.10208 8.82826C2.55037 7.54612 3.27017 6.35997 4.22 5.34259C4.64518 4.8872 5.27275 4.67067 5.89701 4.73544L6.95383 4.84514C7.43561 4.89515 7.88844 4.6456 8.07377 4.24441L8.50266 3.31593C8.76494 2.74818 9.28448 2.33019 9.90423 2.20761C11.2916 1.9332 12.7148 1.93127 14.0885 2.19913C14.7099 2.32029 15.2308 2.73881 15.4937 3.3078L15.9263 4.24441C16.1116 4.6456 16.5644 4.89514 17.0462 4.84514L18.1043 4.73532C18.7267 4.67072 19.3518 4.88603 19.777 5.33886C20.2566 5.84953 20.6755 6.3963 21.0297 6.98193C21.3843 7.56823 21.6716 8.18942 21.8959 8.84339C22.1023 9.44509 21.9785 10.1046 21.5911 10.6098L20.9624 11.4295C20.6996 11.7722 20.6996 12.2278 20.9624 12.5705L21.5959 13.3964C21.9853 13.9042 22.109 14.568 21.8979 15.1717C21.4497 16.4538 20.7299 17.6399 19.7801 18.6573C19.3549 19.1128 18.7273 19.3294 18.103 19.2646L17.0462 19.1549C16.5645 19.1049 16.1116 19.3544 15.9263 19.7556L15.4974 20.6841C15.2351 21.2518 14.7156 21.6698 14.0958 21.7924C12.7083 22.0668 11.2852 22.0687 9.91145 21.8009ZM13.7432 20.0088C13.7844 20.0006 13.8259 19.9673 13.847 19.9216L14.2758 18.9931C14.7915 17.8768 15.9886 17.2171 17.2341 17.3464L18.2909 17.4561C18.3649 17.4638 18.4272 17.4423 18.4512 17.4166C19.2296 16.5828 19.8171 15.6146 20.1817 14.5716C20.1845 14.5636 20.1796 14.5373 20.1532 14.5029L19.5198 13.677C18.7564 12.6815 18.7564 11.3185 19.5198 10.323L20.1485 9.5033C20.1746 9.46927 20.1795 9.4429 20.1762 9.43327C19.9932 8.89965 19.7603 8.39623 19.4741 7.92293C19.1873 7.4489 18.846 7.00333 18.4517 6.58351C18.4272 6.55739 18.3656 6.53616 18.2921 6.54378L17.234 6.65361C15.9886 6.78287 14.7915 6.12317 14.2758 5.00689L13.8432 4.07027C13.822 4.02448 13.7811 3.9916 13.7406 3.98371C12.5983 3.76097 11.4132 3.76258 10.2571 3.99124C10.2158 3.99941 10.1744 4.03271 10.1533 4.07842L9.72441 5.00689C9.20875 6.12317 8.01164 6.7829 6.76619 6.6536L5.70942 6.54391C5.63535 6.53623 5.573 6.55774 5.54905 6.5834C4.77067 7.41713 4.18312 8.38534 3.81845 9.42835C3.81564 9.43637 3.82054 9.46265 3.84693 9.49706L4.48038 10.323C5.24381 11.3185 5.24383 12.6815 4.48041 13.6769L3.85171 14.4967C3.82561 14.5307 3.82066 14.5571 3.82396 14.5667C4.00701 15.1004 4.23986 15.6038 4.52613 16.0771C4.81284 16.5511 5.15421 16.9967 5.54845 17.4165C5.57298 17.4426 5.63461 17.4638 5.70811 17.4562L6.76608 17.3464C8.01157 17.2171 9.20871 17.8768 9.72438 18.9932L10.157 19.9297C10.1781 19.9755 10.2191 20.0084 10.2595 20.0163C11.4018 20.239 12.587 20.2374 13.7432 20.0088Z" fill="currentColor"/></svg>
+              <input type="password" id="signupPass" placeholder="Secure password" aria-label="Password">
+            </div>
+            <button class="btn" id="signupBtn">Create account</button>
+            <div class="social-sep">or sign up with</div>
+            <div class="social-row">
+              <button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#m3)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="m3"><rect width="24" height="24" fill="white"/></clipPath></defs></svg> Email</button>
+              <button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.5 19.5C15.5 19.5 14 18.2 14 16.5C14 14.8 15.5 13.5 17.5 13.5C19.5 13.5 21 14.8 21 16.5C21 18.2 19.5 19.5 17.5 19.5ZM6.5 19.5C4.5 19.5 3 18.2 3 16.5C3 14.8 4.5 13.5 6.5 13.5C8.5 13.5 10 14.8 10 16.5C10 18.2 8.5 19.5 6.5 19.5ZM12 13C9.8 13 8 11.2 8 9C8 6.8 9.8 5 12 5C14.2 5 16 6.8 16 9C16 11.2 14.2 13 12 13ZM12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11Z" fill="currentColor"/></svg> iCloud</button>
+            </div>
+          </div>
+          <!-- Log In -->
+          <div class="panel">
+            <div class="field">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 2.09961C18.1539 2.09961 19.9004 3.84609 19.9004 6V18C19.9004 20.1539 18.1539 21.9004 16 21.9004H8C5.84609 21.9004 4.09961 20.1539 4.09961 18V6C4.09961 3.84609 5.84609 2.09961 8 2.09961H16ZM8 3.90039C6.8402 3.90039 5.90039 4.8402 5.90039 6V18C5.90039 19.1598 6.8402 20.0996 8 20.0996H16C17.1598 20.0996 18.0996 19.1598 18.0996 18V6C18.0996 4.8402 17.1598 3.90039 16 3.90039H8Z" fill="currentColor"/><path d="M14 16.1006C14.497 16.1006 14.9003 16.503 14.9004 17C14.9004 17.497 14.497 17.9004 14 17.9004H10C9.50294 17.9004 9.09961 17.4971 9.09961 17C9.09966 16.503 9.50298 16.1006 10 16.1006H14Z" fill="currentColor"/></svg>
+              <input type="text" id="loginEmail" placeholder="Gmail or mobile number" aria-label="Email">
+            </div>
+            <div class="field">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16.0404 12C16.0404 9.76874 14.2313 7.9596 12.0001 7.9596C9.76883 7.9596 7.95972 9.76874 7.95972 12C7.95972 14.2313 9.76883 16.0404 12.0001 16.0404C14.2313 16.0404 16.0404 14.2313 16.0404 12ZM14.2222 12C14.2222 13.2271 13.2271 14.2222 12 14.2222C10.7729 14.2222 9.77783 13.2271 9.77783 12C9.77783 10.7729 10.7729 9.77778 12 9.77778C13.2271 9.77778 14.2222 10.7729 14.2222 12Z" fill="currentColor"/><path d="M9.91145 21.8009C9.29001 21.6797 8.76914 21.2612 8.50632 20.6922L8.07372 19.7556C7.88838 19.3544 7.43553 19.1048 6.95371 19.1549L5.89572 19.2647C5.2733 19.3293 4.64823 19.114 4.22298 18.6611C3.74343 18.1504 3.32454 17.6037 2.97033 17.0181C2.61571 16.4318 2.32839 15.8106 2.10407 15.1566C1.89769 14.5549 2.02148 13.8954 2.4089 13.3902L3.0376 12.5704C3.30043 12.2277 3.30042 11.7722 3.03758 11.4295L2.40413 10.6035C2.01474 10.0958 1.891 9.43198 2.10208 8.82826C2.55037 7.54612 3.27017 6.35997 4.22 5.34259C4.64518 4.8872 5.27275 4.67067 5.89701 4.73544L6.95383 4.84514C7.43561 4.89515 7.88844 4.6456 8.07377 4.24441L8.50266 3.31593C8.76494 2.74818 9.28448 2.33019 9.90423 2.20761C11.2916 1.9332 12.7148 1.93127 14.0885 2.19913C14.7099 2.32029 15.2308 2.73881 15.4937 3.3078L15.9263 4.24441C16.1116 4.6456 16.5644 4.89514 17.0462 4.84514L18.1043 4.73532C18.7267 4.67072 19.3518 4.88603 19.777 5.33886C20.2566 5.84953 20.6755 6.3963 21.0297 6.98193C21.3843 7.56823 21.6716 8.18942 21.8959 8.84339C22.1023 9.44509 21.9785 10.1046 21.5911 10.6098L20.9624 11.4295C20.6996 11.7722 20.6996 12.2278 20.9624 12.5705L21.5959 13.3964C21.9853 13.9042 22.109 14.568 21.8979 15.1717C21.4497 16.4538 20.7299 17.6399 19.7801 18.6573C19.3549 19.1128 18.7273 19.3294 18.103 19.2646L17.0462 19.1549C16.5645 19.1049 16.1116 19.3544 15.9263 19.7556L15.4974 20.6841C15.2351 21.2518 14.7156 21.6698 14.0958 21.7924C12.7083 22.0668 11.2852 22.0687 9.91145 21.8009ZM13.7432 20.0088C13.7844 20.0006 13.8259 19.9673 13.847 19.9216L14.2758 18.9931C14.7915 17.8768 15.9886 17.2171 17.2341 17.3464L18.2909 17.4561C18.3649 17.4638 18.4272 17.4423 18.4512 17.4166C19.2296 16.5828 19.8171 15.6146 20.1817 14.5716C20.1845 14.5636 20.1796 14.5373 20.1532 14.5029L19.5198 13.677C18.7564 12.6815 18.7564 11.3185 19.5198 10.323L20.1485 9.5033C20.1746 9.46927 20.1795 9.4429 20.1762 9.43327C19.9932 8.89965 19.7603 8.39623 19.4741 7.92293C19.1873 7.4489 18.846 7.00333 18.4517 6.58351C18.4272 6.55739 18.3656 6.53616 18.2921 6.54378L17.234 6.65361C15.9886 6.78287 14.7915 6.12317 14.2758 5.00689L13.8432 4.07027C13.822 4.02448 13.7811 3.9916 13.7406 3.98371C12.5983 3.76097 11.4132 3.76258 10.2571 3.99124C10.2158 3.99941 10.1744 4.03271 10.1533 4.07842L9.72441 5.00689C9.20875 6.12317 8.01164 6.7829 6.76619 6.6536L5.70942 6.54391C5.63535 6.53623 5.573 6.55774 5.54905 6.5834C4.77067 7.41713 4.18312 8.38534 3.81845 9.42835C3.81564 9.43637 3.82054 9.46265 3.84693 9.49706L4.48038 10.323C5.24381 11.3185 5.24383 12.6815 4.48041 13.6769L3.85171 14.4967C3.82561 14.5307 3.82066 14.5571 3.82396 14.5667C4.00701 15.1004 4.23986 15.6038 4.52613 16.0771C4.81284 16.5511 5.15421 16.9967 5.54845 17.4165C5.57298 17.4426 5.63461 17.4638 5.70811 17.4562L6.76608 17.3464C8.01157 17.2171 9.20871 17.8768 9.72438 18.9932L10.157 19.9297C10.1781 19.9755 10.2191 20.0084 10.2595 20.0163C11.4018 20.239 12.587 20.2374 13.7432 20.0088Z" fill="currentColor"/></svg>
+              <input type="password" id="loginPass" placeholder="Password" aria-label="Password">
+            </div>
+            <button class="btn" id="loginBtn">Log in</button>
+            <div class="social-sep">or log in with</div>
+            <div class="social-row">
+              <button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#m2)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="m2"><rect width="24" height="24" fill="white"/></clipPath></defs></svg> Email</button>
+              <button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.5 19.5C15.5 19.5 14 18.2 14 16.5C14 14.8 15.5 13.5 17.5 13.5C19.5 13.5 21 14.8 21 16.5C21 18.2 19.5 19.5 17.5 19.5ZM6.5 19.5C4.5 19.5 3 18.2 3 16.5C3 14.8 4.5 13.5 6.5 13.5C8.5 13.5 10 14.8 10 16.5C10 18.2 8.5 19.5 6.5 19.5ZM12 13C9.8 13 8 11.2 8 9C8 6.8 9.8 5 12 5C14.2 5 16 6.8 16 9C16 11.2 14.2 13 12 13ZM12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11Z" fill="currentColor"/></svg> iCloud</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div class="dashboard" id="dashboard">
+        <div class="dashboard-header">
+          <h2>⚡ Choose your package</h2>
+          <p>Select a plan and start generating digital yield</p>
+          <div class="user-email" id="dashEmail"></div>
+          <button class="logout-btn" id="logoutBtn">← Sign out</button>
+        </div>
+        <div class="package-grid" id="packageGrid">
+          <!-- Packages injected by JS -->
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer-desc" id="footerDesc">
+        <p>By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+        <p>Your data is encrypted end-to-end. We never share your information with third parties.</p>
+        <p>Need help? <a href="#">Contact support</a> or visit our <a href="#">Help Center</a>.</p>
       </div>
     </div>
+  </div>
 
-    <div class="hero">
-      <h1>Make your time earn money for you</h1>
-      <p class="tag">Make steps, go modern. Transition your daily digital patterns into an optimized asset generator.</p>
-      <p class="sub">Step into an automated framework where time converts directly to digital yield. Secure, immediate, and built for the modern economy.</p>
-    </div>
-
-    <!-- Normal card (hidden when modal active) -->
-    <div class="card" id="card">
+  <!-- FOCUS MODAL (input popup) -->
+  <div class="focus-modal-overlay" id="focusModalOverlay">
+    <div class="focus-modal-card" id="focusModalCard">
       <div class="tabs">
         <button class="tab active" data-tab="0">Sign up</button>
         <button class="tab" data-tab="1">Log in</button>
       </div>
-      <div class="track" id="track">
-        <!-- Sign Up Panel -->
+      <div class="track" id="focusTrack">
+        <!-- Sign Up -->
         <div class="panel">
-          <div class="field">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11.9997 12.8779C16.0197 12.878 19.4393 15.3848 20.7048 18.8828C21.0812 19.9234 20.2782 20.8962 19.2038 21.0137L18.9861 21.0264H5.0134L4.79562 21.0137C3.7213 20.8961 2.91743 19.9233 3.29367 18.8828C4.55905 15.3847 7.9797 12.8781 11.9997 12.8779ZM11.9997 14.6777C8.84467 14.6779 6.17462 16.5794 5.09152 19.2256H18.9079C17.8248 16.5793 15.1549 14.6778 11.9997 14.6777ZM12.2312 3.00586C14.6088 3.1264 16.4997 5.09239 16.4997 7.5L16.4939 7.73145C16.3734 10.1091 14.4073 11.9999 11.9997 12C9.59225 11.9998 7.62604 10.109 7.50558 7.73145L7.49973 7.5C7.49973 5.01485 9.51462 3.00021 11.9997 3L12.2312 3.00586ZM11.9997 4.7998C10.5087 4.80001 9.29953 6.00896 9.29953 7.5C9.29953 8.99104 10.5087 10.2 11.9997 10.2002C13.4908 10.2001 14.6999 8.99112 14.6999 7.5C14.6999 6.00888 13.4908 4.79989 11.9997 4.7998Z" fill="currentColor"/>
-            </svg>
-            <input type="text" placeholder="Full name" aria-label="Full name">
-          </div>
-          <div class="field">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clip-path="url(#m)">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/>
-              </g>
-              <defs><clipPath id="m"><rect width="24" height="24" fill="white"/></clipPath></defs>
-            </svg>
-            <input type="email" placeholder="Email address" aria-label="Email address">
-          </div>
-          <div class="field">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16.0404 12C16.0404 9.76874 14.2313 7.9596 12.0001 7.9596C9.76883 7.9596 7.95972 9.76874 7.95972 12C7.95972 14.2313 9.76883 16.0404 12.0001 16.0404C14.2313 16.0404 16.0404 14.2313 16.0404 12ZM14.2222 12C14.2222 13.2271 13.2271 14.2222 12 14.2222C10.7729 14.2222 9.77783 13.2271 9.77783 12C9.77783 10.7729 10.7729 9.77778 12 9.77778C13.2271 9.77778 14.2222 10.7729 14.2222 12Z" fill="currentColor"/>
-              <path d="M9.91145 21.8009C9.29001 21.6797 8.76914 21.2612 8.50632 20.6922L8.07372 19.7556C7.88838 19.3544 7.43553 19.1048 6.95371 19.1549L5.89572 19.2647C5.2733 19.3293 4.64823 19.114 4.22298 18.6611C3.74343 18.1504 3.32454 17.6037 2.97033 17.0181C2.61571 16.4318 2.32839 15.8106 2.10407 15.1566C1.89769 14.5549 2.02148 13.8954 2.4089 13.3902L3.0376 12.5704C3.30043 12.2277 3.30042 11.7722 3.03758 11.4295L2.40413 10.6035C2.01474 10.0958 1.891 9.43198 2.10208 8.82826C2.55037 7.54612 3.27017 6.35997 4.22 5.34259C4.64518 4.8872 5.27275 4.67067 5.89701 4.73544L6.95383 4.84514C7.43561 4.89515 7.88844 4.6456 8.07377 4.24441L8.50266 3.31593C8.76494 2.74818 9.28448 2.33019 9.90423 2.20761C11.2916 1.9332 12.7148 1.93127 14.0885 2.19913C14.7099 2.32029 15.2308 2.73881 15.4937 3.3078L15.9263 4.24441C16.1116 4.6456 16.5644 4.89514 17.0462 4.84514L18.1043 4.73532C18.7267 4.67072 19.3518 4.88603 19.777 5.33886C20.2566 5.84953 20.6755 6.3963 21.0297 6.98193C21.3843 7.56823 21.6716 8.18942 21.8959 8.84339C22.1023 9.44509 21.9785 10.1046 21.5911 10.6098L20.9624 11.4295C20.6996 11.7722 20.6996 12.2278 20.9624 12.5705L21.5959 13.3964C21.9853 13.9042 22.109 14.568 21.8979 15.1717C21.4497 16.4538 20.7299 17.6399 19.7801 18.6573C19.3549 19.1128 18.7273 19.3294 18.103 19.2646L17.0462 19.1549C16.5645 19.1049 16.1116 19.3544 15.9263 19.7556L15.4974 20.6841C15.2351 21.2518 14.7156 21.6698 14.0958 21.7924C12.7083 22.0668 11.2852 22.0687 9.91145 21.8009ZM13.7432 20.0088C13.7844 20.0006 13.8259 19.9673 13.847 19.9216L14.2758 18.9931C14.7915 17.8768 15.9886 17.2171 17.2341 17.3464L18.2909 17.4561C18.3649 17.4638 18.4272 17.4423 18.4512 17.4166C19.2296 16.5828 19.8171 15.6146 20.1817 14.5716C20.1845 14.5636 20.1796 14.5373 20.1532 14.5029L19.5198 13.677C18.7564 12.6815 18.7564 11.3185 19.5198 10.323L20.1485 9.5033C20.1746 9.46927 20.1795 9.4429 20.1762 9.43327C19.9932 8.89965 19.7603 8.39623 19.4741 7.92293C19.1873 7.4489 18.846 7.00333 18.4517 6.58351C18.4272 6.55739 18.3656 6.53616 18.2921 6.54378L17.234 6.65361C15.9886 6.78287 14.7915 6.12317 14.2758 5.00689L13.8432 4.07027C13.822 4.02448 13.7811 3.9916 13.7406 3.98371C12.5983 3.76097 11.4132 3.76258 10.2571 3.99124C10.2158 3.99941 10.1744 4.03271 10.1533 4.07842L9.72441 5.00689C9.20875 6.12317 8.01164 6.7829 6.76619 6.6536L5.70942 6.54391C5.63535 6.53623 5.573 6.55774 5.54905 6.5834C4.77067 7.41713 4.18312 8.38534 3.81845 9.42835C3.81564 9.43637 3.82054 9.46265 3.84693 9.49706L4.48038 10.323C5.24381 11.3185 5.24383 12.6815 4.48041 13.6769L3.85171 14.4967C3.82561 14.5307 3.82066 14.5571 3.82396 14.5667C4.00701 15.1004 4.23986 15.6038 4.52613 16.0771C4.81284 16.5511 5.15421 16.9967 5.54845 17.4165C5.57298 17.4426 5.63461 17.4638 5.70811 17.4562L6.76608 17.3464C8.01157 17.2171 9.20871 17.8768 9.72438 18.9932L10.157 19.9297C10.1781 19.9755 10.2191 20.0084 10.2595 20.0163C11.4018 20.239 12.587 20.2374 13.7432 20.0088Z" fill="currentColor"/>
-            </svg>
-            <input type="password" placeholder="Secure password" aria-label="Password">
-          </div>
-          <button class="btn" id="signupBtn">Create account</button>
+          <div class="field"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11.9997 12.8779C16.0197 12.878 19.4393 15.3848 20.7048 18.8828C21.0812 19.9234 20.2782 20.8962 19.2038 21.0137L18.9861 21.0264H5.0134L4.79562 21.0137C3.7213 20.8961 2.91743 19.9233 3.29367 18.8828C4.55905 15.3847 7.9797 12.8781 11.9997 12.8779ZM11.9997 14.6777C8.84467 14.6779 6.17462 16.5794 5.09152 19.2256H18.9079C17.8248 16.5793 15.1549 14.6778 11.9997 14.6777ZM12.2312 3.00586C14.6088 3.1264 16.4997 5.09239 16.4997 7.5L16.4939 7.73145C16.3734 10.1091 14.4073 11.9999 11.9997 12C9.59225 11.9998 7.62604 10.109 7.50558 7.73145L7.49973 7.5C7.49973 5.01485 9.51462 3.00021 11.9997 3L12.2312 3.00586ZM11.9997 4.7998C10.5087 4.80001 9.29953 6.00896 9.29953 7.5C9.29953 8.99104 10.5087 10.2 11.9997 10.2002C13.4908 10.2001 14.6999 8.99112 14.6999 7.5C14.6999 6.00888 13.4908 4.79989 11.9997 4.7998Z" fill="currentColor"/></svg><input type="text" placeholder="Full name" aria-label="Full name"></div>
+          <div class="field"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#mm)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="mm"><rect width="24" height="24" fill="white"/></clipPath></defs></svg><input type="email" placeholder="Email address" aria-label="Email address"></div>
+          <div class="field"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16.0404 12C16.0404 9.76874 14.2313 7.9596 12.0001 7.9596C9.76883 7.9596 7.95972 9.76874 7.95972 12C7.95972 14.2313 9.76883 16.0404 12.0001 16.0404C14.2313 16.0404 16.0404 14.2313 16.0404 12ZM14.2222 12C14.2222 13.2271 13.2271 14.2222 12 14.2222C10.7729 14.2222 9.77783 13.2271 9.77783 12C9.77783 10.7729 10.7729 9.77778 12 9.77778C13.2271 9.77778 14.2222 10.7729 14.2222 12Z" fill="currentColor"/><path d="M9.91145 21.8009C9.29001 21.6797 8.76914 21.2612 8.50632 20.6922L8.07372 19.7556C7.88838 19.3544 7.43553 19.1048 6.95371 19.1549L5.89572 19.2647C5.2733 19.3293 4.64823 19.114 4.22298 18.6611C3.74343 18.1504 3.32454 17.6037 2.97033 17.0181C2.61571 16.4318 2.32839 15.8106 2.10407 15.1566C1.89769 14.5549 2.02148 13.8954 2.4089 13.3902L3.0376 12.5704C3.30043 12.2277 3.30042 11.7722 3.03758 11.4295L2.40413 10.6035C2.01474 10.0958 1.891 9.43198 2.10208 8.82826C2.55037 7.54612 3.27017 6.35997 4.22 5.34259C4.64518 4.8872 5.27275 4.67067 5.89701 4.73544L6.95383 4.84514C7.43561 4.89515 7.88844 4.6456 8.07377 4.24441L8.50266 3.31593C8.76494 2.74818 9.28448 2.33019 9.90423 2.20761C11.2916 1.9332 12.7148 1.93127 14.0885 2.19913C14.7099 2.32029 15.2308 2.73881 15.4937 3.3078L15.9263 4.24441C16.1116 4.6456 16.5644 4.89514 17.0462 4.84514L18.1043 4.73532C18.7267 4.67072 19.3518 4.88603 19.777 5.33886C20.2566 5.84953 20.6755 6.3963 21.0297 6.98193C21.3843 7.56823 21.6716 8.18942 21.8959 8.84339C22.1023 9.44509 21.9785 10.1046 21.5911 10.6098L20.9624 11.4295C20.6996 11.7722 20.6996 12.2278 20.9624 12.5705L21.5959 13.3964C21.9853 13.9042 22.109 14.568 21.8979 15.1717C21.4497 16.4538 20.7299 17.6399 19.7801 18.6573C19.3549 19.1128 18.7273 19.3294 18.103 19.2646L17.0462 19.1549C16.5645 19.1049 16.1116 19.3544 15.9263 19.7556L15.4974 20.6841C15.2351 21.2518 14.7156 21.6698 14.0958 21.7924C12.7083 22.0668 11.2852 22.0687 9.91145 21.8009ZM13.7432 20.0088C13.7844 20.0006 13.8259 19.9673 13.847 19.9216L14.2758 18.9931C14.7915 17.8768 15.9886 17.2171 17.2341 17.3464L18.2909 17.4561C18.3649 17.4638 18.4272 17.4423 18.4512 17.4166C19.2296 16.5828 19.8171 15.6146 20.1817 14.5716C20.1845 14.5636 20.1796 14.5373 20.1532 14.5029L19.5198 13.677C18.7564 12.6815 18.7564 11.3185 19.5198 10.323L20.1485 9.5033C20.1746 9.46927 20.1795 9.4429 20.1762 9.43327C19.9932 8.89965 19.7603 8.39623 19.4741 7.92293C19.1873 7.4489 18.846 7.00333 18.4517 6.58351C18.4272 6.55739 18.3656 6.53616 18.2921 6.54378L17.234 6.65361C15.9886 6.78287 14.7915 6.12317 14.2758 5.00689L13.8432 4.07027C13.822 4.02448 13.7811 3.9916 13.7406 3.98371C12.5983 3.76097 11.4132 3.76258 10.2571 3.99124C10.2158 3.99941 10.1744 4.03271 10.1533 4.07842L9.72441 5.00689C9.20875 6.12317 8.01164 6.7829 6.76619 6.6536L5.70942 6.54391C5.63535 6.53623 5.573 6.55774 5.54905 6.5834C4.77067 7.41713 4.18312 8.38534 3.81845 9.42835C3.81564 9.43637 3.82054 9.46265 3.84693 9.49706L4.48038 10.323C5.24381 11.3185 5.24383 12.6815 4.48041 13.6769L3.85171 14.4967C3.82561 14.5307 3.82066 14.5571 3.82396 14.5667C4.00701 15.1004 4.23986 15.6038 4.52613 16.0771C4.81284 16.5511 5.15421 16.9967 5.54845 17.4165C5.57298 17.4426 5.63461 17.4638 5.70811 17.4562L6.76608 17.3464C8.01157 17.2171 9.20871 17.8768 9.72438 18.9932L10.157 19.9297C10.1781 19.9755 10.2191 20.0084 10.2595 20.0163C11.4018 20.239 12.587 20.2374 13.7432 20.0088Z" fill="currentColor"/></svg><input type="password" placeholder="Secure password" aria-label="Password"></div>
+          <button class="btn" id="focusSignupBtn">Create account</button>
           <div class="social-sep">or sign up with</div>
-          <div class="social-row">
-            <button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#m3)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="m3"><rect width="24" height="24" fill="white"/></clipPath></defs></svg> Email</button>
-            <button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.5 19.5C15.5 19.5 14 18.2 14 16.5C14 14.8 15.5 13.5 17.5 13.5C19.5 13.5 21 14.8 21 16.5C21 18.2 19.5 19.5 17.5 19.5ZM6.5 19.5C4.5 19.5 3 18.2 3 16.5C3 14.8 4.5 13.5 6.5 13.5C8.5 13.5 10 14.8 10 16.5C10 18.2 8.5 19.5 6.5 19.5ZM12 13C9.8 13 8 11.2 8 9C8 6.8 9.8 5 12 5C14.2 5 16 6.8 16 9C16 11.2 14.2 13 12 13ZM12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11Z" fill="currentColor"/></svg> iCloud</button>
-          </div>
+          <div class="social-row"><button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#mmm)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="mmm"><rect width="24" height="24" fill="white"/></clipPath></defs></svg> Email</button><button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.5 19.5C15.5 19.5 14 18.2 14 16.5C14 14.8 15.5 13.5 17.5 13.5C19.5 13.5 21 14.8 21 16.5C21 18.2 19.5 19.5 17.5 19.5ZM6.5 19.5C4.5 19.5 3 18.2 3 16.5C3 14.8 4.5 13.5 6.5 13.5C8.5 13.5 10 14.8 10 16.5C10 18.2 8.5 19.5 6.5 19.5ZM12 13C9.8 13 8 11.2 8 9C8 6.8 9.8 5 12 5C14.2 5 16 6.8 16 9C16 11.2 14.2 13 12 13ZM12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11Z" fill="currentColor"/></svg> iCloud</button></div>
         </div>
-
-        <!-- Log In Panel -->
+        <!-- Log In -->
         <div class="panel">
-          <div class="field">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 2.09961C18.1539 2.09961 19.9004 3.84609 19.9004 6V18C19.9004 20.1539 18.1539 21.9004 16 21.9004H8C5.84609 21.9004 4.09961 20.1539 4.09961 18V6C4.09961 3.84609 5.84609 2.09961 8 2.09961H16ZM8 3.90039C6.8402 3.90039 5.90039 4.8402 5.90039 6V18C5.90039 19.1598 6.8402 20.0996 8 20.0996H16C17.1598 20.0996 18.0996 19.1598 18.0996 18V6C18.0996 4.8402 17.1598 3.90039 16 3.90039H8Z" fill="currentColor"/><path d="M14 16.1006C14.497 16.1006 14.9003 16.503 14.9004 17C14.9004 17.497 14.497 17.9004 14 17.9004H10C9.50294 17.9004 9.09961 17.4971 9.09961 17C9.09966 16.503 9.50298 16.1006 10 16.1006H14Z" fill="currentColor"/></svg>
-            <input type="text" placeholder="Gmail or mobile number" aria-label="Gmail or mobile number">
-          </div>
-          <div class="field">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16.0404 12C16.0404 9.76874 14.2313 7.9596 12.0001 7.9596C9.76883 7.9596 7.95972 9.76874 7.95972 12C7.95972 14.2313 9.76883 16.0404 12.0001 16.0404C14.2313 16.0404 16.0404 14.2313 16.0404 12ZM14.2222 12C14.2222 13.2271 13.2271 14.2222 12 14.2222C10.7729 14.2222 9.77783 13.2271 9.77783 12C9.77783 10.7729 10.7729 9.77778 12 9.77778C13.2271 9.77778 14.2222 10.7729 14.2222 12Z" fill="currentColor"/><path d="M9.91145 21.8009C9.29001 21.6797 8.76914 21.2612 8.50632 20.6922L8.07372 19.7556C7.88838 19.3544 7.43553 19.1048 6.95371 19.1549L5.89572 19.2647C5.2733 19.3293 4.64823 19.114 4.22298 18.6611C3.74343 18.1504 3.32454 17.6037 2.97033 17.0181C2.61571 16.4318 2.32839 15.8106 2.10407 15.1566C1.89769 14.5549 2.02148 13.8954 2.4089 13.3902L3.0376 12.5704C3.30043 12.2277 3.30042 11.7722 3.03758 11.4295L2.40413 10.6035C2.01474 10.0958 1.891 9.43198 2.10208 8.82826C2.55037 7.54612 3.27017 6.35997 4.22 5.34259C4.64518 4.8872 5.27275 4.67067 5.89701 4.73544L6.95383 4.84514C7.43561 4.89515 7.88844 4.6456 8.07377 4.24441L8.50266 3.31593C8.76494 2.74818 9.28448 2.33019 9.90423 2.20761C11.2916 1.9332 12.7148 1.93127 14.0885 2.19913C14.7099 2.32029 15.2308 2.73881 15.4937 3.3078L15.9263 4.24441C16.1116 4.6456 16.5644 4.89514 17.0462 4.84514L18.1043 4.73532C18.7267 4.67072 19.3518 4.88603 19.777 5.33886C20.2566 5.84953 20.6755 6.3963 21.0297 6.98193C21.3843 7.56823 21.6716 8.18942 21.8959 8.84339C22.1023 9.44509 21.9785 10.1046 21.5911 10.6098L20.9624 11.4295C20.6996 11.7722 20.6996 12.2278 20.9624 12.5705L21.5959 13.3964C21.9853 13.9042 22.109 14.568 21.8979 15.1717C21.4497 16.4538 20.7299 17.6399 19.7801 18.6573C19.3549 19.1128 18.7273 19.3294 18.103 19.2646L17.0462 19.1549C16.5645 19.1049 16.1116 19.3544 15.9263 19.7556L15.4974 20.6841C15.2351 21.2518 14.7156 21.6698 14.0958 21.7924C12.7083 22.0668 11.2852 22.0687 9.91145 21.8009ZM13.7432 20.0088C13.7844 20.0006 13.8259 19.9673 13.847 19.9216L14.2758 18.9931C14.7915 17.8768 15.9886 17.2171 17.2341 17.3464L18.2909 17.4561C18.3649 17.4638 18.4272 17.4423 18.4512 17.4166C19.2296 16.5828 19.8171 15.6146 20.1817 14.5716C20.1845 14.5636 20.1796 14.5373 20.1532 14.5029L19.5198 13.677C18.7564 12.6815 18.7564 11.3185 19.5198 10.323L20.1485 9.5033C20.1746 9.46927 20.1795 9.4429 20.1762 9.43327C19.9932 8.89965 19.7603 8.39623 19.4741 7.92293C19.1873 7.4489 18.846 7.00333 18.4517 6.58351C18.4272 6.55739 18.3656 6.53616 18.2921 6.54378L17.234 6.65361C15.9886 6.78287 14.7915 6.12317 14.2758 5.00689L13.8432 4.07027C13.822 4.02448 13.7811 3.9916 13.7406 3.98371C12.5983 3.76097 11.4132 3.76258 10.2571 3.99124C10.2158 3.99941 10.1744 4.03271 10.1533 4.07842L9.72441 5.00689C9.20875 6.12317 8.01164 6.7829 6.76619 6.6536L5.70942 6.54391C5.63535 6.53623 5.573 6.55774 5.54905 6.5834C4.77067 7.41713 4.18312 8.38534 3.81845 9.42835C3.81564 9.43637 3.82054 9.46265 3.84693 9.49706L4.48038 10.323C5.24381 11.3185 5.24383 12.6815 4.48041 13.6769L3.85171 14.4967C3.82561 14.5307 3.82066 14.5571 3.82396 14.5667C4.00701 15.1004 4.23986 15.6038 4.52613 16.0771C4.81284 16.5511 5.15421 16.9967 5.54845 17.4165C5.57298 17.4426 5.63461 17.4638 5.70811 17.4562L6.76608 17.3464C8.01157 17.2171 9.20871 17.8768 9.72438 18.9932L10.157 19.9297C10.1781 19.9755 10.2191 20.0084 10.2595 20.0163C11.4018 20.239 12.587 20.2374 13.7432 20.0088Z" fill="currentColor"/></svg>
-            <input type="password" placeholder="Password" aria-label="Password">
-          </div>
-          <button class="btn" id="loginBtn">Log in</button>
+          <div class="field"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 2.09961C18.1539 2.09961 19.9004 3.84609 19.9004 6V18C19.9004 20.1539 18.1539 21.9004 16 21.9004H8C5.84609 21.9004 4.09961 20.1539 4.09961 18V6C4.09961 3.84609 5.84609 2.09961 8 2.09961H16ZM8 3.90039C6.8402 3.90039 5.90039 4.8402 5.90039 6V18C5.90039 19.1598 6.8402 20.0996 8 20.0996H16C17.1598 20.0996 18.0996 19.1598 18.0996 18V6C18.0996 4.8402 17.1598 3.90039 16 3.90039H8Z" fill="currentColor"/><path d="M14 16.1006C14.497 16.1006 14.9003 16.503 14.9004 17C14.9004 17.497 14.497 17.9004 14 17.9004H10C9.50294 17.9004 9.09961 17.4971 9.09961 17C9.09966 16.503 9.50298 16.1006 10 16.1006H14Z" fill="currentColor"/></svg><input type="text" placeholder="Gmail or mobile number" aria-label="Email"></div>
+          <div class="field"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16.0404 12C16.0404 9.76874 14.2313 7.9596 12.0001 7.9596C9.76883 7.9596 7.95972 9.76874 7.95972 12C7.95972 14.2313 9.76883 16.0404 12.0001 16.0404C14.2313 16.0404 16.0404 14.2313 16.0404 12ZM14.2222 12C14.2222 13.2271 13.2271 14.2222 12 14.2222C10.7729 14.2222 9.77783 13.2271 9.77783 12C9.77783 10.7729 10.7729 9.77778 12 9.77778C13.2271 9.77778 14.2222 10.7729 14.2222 12Z" fill="currentColor"/><path d="M9.91145 21.8009C9.29001 21.6797 8.76914 21.2612 8.50632 20.6922L8.07372 19.7556C7.88838 19.3544 7.43553 19.1048 6.95371 19.1549L5.89572 19.2647C5.2733 19.3293 4.64823 19.114 4.22298 18.6611C3.74343 18.1504 3.32454 17.6037 2.97033 17.0181C2.61571 16.4318 2.32839 15.8106 2.10407 15.1566C1.89769 14.5549 2.02148 13.8954 2.4089 13.3902L3.0376 12.5704C3.30043 12.2277 3.30042 11.7722 3.03758 11.4295L2.40413 10.6035C2.01474 10.0958 1.891 9.43198 2.10208 8.82826C2.55037 7.54612 3.27017 6.35997 4.22 5.34259C4.64518 4.8872 5.27275 4.67067 5.89701 4.73544L6.95383 4.84514C7.43561 4.89515 7.88844 4.6456 8.07377 4.24441L8.50266 3.31593C8.76494 2.74818 9.28448 2.33019 9.90423 2.20761C11.2916 1.9332 12.7148 1.93127 14.0885 2.19913C14.7099 2.32029 15.2308 2.73881 15.4937 3.3078L15.9263 4.24441C16.1116 4.6456 16.5644 4.89514 17.0462 4.84514L18.1043 4.73532C18.7267 4.67072 19.3518 4.88603 19.777 5.33886C20.2566 5.84953 20.6755 6.3963 21.0297 6.98193C21.3843 7.56823 21.6716 8.18942 21.8959 8.84339C22.1023 9.44509 21.9785 10.1046 21.5911 10.6098L20.9624 11.4295C20.6996 11.7722 20.6996 12.2278 20.9624 12.5705L21.5959 13.3964C21.9853 13.9042 22.109 14.568 21.8979 15.1717C21.4497 16.4538 20.7299 17.6399 19.7801 18.6573C19.3549 19.1128 18.7273 19.3294 18.103 19.2646L17.0462 19.1549C16.5645 19.1049 16.1116 19.3544 15.9263 19.7556L15.4974 20.6841C15.2351 21.2518 14.7156 21.6698 14.0958 21.7924C12.7083 22.0668 11.2852 22.0687 9.91145 21.8009ZM13.7432 20.0088C13.7844 20.0006 13.8259 19.9673 13.847 19.9216L14.2758 18.9931C14.7915 17.8768 15.9886 17.2171 17.2341 17.3464L18.2909 17.4561C18.3649 17.4638 18.4272 17.4423 18.4512 17.4166C19.2296 16.5828 19.8171 15.6146 20.1817 14.5716C20.1845 14.5636 20.1796 14.5373 20.1532 14.5029L19.5198 13.677C18.7564 12.6815 18.7564 11.3185 19.5198 10.323L20.1485 9.5033C20.1746 9.46927 20.1795 9.4429 20.1762 9.43327C19.9932 8.89965 19.7603 8.39623 19.4741 7.92293C19.1873 7.4489 18.846 7.00333 18.4517 6.58351C18.4272 6.55739 18.3656 6.53616 18.2921 6.54378L17.234 6.65361C15.9886 6.78287 14.7915 6.12317 14.2758 5.00689L13.8432 4.07027C13.822 4.02448 13.7811 3.9916 13.7406 3.98371C12.5983 3.76097 11.4132 3.76258 10.2571 3.99124C10.2158 3.99941 10.1744 4.03271 10.1533 4.07842L9.72441 5.00689C9.20875 6.12317 8.01164 6.7829 6.76619 6.6536L5.70942 6.54391C5.63535 6.53623 5.573 6.55774 5.54905 6.5834C4.77067 7.41713 4.18312 8.38534 3.81845 9.42835C3.81564 9.43637 3.82054 9.46265 3.84693 9.49706L4.48038 10.323C5.24381 11.3185 5.24383 12.6815 4.48041 13.6769L3.85171 14.4967C3.82561 14.5307 3.82066 14.5571 3.82396 14.5667C4.00701 15.1004 4.23986 15.6038 4.52613 16.0771C4.81284 16.5511 5.15421 16.9967 5.54845 17.4165C5.57298 17.4426 5.63461 17.4638 5.70811 17.4562L6.76608 17.3464C8.01157 17.2171 9.20871 17.8768 9.72438 18.9932L10.157 19.9297C10.1781 19.9755 10.2191 20.0084 10.2595 20.0163C11.4018 20.239 12.587 20.2374 13.7432 20.0088Z" fill="currentColor"/></svg><input type="password" placeholder="Password" aria-label="Password"></div>
+          <button class="btn" id="focusLoginBtn">Log in</button>
           <div class="social-sep">or log in with</div>
-          <div class="social-row">
-            <button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#m2)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="m2"><rect width="24" height="24" fill="white"/></clipPath></defs></svg> Email</button>
-            <button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.5 19.5C15.5 19.5 14 18.2 14 16.5C14 14.8 15.5 13.5 17.5 13.5C19.5 13.5 21 14.8 21 16.5C21 18.2 19.5 19.5 17.5 19.5ZM6.5 19.5C4.5 19.5 3 18.2 3 16.5C3 14.8 4.5 13.5 6.5 13.5C8.5 13.5 10 14.8 10 16.5C10 18.2 8.5 19.5 6.5 19.5ZM12 13C9.8 13 8 11.2 8 9C8 6.8 9.8 5 12 5C14.2 5 16 6.8 16 9C16 11.2 14.2 13 12 13ZM12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11Z" fill="currentColor"/></svg> iCloud</button>
-          </div>
+          <div class="social-row"><button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#mm2)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="mm2"><rect width="24" height="24" fill="white"/></clipPath></defs></svg> Email</button><button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.5 19.5C15.5 19.5 14 18.2 14 16.5C14 14.8 15.5 13.5 17.5 13.5C19.5 13.5 21 14.8 21 16.5C21 18.2 19.5 19.5 17.5 19.5ZM6.5 19.5C4.5 19.5 3 18.2 3 16.5C3 14.8 4.5 13.5 6.5 13.5C8.5 13.5 10 14.8 10 16.5C10 18.2 8.5 19.5 6.5 19.5ZM12 13C9.8 13 8 11.2 8 9C8 6.8 9.8 5 12 5C14.2 5 16 6.8 16 9C16 11.2 14.2 13 12 13ZM12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11Z" fill="currentColor"/></svg> iCloud</button></div>
         </div>
       </div>
     </div>
-
-    <div class="footer-desc">
-      <p>By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
-      <p>Your data is encrypted end-to-end. We never share your information with third parties.</p>
-      <p>Need help? <a href="#">Contact support</a> or visit our <a href="#">Help Center</a>.</p>
-    </div>
   </div>
-</div>
 
-<!-- Modal overlay (hidden initially) -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal-card" id="modalCard">
-    <div class="tabs">
-      <button class="tab active" data-tab="0">Sign up</button>
-      <button class="tab" data-tab="1">Log in</button>
-    </div>
-    <div class="track" id="modalTrack">
-      <!-- Sign Up -->
-      <div class="panel">
-        <div class="field"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11.9997 12.8779C16.0197 12.878 19.4393 15.3848 20.7048 18.8828C21.0812 19.9234 20.2782 20.8962 19.2038 21.0137L18.9861 21.0264H5.0134L4.79562 21.0137C3.7213 20.8961 2.91743 19.9233 3.29367 18.8828C4.55905 15.3847 7.9797 12.8781 11.9997 12.8779ZM11.9997 14.6777C8.84467 14.6779 6.17462 16.5794 5.09152 19.2256H18.9079C17.8248 16.5793 15.1549 14.6778 11.9997 14.6777ZM12.2312 3.00586C14.6088 3.1264 16.4997 5.09239 16.4997 7.5L16.4939 7.73145C16.3734 10.1091 14.4073 11.9999 11.9997 12C9.59225 11.9998 7.62604 10.109 7.50558 7.73145L7.49973 7.5C7.49973 5.01485 9.51462 3.00021 11.9997 3L12.2312 3.00586ZM11.9997 4.7998C10.5087 4.80001 9.29953 6.00896 9.29953 7.5C9.29953 8.99104 10.5087 10.2 11.9997 10.2002C13.4908 10.2001 14.6999 8.99112 14.6999 7.5C14.6999 6.00888 13.4908 4.79989 11.9997 4.7998Z" fill="currentColor"/></svg><input type="text" placeholder="Full name" aria-label="Full name"></div>
-        <div class="field"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#mm)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="mm"><rect width="24" height="24" fill="white"/></clipPath></defs></svg><input type="email" placeholder="Email address" aria-label="Email address"></div>
-        <div class="field"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16.0404 12C16.0404 9.76874 14.2313 7.9596 12.0001 7.9596C9.76883 7.9596 7.95972 9.76874 7.95972 12C7.95972 14.2313 9.76883 16.0404 12.0001 16.0404C14.2313 16.0404 16.0404 14.2313 16.0404 12ZM14.2222 12C14.2222 13.2271 13.2271 14.2222 12 14.2222C10.7729 14.2222 9.77783 13.2271 9.77783 12C9.77783 10.7729 10.7729 9.77778 12 9.77778C13.2271 9.77778 14.2222 10.7729 14.2222 12Z" fill="currentColor"/><path d="M9.91145 21.8009C9.29001 21.6797 8.76914 21.2612 8.50632 20.6922L8.07372 19.7556C7.88838 19.3544 7.43553 19.1048 6.95371 19.1549L5.89572 19.2647C5.2733 19.3293 4.64823 19.114 4.22298 18.6611C3.74343 18.1504 3.32454 17.6037 2.97033 17.0181C2.61571 16.4318 2.32839 15.8106 2.10407 15.1566C1.89769 14.5549 2.02148 13.8954 2.4089 13.3902L3.0376 12.5704C3.30043 12.2277 3.30042 11.7722 3.03758 11.4295L2.40413 10.6035C2.01474 10.0958 1.891 9.43198 2.10208 8.82826C2.55037 7.54612 3.27017 6.35997 4.22 5.34259C4.64518 4.8872 5.27275 4.67067 5.89701 4.73544L6.95383 4.84514C7.43561 4.89515 7.88844 4.6456 8.07377 4.24441L8.50266 3.31593C8.76494 2.74818 9.28448 2.33019 9.90423 2.20761C11.2916 1.9332 12.7148 1.93127 14.0885 2.19913C14.7099 2.32029 15.2308 2.73881 15.4937 3.3078L15.9263 4.24441C16.1116 4.6456 16.5644 4.89514 17.0462 4.84514L18.1043 4.73532C18.7267 4.67072 19.3518 4.88603 19.777 5.33886C20.2566 5.84953 20.6755 6.3963 21.0297 6.98193C21.3843 7.56823 21.6716 8.18942 21.8959 8.84339C22.1023 9.44509 21.9785 10.1046 21.5911 10.6098L20.9624 11.4295C20.6996 11.7722 20.6996 12.2278 20.9624 12.5705L21.5959 13.3964C21.9853 13.9042 22.109 14.568 21.8979 15.1717C21.4497 16.4538 20.7299 17.6399 19.7801 18.6573C19.3549 19.1128 18.7273 19.3294 18.103 19.2646L17.0462 19.1549C16.5645 19.1049 16.1116 19.3544 15.9263 19.7556L15.4974 20.6841C15.2351 21.2518 14.7156 21.6698 14.0958 21.7924C12.7083 22.0668 11.2852 22.0687 9.91145 21.8009ZM13.7432 20.0088C13.7844 20.0006 13.8259 19.9673 13.847 19.9216L14.2758 18.9931C14.7915 17.8768 15.9886 17.2171 17.2341 17.3464L18.2909 17.4561C18.3649 17.4638 18.4272 17.4423 18.4512 17.4166C19.2296 16.5828 19.8171 15.6146 20.1817 14.5716C20.1845 14.5636 20.1796 14.5373 20.1532 14.5029L19.5198 13.677C18.7564 12.6815 18.7564 11.3185 19.5198 10.323L20.1485 9.5033C20.1746 9.46927 20.1795 9.4429 20.1762 9.43327C19.9932 8.89965 19.7603 8.39623 19.4741 7.92293C19.1873 7.4489 18.846 7.00333 18.4517 6.58351C18.4272 6.55739 18.3656 6.53616 18.2921 6.54378L17.234 6.65361C15.9886 6.78287 14.7915 6.12317 14.2758 5.00689L13.8432 4.07027C13.822 4.02448 13.7811 3.9916 13.7406 3.98371C12.5983 3.76097 11.4132 3.76258 10.2571 3.99124C10.2158 3.99941 10.1744 4.03271 10.1533 4.07842L9.72441 5.00689C9.20875 6.12317 8.01164 6.7829 6.76619 6.6536L5.70942 6.54391C5.63535 6.53623 5.573 6.55774 5.54905 6.5834C4.77067 7.41713 4.18312 8.38534 3.81845 9.42835C3.81564 9.43637 3.82054 9.46265 3.84693 9.49706L4.48038 10.323C5.24381 11.3185 5.24383 12.6815 4.48041 13.6769L3.85171 14.4967C3.82561 14.5307 3.82066 14.5571 3.82396 14.5667C4.00701 15.1004 4.23986 15.6038 4.52613 16.0771C4.81284 16.5511 5.15421 16.9967 5.54845 17.4165C5.57298 17.4426 5.63461 17.4638 5.70811 17.4562L6.76608 17.3464C8.01157 17.2171 9.20871 17.8768 9.72438 18.9932L10.157 19.9297C10.1781 19.9755 10.2191 20.0084 10.2595 20.0163C11.4018 20.239 12.587 20.2374 13.7432 20.0088Z" fill="currentColor"/></svg><input type="password" placeholder="Secure password" aria-label="Password"></div>
-        <button class="btn" id="modalSignupBtn">Create account</button>
-        <div class="social-sep">or sign up with</div>
-        <div class="social-row"><button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#mmm)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="mmm"><rect width="24" height="24" fill="white"/></clipPath></defs></svg> Email</button><button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.5 19.5C15.5 19.5 14 18.2 14 16.5C14 14.8 15.5 13.5 17.5 13.5C19.5 13.5 21 14.8 21 16.5C21 18.2 19.5 19.5 17.5 19.5ZM6.5 19.5C4.5 19.5 3 18.2 3 16.5C3 14.8 4.5 13.5 6.5 13.5C8.5 13.5 10 14.8 10 16.5C10 18.2 8.5 19.5 6.5 19.5ZM12 13C9.8 13 8 11.2 8 9C8 6.8 9.8 5 12 5C14.2 5 16 6.8 16 9C16 11.2 14.2 13 12 13ZM12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11Z" fill="currentColor"/></svg> iCloud</button></div>
-      </div>
-      <!-- Log In -->
-      <div class="panel">
-        <div class="field"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 2.09961C18.1539 2.09961 19.9004 3.84609 19.9004 6V18C19.9004 20.1539 18.1539 21.9004 16 21.9004H8C5.84609 21.9004 4.09961 20.1539 4.09961 18V6C4.09961 3.84609 5.84609 2.09961 8 2.09961H16ZM8 3.90039C6.8402 3.90039 5.90039 4.8402 5.90039 6V18C5.90039 19.1598 6.8402 20.0996 8 20.0996H16C17.1598 20.0996 18.0996 19.1598 18.0996 18V6C18.0996 4.8402 17.1598 3.90039 16 3.90039H8Z" fill="currentColor"/><path d="M14 16.1006C14.497 16.1006 14.9003 16.503 14.9004 17C14.9004 17.497 14.497 17.9004 14 17.9004H10C9.50294 17.9004 9.09961 17.4971 9.09961 17C9.09966 16.503 9.50298 16.1006 10 16.1006H14Z" fill="currentColor"/></svg><input type="text" placeholder="Gmail or mobile number" aria-label="Gmail or mobile number"></div>
-        <div class="field"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16.0404 12C16.0404 9.76874 14.2313 7.9596 12.0001 7.9596C9.76883 7.9596 7.95972 9.76874 7.95972 12C7.95972 14.2313 9.76883 16.0404 12.0001 16.0404C14.2313 16.0404 16.0404 14.2313 16.0404 12ZM14.2222 12C14.2222 13.2271 13.2271 14.2222 12 14.2222C10.7729 14.2222 9.77783 13.2271 9.77783 12C9.77783 10.7729 10.7729 9.77778 12 9.77778C13.2271 9.77778 14.2222 10.7729 14.2222 12Z" fill="currentColor"/><path d="M9.91145 21.8009C9.29001 21.6797 8.76914 21.2612 8.50632 20.6922L8.07372 19.7556C7.88838 19.3544 7.43553 19.1048 6.95371 19.1549L5.89572 19.2647C5.2733 19.3293 4.64823 19.114 4.22298 18.6611C3.74343 18.1504 3.32454 17.6037 2.97033 17.0181C2.61571 16.4318 2.32839 15.8106 2.10407 15.1566C1.89769 14.5549 2.02148 13.8954 2.4089 13.3902L3.0376 12.5704C3.30043 12.2277 3.30042 11.7722 3.03758 11.4295L2.40413 10.6035C2.01474 10.0958 1.891 9.43198 2.10208 8.82826C2.55037 7.54612 3.27017 6.35997 4.22 5.34259C4.64518 4.8872 5.27275 4.67067 5.89701 4.73544L6.95383 4.84514C7.43561 4.89515 7.88844 4.6456 8.07377 4.24441L8.50266 3.31593C8.76494 2.74818 9.28448 2.33019 9.90423 2.20761C11.2916 1.9332 12.7148 1.93127 14.0885 2.19913C14.7099 2.32029 15.2308 2.73881 15.4937 3.3078L15.9263 4.24441C16.1116 4.6456 16.5644 4.89514 17.0462 4.84514L18.1043 4.73532C18.7267 4.67072 19.3518 4.88603 19.777 5.33886C20.2566 5.84953 20.6755 6.3963 21.0297 6.98193C21.3843 7.56823 21.6716 8.18942 21.8959 8.84339C22.1023 9.44509 21.9785 10.1046 21.5911 10.6098L20.9624 11.4295C20.6996 11.7722 20.6996 12.2278 20.9624 12.5705L21.5959 13.3964C21.9853 13.9042 22.109 14.568 21.8979 15.1717C21.4497 16.4538 20.7299 17.6399 19.7801 18.6573C19.3549 19.1128 18.7273 19.3294 18.103 19.2646L17.0462 19.1549C16.5645 19.1049 16.1116 19.3544 15.9263 19.7556L15.4974 20.6841C15.2351 21.2518 14.7156 21.6698 14.0958 21.7924C12.7083 22.0668 11.2852 22.0687 9.91145 21.8009ZM13.7432 20.0088C13.7844 20.0006 13.8259 19.9673 13.847 19.9216L14.2758 18.9931C14.7915 17.8768 15.9886 17.2171 17.2341 17.3464L18.2909 17.4561C18.3649 17.4638 18.4272 17.4423 18.4512 17.4166C19.2296 16.5828 19.8171 15.6146 20.1817 14.5716C20.1845 14.5636 20.1796 14.5373 20.1532 14.5029L19.5198 13.677C18.7564 12.6815 18.7564 11.3185 19.5198 10.323L20.1485 9.5033C20.1746 9.46927 20.1795 9.4429 20.1762 9.43327C19.9932 8.89965 19.7603 8.39623 19.4741 7.92293C19.1873 7.4489 18.846 7.00333 18.4517 6.58351C18.4272 6.55739 18.3656 6.53616 18.2921 6.54378L17.234 6.65361C15.9886 6.78287 14.7915 6.12317 14.2758 5.00689L13.8432 4.07027C13.822 4.02448 13.7811 3.9916 13.7406 3.98371C12.5983 3.76097 11.4132 3.76258 10.2571 3.99124C10.2158 3.99941 10.1744 4.03271 10.1533 4.07842L9.72441 5.00689C9.20875 6.12317 8.01164 6.7829 6.76619 6.6536L5.70942 6.54391C5.63535 6.53623 5.573 6.55774 5.54905 6.5834C4.77067 7.41713 4.18312 8.38534 3.81845 9.42835C3.81564 9.43637 3.82054 9.46265 3.84693 9.49706L4.48038 10.323C5.24381 11.3185 5.24383 12.6815 4.48041 13.6769L3.85171 14.4967C3.82561 14.5307 3.82066 14.5571 3.82396 14.5667C4.00701 15.1004 4.23986 15.6038 4.52613 16.0771C4.81284 16.5511 5.15421 16.9967 5.54845 17.4165C5.57298 17.4426 5.63461 17.4638 5.70811 17.4562L6.76608 17.3464C8.01157 17.2171 9.20871 17.8768 9.72438 18.9932L10.157 19.9297C10.1781 19.9755 10.2191 20.0084 10.2595 20.0163C11.4018 20.239 12.587 20.2374 13.7432 20.0088Z" fill="currentColor"/></svg><input type="password" placeholder="Password" aria-label="Password"></div>
-        <button class="btn" id="modalLoginBtn">Log in</button>
-        <div class="social-sep">or log in with</div>
-        <div class="social-row"><button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><g clip-path="url(#mm2)"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 4.09961C20.1539 4.09961 21.9004 5.84609 21.9004 8V16C21.9004 18.1539 20.1539 19.9004 18 19.9004H6C3.84609 19.9004 2.09961 18.1539 2.09961 16V8C2.09961 5.84609 3.84609 4.09961 6 4.09961H18ZM3.90039 16C3.90039 17.1598 4.8402 18.0996 6 18.0996H18C19.1598 18.0996 20.0996 17.1598 20.0996 16V9.49805L13.5361 13.5361C12.5955 14.1147 11.4075 14.1084 10.4727 13.5205L3.90039 9.38672V16ZM6 5.90039C5.0746 5.90039 4.29039 6.49909 4.01074 7.33008L11.4316 11.9971C11.7861 12.2199 12.2361 12.2222 12.5928 12.0029L20.0195 7.43457C19.7725 6.54993 18.9636 5.90039 18 5.90039H6Z" fill="currentColor"/></g><defs><clipPath id="mm2"><rect width="24" height="24" fill="white"/></clipPath></defs></svg> Email</button><button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.5 19.5C15.5 19.5 14 18.2 14 16.5C14 14.8 15.5 13.5 17.5 13.5C19.5 13.5 21 14.8 21 16.5C21 18.2 19.5 19.5 17.5 19.5ZM6.5 19.5C4.5 19.5 3 18.2 3 16.5C3 14.8 4.5 13.5 6.5 13.5C8.5 13.5 10 14.8 10 16.5C10 18.2 8.5 19.5 6.5 19.5ZM12 13C9.8 13 8 11.2 8 9C8 6.8 9.8 5 12 5C14.2 5 16 6.8 16 9C16 11.2 14.2 13 12 13ZM12 11C13.1 11 14 10.1 14 9C14 7.9 13.1 7 12 7C10.9 7 10 7.9 10 9C10 10.1 10.9 11 12 11Z" fill="currentColor"/></svg> iCloud</button></div>
+  <!-- PURCHASE MODAL -->
+  <div class="purchase-modal-overlay" id="purchaseOverlay">
+    <div class="purchase-modal" id="purchaseModal">
+      <span class="pkg-icon" id="purchaseIcon">📦</span>
+      <h3 id="purchaseTitle">Package</h3>
+      <div class="price-tag" id="purchasePrice">0 <small>Birr</small></div>
+      <p id="purchaseDesc">Description goes here.</p>
+      <div class="actions">
+        <button class="btn btn-secondary" id="purchaseCancel">Cancel</button>
+        <button class="btn btn-accent" id="purchaseConfirm">✅ Confirm purchase</button>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-(function(){
-  const portal = document.getElementById('portal');
-  const c = document.getElementById('c');
-  const ctx = c.getContext('2d');
-  const wrap = document.getElementById('bubbleWrap');
-  const themeBtn = document.getElementById('themeBtn');
-  const iconMoon = document.getElementById('iconMoon');
-  const iconSun = document.getElementById('iconSun');
-  const card = document.getElementById('card');
-  const modalOverlay = document.getElementById('modalOverlay');
-  const modalCard = document.getElementById('modalCard');
+  <!-- ADMIN LOGIN (triggered by triple-tap on logo) -->
+  <div class="admin-login-overlay" id="adminLoginOverlay">
+    <div class="admin-login-box">
+      <h3>🔐 Admin access</h3>
+      <p class="sub">Enter the admin password to manage users</p>
+      <div class="field">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16.0404 12C16.0404 9.76874 14.2313 7.9596 12.0001 7.9596C9.76883 7.9596 7.95972 9.76874 7.95972 12C7.95972 14.2313 9.76883 16.0404 12.0001 16.0404C14.2313 16.0404 16.0404 14.2313 16.0404 12ZM14.2222 12C14.2222 13.2271 13.2271 14.2222 12 14.2222C10.7729 14.2222 9.77783 13.2271 9.77783 12C9.77783 10.7729 10.7729 9.77778 12 9.77778C13.2271 9.77778 14.2222 10.7729 14.2222 12Z" fill="currentColor"/><path d="M9.91145 21.8009C9.29001 21.6797 8.76914 21.2612 8.50632 20.6922L8.07372 19.7556C7.88838 19.3544 7.43553 19.1048 6.95371 19.1549L5.89572 19.2647C5.2733 19.3293 4.64823 19.114 4.22298 18.6611C3.74343 18.1504 3.32454 17.6037 2.97033 17.0181C2.61571 16.4318 2.32839 15.8106 2.10407 15.1566C1.89769 14.5549 2.02148 13.8954 2.4089 13.3902L3.0376 12.5704C3.30043 12.2277 3.30042 11.7722 3.03758 11.4295L2.40413 10.6035C2.01474 10.0958 1.891 9.43198 2.10208 8.82826C2.55037 7.54612 3.27017 6.35997 4.22 5.34259C4.64518 4.8872 5.27275 4.67067 5.89701 4.73544L6.95383 4.84514C7.43561 4.89515 7.88844 4.6456 8.07377 4.24441L8.50266 3.31593C8.76494 2.74818 9.28448 2.33019 9.90423 2.20761C11.2916 1.9332 12.7148 1.93127 14.0885 2.19913C14.7099 2.32029 15.2308 2.73881 15.4937 3.3078L15.9263 4.24441C16.1116 4.6456 16.5644 4.89514 17.0462 4.84514L18.1043 4.73532C18.7267 4.67072 19.3518 4.88603 19.777 5.33886C20.2566 5.84953 20.6755 6.3963 21.0297 6.98193C21.3843 7.56823 21.6716 8.18942 21.8959 8.84339C22.1023 9.44509 21.9785 10.1046 21.5911 10.6098L20.9624 11.4295C20.6996 11.7722 20.6996 12.2278 20.9624 12.5705L21.5959 13.3964C21.9853 13.9042 22.109 14.568 21.8979 15.1717C21.4497 16.4538 20.7299 17.6399 19.7801 18.6573C19.3549 19.1128 18.7273 19.3294 18.103 19.2646L17.0462 19.1549C16.5645 19.1049 16.1116 19.3544 15.9263 19.7556L15.4974 20.6841C15.2351 21.2518 14.7156 21.6698 14.0958 21.7924C12.7083 22.0668 11.2852 22.0687 9.91145 21.8009ZM13.7432 20.0088C13.7844 20.0006 13.8259 19.9673 13.847 19.9216L14.2758 18.9931C14.7915 17.8768 15.9886 17.2171 17.2341 17.3464L18.2909 17.4561C18.3649 17.4638 18.4272 17.4423 18.4512 17.4166C19.2296 16.5828 19.8171 15.6146 20.1817 14.5716C20.1845 14.5636 20.1796 14.5373 20.1532 14.5029L19.5198 13.677C18.7564 12.6815 18.7564 11.3185 19.5198 10.323L20.1485 9.5033C20.1746 9.46927 20.1795 9.4429 20.1762 9.43327C19.9932 8.89965 19.7603 8.39623 19.4741 7.92293C19.1873 7.4489 18.846 7.00333 18.4517 6.58351C18.4272 6.55739 18.3656 6.53616 18.2921 6.54378L17.234 6.65361C15.9886 6.78287 14.7915 6.12317 14.2758 5.00689L13.8432 4.07027C13.822 4.02448 13.7811 3.9916 13.7406 3.98371C12.5983 3.76097 11.4132 3.76258 10.2571 3.99124C10.2158 3.99941 10.1744 4.03271 10.1533 4.07842L9.72441 5.00689C9.20875 6.12317 8.01164 6.7829 6.76619 6.6536L5.70942 6.54391C5.63535 6.53623 5.573 6.55774 5.54905 6.5834C4.77067 7.41713 4.18312 8.38534 3.81845 9.42835C3.81564 9.43637 3.82054 9.46265 3.84693 9.49706L4.48038 10.323C5.24381 11.3185 5.24383 12.6815 4.48041 13.6769L3.85171 14.4967C3.82561 14.5307 3.82066 14.5571 3.82396 14.5667C4.00701 15.1004 4.23986 15.6038 4.52613 16.0771C4.81284 16.5511 5.15421 16.9967 5.54845 17.4165C5.57298 17.4426 5.63461 17.4638 5.70811 17.4562L6.76608 17.3464C8.01157 17.2171 9.20871 17.8768 9.72438 18.9932L10.157 19.9297C10.1781 19.9755 10.2191 20.0084 10.2595 20.0163C11.4018 20.239 12.587 20.2374 13.7432 20.0088Z" fill="currentColor"/></svg>
+        <input type="password" id="adminPassInput" placeholder="Admin password" aria-label="Admin password">
+      </div>
+      <button class="btn" id="adminLoginBtn">Unlock</button>
+      <div class="error" id="adminLoginError">Incorrect password</div>
+    </div>
+  </div>
 
-  let dark = true;
-  let w, h, dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const nodes = [];
-  const N = 55;
-  let mx = -1, my = -1, md = false;
+  <!-- ADMIN PANEL -->
+  <div class="admin-overlay" id="adminOverlay">
+    <div class="admin-panel" id="adminPanel">
+      <h2>👑 User management</h2>
+      <p class="sub">View registered users and their purchased packages</p>
+      <div class="user-list" id="userList">
+        <div class="empty-msg">No users yet</div>
+      </div>
+      <div class="add-user">
+        <input type="email" id="adminAddEmail" placeholder="Add user email...">
+        <button id="adminAddBtn">➕ Add</button>
+      </div>
+      <button class="close-admin" id="adminCloseBtn">Close panel</button>
+    </div>
+  </div>
 
-  function resize() {
-    w = portal.clientWidth;
-    h = portal.clientHeight;
-    c.width = w * dpr;
-    c.height = h * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
 
-    // Adjust node positions proportionally if resized
-    if (nodes.length) {
-      const scaleX = w / (c._prevW || w);
-      const scaleY = h / (c._prevH || h);
-      nodes.forEach(p => { p.x *= scaleX; p.y *= scaleY; });
-    }
-    c._prevW = w;
-    c._prevH = h;
+  <script>
+    (function() {
+      // ----- DATA -----
+      const PACKAGES = [{
+        id: 'bronze',
+        name: 'Bronze',
+        icon: 'fa-solid fa-medal',
+        price: 200,
+        desc: 'Entry-level yield generation. Perfect for starters.',
+        features: ['Basic analytics', '1x daily sync', 'Email support'],
+        color: 'var(--bronze)'
+      }, {
+        id: 'silver',
+        name: 'Silver',
+        icon: 'fa-solid fa-chess-queen',
+        price: 400,
+        desc: 'Step up your game with more power and control.',
+        features: ['Advanced analytics', '3x daily sync', 'Priority email support'],
+        color: 'var(--silver)'
+      }, {
+        id: 'gold',
+        name: 'Gold',
+        icon: 'fa-solid fa-crown',
+        price: 600,
+        desc: 'Premium performance for serious earners.',
+        features: ['Real-time insights', '5x daily sync', '24/7 chat support'],
+        color: 'var(--gold)'
+      }, {
+        id: 'platinum',
+        name: 'Platinum',
+        icon: 'fa-solid fa-gem',
+        price: 800,
+        desc: 'Elite-tier tools for maximum digital yield.',
+        features: ['AI-powered predictions', 'Unlimited sync', 'Dedicated account manager'],
+        color: 'var(--platinum)'
+      }, {
+        id: 'diamond',
+        name: 'Diamond',
+        icon: 'fa-solid fa-star',
+        price: 1000,
+        desc: 'The ultimate package. Full suite + exclusive perks.',
+        features: ['All features + custom strategies', 'Unlimited sync', 'VIP support + early access'],
+        color: 'var(--diamond)'
+      }];
 
-    // Generate nodes if first time
-    if (nodes.length < N) {
-      for (let i = 0; i < N; i++) {
-        nodes.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.6,
-          vy: (Math.random() - 0.5) * 0.6,
-          r: Math.random() * 2 + 1.5
+      const ADMIN_PASSWORD = 'admin123';
+      const STORAGE_KEY = 'abay_users';
+      const SESSION_KEY = 'abay_session';
+      const PURCHASES_KEY = 'abay_purchases';
+
+      // ----- STATE -----
+      let users = [];
+      let session = null;
+      let purchases = {};
+      let activePackageColor = null;
+
+      function loadData() {
+        try {
+          const rawUsers = localStorage.getItem(STORAGE_KEY);
+          users = rawUsers ? JSON.parse(rawUsers) : [];
+          const sess = localStorage.getItem(SESSION_KEY);
+          session = sess ? JSON.parse(sess) : null;
+          const rawPurchases = localStorage.getItem(PURCHASES_KEY);
+          purchases = rawPurchases ? JSON.parse(rawPurchases) : {};
+        } catch { users = [];
+          session = null;
+          purchases = {}; }
+        users = users.map(u => {
+          if (!u.password) u.password = 'default123';
+          return u;
+        });
+        saveData();
+      }
+
+      function saveData() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+        if (session) {
+          localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+        } else {
+          localStorage.removeItem(SESSION_KEY);
+        }
+        localStorage.setItem(PURCHASES_KEY, JSON.stringify(purchases));
+      }
+
+      function findUser(email) {
+        return users.find(u => u.email.toLowerCase() === email.toLowerCase());
+      }
+
+      function isLoggedIn() {
+        return session && findUser(session.email);
+      }
+
+      function getCurrentUser() {
+        if (!session) return null;
+        return findUser(session.email);
+      }
+
+      function getUserPurchases(email) {
+        return purchases[email] || [];
+      }
+
+      // ----- DOM refs -----
+      const portal = document.getElementById('portal');
+      const c = document.getElementById('c');
+      const ctx = c.getContext('2d');
+      const wrap = document.getElementById('bubbleWrap');
+      const themeBtn = document.getElementById('themeBtn');
+      const iconMoon = document.getElementById('iconMoon');
+      const iconSun = document.getElementById('iconSun');
+      const authCard = document.getElementById('authCard');
+      const authTrack = document.getElementById('authTrack');
+      const dashboard = document.getElementById('dashboard');
+      const dashEmail = document.getElementById('dashEmail');
+      const packageGrid = document.getElementById('packageGrid');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const userBadge = document.getElementById('userBadge');
+      const logoTrigger = document.getElementById('logoTrigger');
+
+      const signupName = document.getElementById('signupName');
+      const signupEmail = document.getElementById('signupEmail');
+      const signupPass = document.getElementById('signupPass');
+      const signupBtn = document.getElementById('signupBtn');
+      const loginEmail = document.getElementById('loginEmail');
+      const loginPass = document.getElementById('loginPass');
+      const loginBtn = document.getElementById('loginBtn');
+
+      // Focus modal
+      const focusOverlay = document.getElementById('focusModalOverlay');
+      const focusCard = document.getElementById('focusModalCard');
+      const focusTrack = document.getElementById('focusTrack');
+      const focusSignupBtn = document.getElementById('focusSignupBtn');
+      const focusLoginBtn = document.getElementById('focusLoginBtn');
+
+      // Purchase modal
+      const purchaseOverlay = document.getElementById('purchaseOverlay');
+      const purchaseModal = document.getElementById('purchaseModal');
+      const purchaseIcon = document.getElementById('purchaseIcon');
+      const purchaseTitle = document.getElementById('purchaseTitle');
+      const purchasePrice = document.getElementById('purchasePrice');
+      const purchaseDesc = document.getElementById('purchaseDesc');
+      const purchaseCancel = document.getElementById('purchaseCancel');
+      const purchaseConfirm = document.getElementById('purchaseConfirm');
+
+      // Admin
+      const adminLoginOverlay = document.getElementById('adminLoginOverlay');
+      const adminPassInput = document.getElementById('adminPassInput');
+      const adminLoginBtn = document.getElementById('adminLoginBtn');
+      const adminLoginError = document.getElementById('adminLoginError');
+      const adminOverlay = document.getElementById('adminOverlay');
+      const adminPanel = document.getElementById('adminPanel');
+      const userList = document.getElementById('userList');
+      const adminAddEmail = document.getElementById('adminAddEmail');
+      const adminAddBtn = document.getElementById('adminAddBtn');
+      const adminCloseBtn = document.getElementById('adminCloseBtn');
+
+      const toast = document.getElementById('toast');
+
+      // ----- TOAST -----
+      let toastTimer = null;
+
+      function showToast(msg, duration = 2800) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+      }
+
+      // ----- THEME -----
+      let dark = true;
+      themeBtn.addEventListener('click', () => {
+        dark = !dark;
+        document.documentElement.classList.toggle('light', !dark);
+        iconMoon.style.display = dark ? 'block' : 'none';
+        iconSun.style.display = dark ? 'none' : 'block';
+        themeBtn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+      });
+
+      // ----- CANVAS with dynamic colors -----
+      let w, h, dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const nodes = [];
+      const N = 55;
+      let mx = -1,
+        my = -1,
+        md = false;
+      let isPageVisible = true;
+
+      document.addEventListener('visibilitychange', () => {
+        isPageVisible = !document.hidden;
+      });
+
+      function resize() {
+        w = portal.clientWidth;
+        h = portal.clientHeight;
+        c.width = w * dpr;
+        c.height = h * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (nodes.length) {
+          const scaleX = w / (c._prevW || w);
+          const scaleY = h / (c._prevH || h);
+          nodes.forEach(p => { p.x *= scaleX;
+            p.y *= scaleY; });
+        }
+        c._prevW = w;
+        c._prevH = h;
+        if (nodes.length < N) {
+          for (let i = 0; i < N; i++) {
+            nodes.push({
+              x: Math.random() * w,
+              y: Math.random() * h,
+              vx: (Math.random() - 0.5) * 0.6,
+              vy: (Math.random() - 0.5) * 0.6,
+              r: Math.random() * 2 + 1.5
+            });
+          }
+        }
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      let scrollYOffset = 0;
+      portal.addEventListener('scroll', () => {
+        scrollYOffset = portal.scrollTop;
+        wrap.classList.toggle('scrolled', scrollYOffset > 8);
+      });
+
+      function handleMove(x, y) { mx = x;
+        my = y + scrollYOffset; }
+      c.addEventListener('touchstart', e => { md = true;
+        handleMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+      c.addEventListener('touchmove', e => { if (md) handleMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+      c.addEventListener('touchend', () => { md = false;
+        mx = -1; });
+      c.addEventListener('mousedown', e => { md = true;
+        handleMove(e.clientX, e.clientY); });
+      c.addEventListener('mousemove', e => { if (md) handleMove(e.clientX, e.clientY); });
+      c.addEventListener('mouseup', () => { md = false;
+        mx = -1; });
+
+      function loop() {
+        if (isPageVisible) {
+          ctx.clearRect(0, 0, w, h);
+          const rs = getComputedStyle(document.documentElement);
+          let nodeColor = rs.getPropertyValue('--p-node').trim();
+          let lineColor = rs.getPropertyValue('--p-line').trim();
+
+          // If a package is hovered/selected, shift colors
+          if (activePackageColor) {
+            const temp = document.createElement('div');
+            temp.style.color = activePackageColor;
+            document.body.appendChild(temp);
+            const computed = getComputedStyle(temp).color;
+            document.body.removeChild(temp);
+            // Use the computed color with alpha
+            const alpha = 0.6;
+            nodeColor = computed.replace(')', ', ' + alpha + ')').replace('rgb', 'rgba');
+            lineColor = computed.replace(')', ', 0.18)').replace('rgb', 'rgba');
+          }
+
+          for (let i = 0; i < N; i++) {
+            const p = nodes[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0) p.x += w;
+            if (p.x > w) p.x -= w;
+            if (p.y < 0) p.y += h;
+            if (p.y > h) p.y -= h;
+            const displayY = (p.y - scrollYOffset * 0.4) % h;
+            const fy = displayY < 0 ? displayY + h : displayY;
+            if (md && mx >= 0) {
+              const dx = mx - p.x;
+              const dy = (my - scrollYOffset) - p.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < 120) {
+                ctx.beginPath();
+                ctx.moveTo(mx, my - scrollYOffset);
+                ctx.lineTo(p.x, fy);
+                ctx.strokeStyle = lineColor;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+              }
+            }
+            for (let j = i + 1; j < N; j++) {
+              const q = nodes[j];
+              const qDisplayY = (q.y - scrollYOffset * 0.4) % h;
+              const qy = qDisplayY < 0 ? qDisplayY + h : qDisplayY;
+              const dx = p.x - q.x;
+              const dy = fy - qy;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < 100) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, fy);
+                ctx.lineTo(q.x, qy);
+                ctx.strokeStyle = lineColor;
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+              }
+            }
+            ctx.beginPath();
+            ctx.arc(p.x, fy, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = nodeColor;
+            ctx.fill();
+          }
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
+
+      // ----- TABS (auth card) -----
+      function setupTabs(tabsContainer, trackElement) {
+        const tabs = tabsContainer.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const index = tab.dataset.tab;
+            trackElement.style.transform = index === '0' ? 'translateX(0)' : 'translateX(-50%)';
+          });
         });
       }
-    }
-  }
+      setupTabs(authCard, authTrack);
+      setupTabs(focusCard, focusTrack);
 
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Scroll-driven parallax offset
-  let scrollYOffset = 0;
-  portal.addEventListener('scroll', () => {
-    const s = portal.scrollTop;
-    scrollYOffset = s;
-    wrap.classList.toggle('scrolled', s > 8);
-  });
-
-  // Mouse / touch interaction
-  function handleMove(x, y) {
-    mx = x;
-    my = y + scrollYOffset;
-  }
-  c.addEventListener('touchstart', e => { md = true; handleMove(e.touches[0].clientX, e.touches[0].clientY); }, {passive:true});
-  c.addEventListener('touchmove', e => { if(md) handleMove(e.touches[0].clientX, e.touches[0].clientY); }, {passive:true});
-  c.addEventListener('touchend', () => { md = false; mx = -1; });
-  c.addEventListener('mousedown', e => { md = true; handleMove(e.clientX, e.clientY); });
-  c.addEventListener('mousemove', e => { if(md) handleMove(e.clientX, e.clientY); });
-  c.addEventListener('mouseup', () => { md = false; mx = -1; });
-
-  function loop() {
-    ctx.clearRect(0, 0, w, h);
-    const rs = getComputedStyle(document.documentElement);
-    const nodeColor = rs.getPropertyValue('--p-node').trim();
-    const lineColor = rs.getPropertyValue('--p-line').trim();
-
-    // Draw nodes with scroll parallax
-    for (let i = 0; i < N; i++) {
-      const p = nodes[i];
-      // Update positions
-      p.x += p.vx;
-      p.y += p.vy;
-
-      // Wrap around viewport
-      if (p.x < 0) p.x += w;
-      if (p.x > w) p.x -= w;
-      if (p.y < 0) p.y += h;
-      if (p.y > h) p.y -= h;
-
-      // Display y with parallax
-      const displayY = (p.y - scrollYOffset * 0.4) % h;
-      const fy = displayY < 0 ? displayY + h : displayY;
-
-      // Mouse interaction lines
-      if (md && mx >= 0) {
-        const dx = mx - p.x;
-        const dy = (my - scrollYOffset) - p.y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.moveTo(mx, my - scrollYOffset);
-          ctx.lineTo(p.x, fy);
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = 1;
-          ctx.stroke();
+      // ----- FOCUS MODAL (input popup) -----
+      function openFocusModal(input) {
+        focusOverlay.classList.add('active');
+        // match the tab state from the main card
+        const activeTab = authCard.querySelector('.tab.active');
+        if (activeTab) {
+          const index = activeTab.dataset.tab;
+          const focusTabs = focusCard.querySelectorAll('.tab');
+          focusTabs.forEach((t, i) => {
+            t.classList.toggle('active', i === parseInt(index));
+          });
+          focusTrack.style.transform = index === '0' ? 'translateX(0)' : 'translateX(-50%)';
         }
+        // focus the corresponding input
+        setTimeout(() => {
+          const placeholder = input.placeholder;
+          const target = focusCard.querySelector(`input[placeholder="${placeholder}"]`);
+          if (target) target.focus();
+        }, 200);
       }
 
-      // Inter-node connections
-      for (let j = i+1; j < N; j++) {
-        const q = nodes[j];
-        const qDisplayY = (q.y - scrollYOffset * 0.4) % h;
-        const qy = qDisplayY < 0 ? qDisplayY + h : qDisplayY;
-
-        const dx = p.x - q.x;
-        const dy = fy - qy;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 100) {
-          ctx.beginPath();
-          ctx.moveTo(p.x, fy);
-          ctx.lineTo(q.x, qy);
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-        }
+      function closeFocusModal() {
+        focusOverlay.classList.remove('active');
       }
 
-      ctx.beginPath();
-      ctx.arc(p.x, fy, p.r, 0, Math.PI*2);
-      ctx.fillStyle = nodeColor;
-      ctx.fill();
-    }
-
-    requestAnimationFrame(loop);
-  }
-  loop();
-
-  // Theme toggle
-  themeBtn.addEventListener('click', () => {
-    dark = !dark;
-    document.documentElement.classList.toggle('light', !dark);
-    iconMoon.style.display = dark ? 'block' : 'none';
-    iconSun.style.display = dark ? 'none' : 'block';
-    themeBtn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
-  });
-
-  // Tab switching (both cards share classes, we'll manage both)
-  function setupTabs(tabsContainer, trackElement) {
-    const tabs = tabsContainer.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        const index = tab.dataset.tab;
-        trackElement.style.transform = index === '0' ? 'translateX(0)' : 'translateX(-50%)';
+      // Trigger focus modal from main card inputs
+      authCard.querySelectorAll('.field input').forEach(inp => {
+        inp.addEventListener('focus', () => openFocusModal(inp));
       });
-    });
-  }
-  setupTabs(card, document.getElementById('track'));
-  setupTabs(modalCard, document.getElementById('modalTrack'));
 
-  // Modal open on input focus
-  const allInputs = document.querySelectorAll('.card input, .modal-card input');
-  const modalInputs = modalCard.querySelectorAll('input');
+      focusOverlay.addEventListener('click', (e) => {
+        if (e.target === focusOverlay) closeFocusModal();
+      });
 
-  let modalActive = false;
-  let lastActiveInput = null;
+      // Focus modal buttons
+      focusSignupBtn.addEventListener('click', () => {
+        const name = focusCard.querySelector('.panel:first-child input[placeholder="Full name"]').value;
+        const email = focusCard.querySelector('.panel:first-child input[placeholder="Email address"]').value;
+        const pass = focusCard.querySelector('.panel:first-child input[placeholder="Secure password"]').value;
+        if (loginUser(email, pass, name)) closeFocusModal();
+      });
 
-  function openModal(input) {
-    if (modalActive) return;
-    modalActive = true;
-    portal.classList.add('no-scroll');
-    document.body.classList.add('modal-active');
-    modalOverlay.classList.add('active');
-    // Focus the corresponding input inside modal
-    const type = input.placeholder || '';
-    const modalInput = Array.from(modalInputs).find(inp => inp.placeholder === type);
-    if (modalInput) setTimeout(() => modalInput.focus(), 150);
-    lastActiveInput = input;
-  }
+      focusLoginBtn.addEventListener('click', () => {
+        const email = focusCard.querySelector('.panel:last-child input[placeholder="Gmail or mobile number"]').value;
+        const pass = focusCard.querySelector('.panel:last-child input[placeholder="Password"]').value;
+        if (loginUser(email, pass)) closeFocusModal();
+      });
 
-  function closeModal() {
-    if (!modalActive) return;
-    modalActive = false;
-    modalOverlay.classList.remove('active');
-    portal.classList.remove('no-scroll');
-    document.body.classList.remove('modal-active');
-    if (lastActiveInput) lastActiveInput.blur();
-    lastActiveInput = null;
-  }
+      // ----- AUTH -----
+      function renderDashboard() {
+        const user = getCurrentUser();
+        if (!user) return;
+        authCard.classList.add('hidden');
+        dashboard.classList.add('visible');
+        dashEmail.textContent = '👤 ' + user.email + (user.name ? ' (' + user.name + ')' : '');
+        userBadge.textContent = '· ' + user.email;
+        renderPackages();
+      }
 
-  // Focus on any input in the normal card opens modal
-  card.querySelectorAll('input').forEach(inp => {
-    inp.addEventListener('focus', () => openModal(inp));
-  });
+      function renderPackages() {
+        packageGrid.innerHTML = '';
+        PACKAGES.forEach(pkg => {
+          const card = document.createElement('div');
+          card.className = 'package-card ' + pkg.id;
+          card.innerHTML = `
+            <div class="badge">${pkg.id === 'diamond' ? 'BEST' : pkg.id === 'gold' ? 'POPULAR' : ''}</div>
+            <div class="icon"><i class="${pkg.icon}" style="color:${pkg.color}; font-size:2.4rem;"></i></div>
+            <h3>${pkg.name}</h3>
+            <div class="price">${pkg.price} <small>Birr</small></div>
+            <div class="features">${pkg.features.map(f => '<span>✓ ' + f + '</span>').join('')}</div>
+            <button class="purchase-btn" data-package="${pkg.id}">Purchase</button>
+          `;
+          // Hover effect for canvas
+          card.addEventListener('mouseenter', () => {
+            activePackageColor = pkg.color;
+          });
+          card.addEventListener('mouseleave', () => {
+            activePackageColor = null;
+          });
+          packageGrid.appendChild(card);
+        });
+        document.querySelectorAll('.purchase-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.package;
+            const pkg = PACKAGES.find(p => p.id === id);
+            if (pkg) openPurchaseModal(pkg);
+          });
+        });
+      }
 
-  // Focus on modal inputs should not re-trigger
-  modalInputs.forEach(inp => {
-    inp.addEventListener('focus', () => {
-      // already open, nothing needed
-    });
-  });
+      function showAuth() {
+        authCard.classList.remove('hidden');
+        dashboard.classList.remove('visible');
+        userBadge.textContent = '';
+        activePackageColor = null;
+      }
 
-  // Close modal when clicking backdrop
-  modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) closeModal();
-  });
+      function loginUser(email, password, name) {
+        const existing = findUser(email);
+        if (existing) {
+          if (existing.password !== password) {
+            showToast('❌ Incorrect password');
+            return false;
+          }
+          session = { email: email.toLowerCase(), loggedInAt: Date.now() };
+          saveData();
+          renderDashboard();
+          showToast('✅ Welcome back, ' + (existing.name || email) + '!');
+          return true;
+        } else {
+          if (!name || name.trim() === '') {
+            showToast('❌ Please enter your full name');
+            return false;
+          }
+          if (password.length < 4) {
+            showToast('❌ Password must be at least 4 characters');
+            return false;
+          }
+          const newUser = { email: email.toLowerCase(), password, name: name.trim(), createdAt: Date.now() };
+          users.push(newUser);
+          session = { email: email.toLowerCase(), loggedInAt: Date.now() };
+          saveData();
+          renderDashboard();
+          showToast('🎉 Account created! Welcome, ' + name.trim() + '!');
+          return true;
+        }
+      }
 
-  // Close modal on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modalActive) closeModal();
-  });
+      function logout() {
+        session = null;
+        saveData();
+        showAuth();
+        showToast('👋 Signed out');
+      }
 
-  // Form submission feedback (placeholder)
-  document.getElementById('signupBtn').addEventListener('click', () => alert('Sign up triggered'));
-  document.getElementById('loginBtn').addEventListener('click', () => alert('Log in triggered'));
-  document.getElementById('modalSignupBtn').addEventListener('click', () => alert('Sign up triggered'));
-  document.getElementById('modalLoginBtn').addEventListener('click', () => alert('Log in triggered'));
-})();
-</script>
+      signupBtn.addEventListener('click', () => {
+        const name = signupName.value.trim();
+        const email = signupEmail.value.trim();
+        const pass = signupPass.value;
+        if (!email || !pass) {
+          showToast('❌ Please fill in all fields');
+          return;
+        }
+        loginUser(email, pass, name);
+      });
+
+      loginBtn.addEventListener('click', () => {
+        const email = loginEmail.value.trim();
+        const pass = loginPass.value;
+        if (!email || !pass) {
+          showToast('❌ Please fill in all fields');
+          return;
+        }
+        const user = findUser(email);
+        if (!user) {
+          showToast('❌ No account found with that email');
+          return;
+        }
+        if (user.password !== pass) {
+          showToast('❌ Incorrect password');
+          return;
+        }
+        session = { email: email.toLowerCase(), loggedInAt: Date.now() };
+        saveData();
+        renderDashboard();
+        showToast('✅ Welcome back, ' + (user.name || email) + '!');
+      });
+
+      [signupName, signupEmail, signupPass].forEach(inp => {
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') signupBtn.click(); });
+      });
+      [loginEmail, loginPass].forEach(inp => {
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') loginBtn.click(); });
+      });
+
+      logoutBtn.addEventListener('click', logout);
+
+      // ----- PURCHASE MODAL -----
+      let selectedPackage = null;
+
+      function openPurchaseModal(pkg) {
+        selectedPackage = pkg;
+        purchaseIcon.innerHTML = `<i class="${pkg.icon}" style="color:${pkg.color}; font-size:3.2rem;"></i>`;
+        purchaseTitle.textContent = pkg.name + ' Package';
+        purchasePrice.innerHTML = pkg.price + ' <small>Birr</small>';
+        purchaseDesc.textContent = pkg.desc;
+        purchaseOverlay.classList.add('active');
+        // pulse canvas with package color
+        activePackageColor = pkg.color;
+        setTimeout(() => { activePackageColor = null; }, 800);
+      }
+
+      function closePurchaseModal() {
+        purchaseOverlay.classList.remove('active');
+        selectedPackage = null;
+      }
+
+      purchaseCancel.addEventListener('click', closePurchaseModal);
+      purchaseOverlay.addEventListener('click', e => {
+        if (e.target === purchaseOverlay) closePurchaseModal();
+      });
+
+      purchaseConfirm.addEventListener('click', () => {
+        if (!selectedPackage) return;
+        const user = getCurrentUser();
+        if (!user) {
+          showToast('❌ Please log in first');
+          closePurchaseModal();
+          return;
+        }
+        const key = user.email;
+        if (!purchases[key]) purchases[key] = [];
+        purchases[key].push({ packageId: selectedPackage.id, price: selectedPackage.price, purchasedAt: Date.now() });
+        saveData();
+        showToast('✅ You purchased the ' + selectedPackage.name + ' package for ' + selectedPackage.price + ' Birr!');
+        closePurchaseModal();
+      });
+
+      // ----- ADMIN (triple-tap on logo) -----
+      let tapCount = 0;
+      let tapTimer = null;
+
+      logoTrigger.addEventListener('click', () => {
+        tapCount++;
+        if (tapCount === 1) {
+          tapTimer = setTimeout(() => { tapCount = 0; }, 400);
+        } else if (tapCount === 3) {
+          clearTimeout(tapTimer);
+          tapCount = 0;
+          adminLoginOverlay.classList.add('active');
+          adminPassInput.value = '';
+          adminLoginError.classList.remove('show');
+          adminPassInput.focus();
+        }
+      });
+
+      adminLoginBtn.addEventListener('click', () => {
+        const pass = adminPassInput.value;
+        if (pass === ADMIN_PASSWORD) {
+          adminLoginOverlay.classList.remove('active');
+          openAdminPanel();
+          showToast('🔓 Admin unlocked');
+        } else {
+          adminLoginError.classList.add('show');
+          adminPassInput.value = '';
+          adminPassInput.focus();
+        }
+      });
+
+      adminPassInput.addEventListener('keydown', e => { if (e.key === 'Enter') adminLoginBtn.click(); });
+
+      function openAdminPanel() {
+        renderUserList();
+        adminOverlay.classList.add('active');
+      }
+
+      function closeAdminPanel() {
+        adminOverlay.classList.remove('active');
+      }
+
+      adminCloseBtn.addEventListener('click', closeAdminPanel);
+      adminOverlay.addEventListener('click', e => {
+        if (e.target === adminOverlay) closeAdminPanel();
+      });
+
+      function renderUserList() {
+        userList.innerHTML = '';
+        if (users.length === 0) {
+          userList.innerHTML = '<div class="empty-msg">No users yet</div>';
+          return;
+        }
+        users.forEach(u => {
+          const div = document.createElement('div');
+          div.className = 'user-item';
+          const isSelf = session && session.email === u.email;
+          const userPurchases = getUserPurchases(u.email);
+          let packagesHtml = '';
+          if (userPurchases.length === 0) {
+            packagesHtml = '<span style="color:var(--text-tertiary);font-size:12px;">No purchases</span>';
+          } else {
+            packagesHtml = userPurchases.map(p => {
+              const pkg = PACKAGES.find(pk => pk.id === p.packageId);
+              return (pkg ? '<i class="' + pkg.icon + '" style="font-size:12px;"></i> ' + pkg.name : p
+                .packageId) + ' (' + p.price + ' Birr)';
+            }).join(', ');
+          }
+          div.innerHTML = `
+            <span class="email">${u.email} ${isSelf ? '⭐' : ''}</span>
+            <div class="packages"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:inline;vertical-align:middle;margin-right:4px;" xmlns="http://www.w3.org/2000/svg"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" fill="currentColor"/></svg> ${packagesHtml}</div>
+            <button class="remove-btn" data-email="${u.email}">✕</button>
+          `;
+          userList.appendChild(div);
+        });
+        userList.querySelectorAll('.remove-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const email = btn.dataset.email;
+            if (session && session.email === email) {
+              showToast('❌ Cannot remove your own account while logged in');
+              return;
+            }
+            if (confirm('Remove user "' + email + '"?')) {
+              users = users.filter(u => u.email !== email);
+              delete purchases[email];
+              if (session && session.email === email) {
+                session = null;
+                saveData();
+                showAuth();
+                closeAdminPanel();
+                showToast('👋 You removed your own account');
+                return;
+              }
+              saveData();
+              renderUserList();
+              showToast('🗑️ Removed ' + email);
+            }
+          });
+        });
+      }
+
+      adminAddBtn.addEventListener('click', () => {
+        const email = adminAddEmail.value.trim();
+        if (!email) {
+          showToast('❌ Enter an email address');
+          return;
+        }
+        if (findUser(email)) {
+          showToast('❌ User already exists');
+          return;
+        }
+        const name = email.split('@')[0];
+        users.push({ email: email.toLowerCase(), password: 'default123', name: name, createdAt: Date.now() });
+        saveData();
+        adminAddEmail.value = '';
+        renderUserList();
+        showToast('✅ Added ' + email + ' (default password: default123)');
+      });
+
+      adminAddEmail.addEventListener('keydown', e => { if (e.key === 'Enter') adminAddBtn.click(); });
+
+      // ----- AUTO-LOGIN -----
+      loadData();
+      if (isLoggedIn()) {
+        renderDashboard();
+      } else {
+        showAuth();
+      }
+
+      // ----- ESC -----
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          if (focusOverlay.classList.contains('active')) closeFocusModal();
+          if (purchaseOverlay.classList.contains('active')) closePurchaseModal();
+          if (adminOverlay.classList.contains('active')) closeAdminPanel();
+          if (adminLoginOverlay.classList.contains('active')) {
+            adminLoginOverlay.classList.remove('active');
+            adminLoginError.classList.remove('show');
+          }
+        }
+      });
+
+      console.log('🚀 Abay Tech ready!');
+      console.log('📦 Packages:', PACKAGES);
+      console.log('👥 Users:', users.length);
+      console.log('🔑 Admin password: ' + ADMIN_PASSWORD);
+      console.log('💡 Triple-tap the "Abay Tech" logo to access admin.');
+    })();
+  </script>
 </body>
-</html>
+  </html>

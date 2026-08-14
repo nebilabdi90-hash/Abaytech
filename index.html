@@ -174,6 +174,15 @@
         .video-card .body .meta .like-container:active { transform: scale(0.92); transition: var(--transition-active); }
         .video-card .body .meta .like-container i { font-size: 16px; }
 
+        /* ===== VIDEO MODAL ===== */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
+        .modal-overlay.active { display: flex; }
+        .modal-content { position: relative; width: 90%; max-width: 800px; background: var(--bg-app); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-heavy); padding: 20px; }
+        .modal-close { position: absolute; top: 10px; right: 15px; font-size: 28px; color: var(--text-muted); cursor: pointer; transition: var(--transition-hover); background: none; border: none; z-index: 10; }
+        .modal-close:hover { color: var(--gold); transform: scale(1.1); }
+        #modalVideoContainer { width: 100%; display: flex; justify-content: center; }
+        #modalVideoContainer iframe, #modalVideoContainer video { width: 100%; max-height: 450px; border-radius: 8px; border: none; background: #000; }
+
         .admin-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 22px; background: var(--bg-glass); padding: 6px; border-radius: 12px; border: 1px solid var(--border-color); backdrop-filter: blur(4px); }
         .admin-tabs button { padding: 10px 22px; border: none; border-radius: 8px; background: transparent; color: var(--text-muted); cursor: pointer; font-weight: 600; font-size: 13px; transition: var(--transition-hover); flex: 1; min-width: 80px; touch-action: manipulation; }
         .admin-tabs button.active { background: var(--gold); color: #0a0f0e; box-shadow: 0 4px 12px rgba(212, 160, 23, 0.15); }
@@ -228,6 +237,8 @@
             .user-badge .email { max-width: 60px; } .admin-tabs button { font-size: 11px; padding: 8px 10px; min-width: 50px; }
             .video-grid { grid-template-columns: 1fr; } .payment-options, .payment-form { padding: 16px; }
             .back-btn, .theme-toggle { width: 34px; height: 34px; font-size: 14px; }
+            .modal-content { width: 95%; padding: 10px; }
+            #modalVideoContainer iframe, #modalVideoContainer video { max-height: 250px; }
         }
         .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
         .empty-state i { font-size: 56px; margin-bottom: 16px; opacity: 0.4; color: var(--gold); }
@@ -243,6 +254,14 @@
 
     <div class="loader-overlay" id="globalLoader"><div class="spinner"></div></div>
     <div id="toast"><i class="fas fa-info-circle"></i><span class="msg">Message</span></div>
+
+    <!-- ===== VIDEO MODAL ===== -->
+    <div class="modal-overlay" id="videoModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div id="modalVideoContainer"></div>
+        </div>
+    </div>
 
     <div id="app">
         <header class="app-header">
@@ -415,6 +434,16 @@
                         <label>Payment Amount (ETB)</label><input type="number" id="paymentAmount" value="500" />
                         <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Save Settings</button>
                     </form>
+                    <hr style="border-color:var(--border-color); margin: 20px 0;" />
+                    <h4 style="margin-bottom:12px;">Sync Database Across Devices</h4>
+                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Export the current database to a .json file and import it on another browser/device.</p>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn-primary" id="exportDbBtn" style="width:auto; padding:10px 20px;"><i class="fas fa-download"></i> Export Data</button>
+                        <div style="flex:1;">
+                            <label for="importDbInput" class="btn-primary" style="display:block; text-align:center; padding:10px 20px; cursor:pointer; width:100%;"><i class="fas fa-upload"></i> Import Data</label>
+                            <input type="file" id="importDbInput" accept=".json" style="display:none;" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -494,6 +523,62 @@
                 document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.toggle('active', b.dataset.cat === state.selectedCategory));
             };
 
+            // ==================== IN-APP VIDEO PLAYER ====================
+            function dataURLtoBlob(dataurl) {
+                var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                while(n--){ u8arr[n] = bstr.charCodeAt(n); }
+                return new Blob([u8arr], {type:mime});
+            }
+
+            function openVideoModal(url, fileData) {
+                const modal = $('videoModal');
+                const container = $('modalVideoContainer');
+                container.innerHTML = '';
+
+                if (fileData) {
+                    // Direct file upload (Base64)
+                    const blob = dataURLtoBlob(fileData);
+                    const blobUrl = URL.createObjectURL(blob);
+                    const videoEl = document.createElement('video');
+                    videoEl.src = blobUrl;
+                    videoEl.controls = true;
+                    videoEl.autoplay = true;
+                    container.appendChild(videoEl);
+                } else if (url) {
+                    // YouTube / Vimeo / Direct Link
+                    let embedUrl = url;
+                    // Convert standard youtube links to embed links
+                    if (url.includes('watch?v=')) {
+                        const vidId = url.split('v=')[1]?.split('&')[0];
+                        if (vidId) embedUrl = `https://www.youtube.com/embed/${vidId}`;
+                    } else if (url.includes('youtu.be/')) {
+                        const vidId = url.split('youtu.be/')[1]?.split('?')[0];
+                        if (vidId) embedUrl = `https://www.youtube.com/embed/${vidId}`;
+                    }
+                    const iframe = document.createElement('iframe');
+                    iframe.src = embedUrl;
+                    iframe.allowFullscreen = true;
+                    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                    container.appendChild(iframe);
+                }
+                modal.classList.add('active');
+            }
+
+            $('modalClose').addEventListener('click', () => {
+                const container = $('modalVideoContainer');
+                container.innerHTML = ''; // Stop video playback
+                $('videoModal').classList.remove('active');
+            });
+            $('videoModal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) {
+                    const container = $('modalVideoContainer');
+                    container.innerHTML = '';
+                    $('videoModal').classList.remove('active');
+                }
+            });
+
+            // ==================== GALLERY RENDER ====================
             const renderVideoGrid = (category = state.selectedCategory) => {
                 const container = $('videoGrid');
                 const videos = DB.getVideos(category);
@@ -539,26 +624,14 @@
                         const video = DB._data.videos.find(v => v.id === this.dataset.id);
                         if (!video) { toast('Video not found.', 'error'); return; }
                         
-                        // Check access
                         if (!video.isFree && (!state.user || state.user.paymentStatus !== 'approved')) {
                             toast('Please complete payment to unlock premium videos.', 'error');
                             navigate('payment');
                             return;
                         }
 
-                        // Determine URL to open
-                        let videoUrl = video.url;
-                        if (video.fileData) {
-                            // If it's a stored file (Base64), create a blob URL and open it
-                            const blob = dataURLtoBlob(video.fileData);
-                            videoUrl = URL.createObjectURL(blob);
-                        }
-                        
-                        if (videoUrl) {
-                            window.open(videoUrl, '_blank');
-                        } else {
-                            toast('Video URL not available.', 'error');
-                        }
+                        // Play Video In-App instead of redirecting
+                        openVideoModal(video.url, video.fileData);
                     });
                 });
                 container.querySelectorAll('.like-container').forEach(btn => {
@@ -576,14 +649,7 @@
                 });
             };
 
-            // Helper to convert Base64 to Blob
-            function dataURLtoBlob(dataurl) {
-                var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-                    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-                while(n--){ u8arr[n] = bstr.charCodeAt(n); }
-                return new Blob([u8arr], {type:mime});
-            }
-
+            // ==================== ADMIN FUNCTIONS ====================
             const renderAdminVideos = () => {
                 const c = $('adminVideoList');
                 const vids = DB._data.videos.slice().sort((a, b) => b.createdAt - a.createdAt);
@@ -645,22 +711,16 @@
                 c.querySelectorAll('.kick-user').forEach(b => b.addEventListener('click', function() {
                     const id = this.dataset.id;
                     if (!confirm('Are you sure you want to kick (delete) this user?')) return;
-                    
                     const u = DB._data.users.find(u => u.id === id);
                     if (!u) return;
-                    
-                    // Remove from database
                     DB._data.users = DB._data.users.filter(user => user.id !== id);
                     DB.save();
-                    
-                    // If the admin kicks the currently logged-in user, force logout immediately
                     if (state.user && state.user.id === id) {
                         toast('Your account has been removed by the admin.', 'error');
                         handleLogout(); 
                     } else {
                         toast(`User ${u.email} has been kicked.`, 'info');
                     }
-                    
                     renderAdminUsers();
                     renderAdminPayments();
                 }));
@@ -740,9 +800,9 @@
                 $('authFooterLogin').classList.toggle('hidden', !isLogin);
             };
 
+            // ==================== AUTHENTICATION ====================
             const handleRegister = (email, password) => {
                 showLoader();
-                // Simulate network delay smoothly
                 setTimeout(() => {
                     if (!email || !password || password.length < 6) { toast('Invalid email or password (min 6 chars).', 'error'); hideLoader(); return; }
                     if (DB.getUser(email)) { toast('This email is already registered. Please login.', 'error'); hideLoader(); return; }
@@ -800,6 +860,52 @@
                 }, 400);
             };
 
+            // ==================== EXPORT / IMPORT ====================
+            function exportDatabase() {
+                const dataStr = JSON.stringify(DB._data, null, 2);
+                const blob = new Blob([dataStr], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ethiohub_backup_${new Date().toISOString().slice(0,10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                toast('Database exported successfully!', 'success');
+            }
+
+            function importDatabase(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (!importedData.users || !importedData.videos || !importedData.payments || !importedData.settings) {
+                            toast('Invalid backup file.', 'error');
+                            return;
+                        }
+                        DB._data = importedData;
+                        // Fix current session
+                        if (state.user) {
+                            const freshUser = DB.getUser(state.user.email);
+                            if (freshUser) state.user = freshUser;
+                            else {
+                                state.user = null;
+                                DB._data.currentUser = null;
+                            }
+                        }
+                        DB.save();
+                        toast('Database imported successfully! Reloading UI...', 'success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } catch (err) {
+                        toast('Failed to parse the backup file.', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
+
             const init = () => {
                 applyTheme(DB._data.theme || 'dark');
                 const saved = DB._data.currentUser;
@@ -815,12 +921,13 @@
                 navigate('register'); updateUserBadge(); renderVideoGrid(); renderCategoryTabs();
             };
 
-            // Auth Event Listeners
+            // ==================== EVENT LISTENERS ====================
             document.querySelectorAll('.auth-switch button').forEach(b => b.addEventListener('click', function() { toggleAuthMode(this.dataset.mode === 'login'); }));
             $('switchToLogin').addEventListener('click', () => toggleAuthMode(true));
             $('switchToRegister').addEventListener('click', () => toggleAuthMode(false));
             toggleAuthMode(false);
 
+            // Fix: Added explicit block to prevent default and handle empty fields instantly
             $('authForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 if (state.isLoginMode) { 
@@ -846,7 +953,6 @@
             $('logoutBtn').addEventListener('click', handleLogout);
             $('themeToggle').addEventListener('click', toggleTheme);
 
-            // Navigation Events
             $('backBtn').addEventListener('click', () => {
                 if (state.currentPage === 'payment' || state.currentPage === 'profile') navigate('gallery');
                 else navigate('register');
@@ -860,7 +966,6 @@
                 if (e.target.id === 'profilePayBtn' || e.target.closest('#profilePayBtn')) navigate('payment');
             });
 
-            // Payment Events
             document.querySelectorAll('.payment-method').forEach(el => el.addEventListener('click', function() {
                 document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
                 this.classList.add('selected'); state.paymentMethod = this.dataset.method;
@@ -876,12 +981,10 @@
                 if (name) toast('Screenshot attached: ' + name, 'info');
             });
 
-            // Gallery Events
             document.querySelectorAll('#categoryTabs button').forEach(b => b.addEventListener('click', function() {
                 state.selectedCategory = this.dataset.cat; renderCategoryTabs(); renderVideoGrid(state.selectedCategory);
             }));
 
-            // Admin Events
             document.querySelectorAll('#adminTabs button').forEach(b => b.addEventListener('click', function() {
                 const tab = this.dataset.tab; state.adminTab = tab;
                 document.querySelectorAll('#adminTabs button').forEach(bb => bb.classList.remove('active'));
@@ -893,7 +996,6 @@
                 if (tab === 'payments') renderAdminPayments();
             }));
 
-            // Add Video (with File Upload Support)
             $('showAddVideoForm').addEventListener('click', function() {
                 const wrap = $('addVideoFormWrap');
                 wrap.classList.toggle('hidden');
@@ -914,10 +1016,9 @@
 
                     if (!title) { toast('Title is required.', 'error'); hideLoader(); return; }
                     
-                    // Handle File Upload vs URL
                     if (fileInput.files && fileInput.files[0]) {
                         const file = fileInput.files[0];
-                        if (file.size > 20 * 1024 * 1024) { // 20MB limit for localStorage
+                        if (file.size > 20 * 1024 * 1024) { 
                             toast('File is too large. Please use a URL or a smaller file (under 20MB).', 'error'); hideLoader(); return;
                         }
                         const reader = new FileReader();
@@ -939,7 +1040,7 @@
             function saveVideo(title, desc, category, url, thumb, isFree, fileData, fileName) {
                 const video = { 
                     id: uid(), title, description: desc, category, url, thumbnail: thumb, isFree, likes: [], duration: '00:00', 
-                    fileData: fileData, // store Base64 string
+                    fileData: fileData, 
                     createdAt: Date.now() 
                 };
                 DB._data.videos.push(video);
@@ -953,7 +1054,6 @@
                 hideLoader();
             }
 
-            // Admin Add User
             $('addUserForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const email = $('newUserEmail').value.trim();
@@ -968,7 +1068,15 @@
                 toast(`User ${email} created successfully.`, 'success');
             });
 
-            // Admin Settings (Dynamic Payment Control)
+            // ===== EXPORT / IMPORT EVENTS =====
+            $('exportDbBtn').addEventListener('click', exportDatabase);
+            $('importDbInput').addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    importDatabase(this.files[0]);
+                }
+                this.value = '';
+            });
+
             const loadSettings = () => {
                 $('siteTitle').value = settings.siteTitle || 'Ethio Hub';
                 $('siteTagline').value = settings.siteTagline || 'Premium Videos & Training';
@@ -988,10 +1096,9 @@
                 settings.paymentAmount = parseFloat($('paymentAmount').value) || 500;
                 DB.save();
                 toast('Settings saved!', 'success');
-                loadSettings(); // Refresh the UI
+                loadSettings(); 
             });
 
-            // Check Status for Payment Pending
             document.addEventListener('click', (e) => {
                 if (e.target.id === 'checkStatusBtn') {
                     const u = DB.getUser(state.user.email);

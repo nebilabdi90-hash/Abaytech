@@ -174,14 +174,13 @@
         .video-card .body .meta .like-container:active { transform: scale(0.92); transition: var(--transition-active); }
         .video-card .body .meta .like-container i { font-size: 16px; }
 
-        /* ===== VIDEO MODAL ===== */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
         .modal-overlay.active { display: flex; }
         .modal-content { position: relative; width: 90%; max-width: 800px; background: var(--bg-app); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-heavy); padding: 20px; }
         .modal-close { position: absolute; top: 10px; right: 15px; font-size: 28px; color: var(--text-muted); cursor: pointer; transition: var(--transition-hover); background: none; border: none; z-index: 10; }
         .modal-close:hover { color: var(--gold); transform: scale(1.1); }
-        #modalVideoContainer { width: 100%; display: flex; justify-content: center; }
-        #modalVideoContainer iframe, #modalVideoContainer video { width: 100%; max-height: 450px; border-radius: 8px; border: none; background: #000; }
+        #modalVideoContainer { width: 100%; display: flex; justify-content: center; background: #000; border-radius: 8px; min-height: 200px; }
+        #modalVideoContainer iframe, #modalVideoContainer video { width: 100%; max-height: 450px; border-radius: 8px; border: none; }
 
         .admin-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 22px; background: var(--bg-glass); padding: 6px; border-radius: 12px; border: 1px solid var(--border-color); backdrop-filter: blur(4px); }
         .admin-tabs button { padding: 10px 22px; border: none; border-radius: 8px; background: transparent; color: var(--text-muted); cursor: pointer; font-weight: 600; font-size: 13px; transition: var(--transition-hover); flex: 1; min-width: 80px; touch-action: manipulation; }
@@ -255,7 +254,6 @@
     <div class="loader-overlay" id="globalLoader"><div class="spinner"></div></div>
     <div id="toast"><i class="fas fa-info-circle"></i><span class="msg">Message</span></div>
 
-    <!-- ===== VIDEO MODAL ===== -->
     <div class="modal-overlay" id="videoModal">
         <div class="modal-content">
             <button class="modal-close" id="modalClose">&times;</button>
@@ -392,7 +390,7 @@
                             <label>Category</label><select id="videoCategory"><option value="exclusive">Exclusive Hub</option><option value="training">Training</option></select>
                             
                             <div class="file-input-group">
-                                <label style="margin:0; display:flex; align-items:center; gap:8px; color:var(--text-main);"><i class="fas fa-upload"></i> Upload Video File:</label>
+                                <label style="margin:0; display:flex; align-items:center; gap:8px; color:var(--text-main);"><i class="fas fa-upload"></i> Upload Video File (Up to 1GB):</label>
                                 <input type="file" id="videoFile" accept="video/*" />
                             </div>
                             
@@ -436,7 +434,7 @@
                     </form>
                     <hr style="border-color:var(--border-color); margin: 20px 0;" />
                     <h4 style="margin-bottom:12px;">Sync Database Across Devices</h4>
-                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Export the current database to a .json file and import it on another browser/device.</p>
+                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Export the current database to a .json file and import it on another browser/device. (This is the only way to sync large files across devices without a backend server).</p>
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
                         <button class="btn-primary" id="exportDbBtn" style="width:auto; padding:10px 20px;"><i class="fas fa-download"></i> Export Data</button>
                         <div style="flex:1;">
@@ -467,15 +465,92 @@
             const showLoader = () => $('globalLoader').classList.add('active');
             const hideLoader = () => $('globalLoader').classList.remove('active');
 
+            // ==================== INDEXED DB LAYER ====================
+            // Replacing localStorage with IndexedDB for large file storage (up to 1GB+)
+            const DB_NAME = 'EthioHubDB';
+            const STORE_NAME = 'mainStore';
+            
+            const idb = {
+                _db: null,
+                async open() {
+                    if (this._db) return this._db;
+                    return new Promise((resolve, reject) => {
+                        const request = indexedDB.open(DB_NAME, 1);
+                        request.onerror = () => reject(request.error);
+                        request.onsuccess = () => {
+                            this._db = request.result;
+                            resolve(this._db);
+                        };
+                        request.onupgradeneeded = (evt) => {
+                            const db = evt.target.result;
+                            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                                db.createObjectStore(STORE_NAME);
+                            }
+                        };
+                    });
+                },
+                async get(key) {
+                    const db = await this.open();
+                    return new Promise((resolve, reject) => {
+                        const tx = db.transaction(STORE_NAME, 'readonly');
+                        const store = tx.objectStore(STORE_NAME);
+                        const req = store.get(key);
+                        req.onsuccess = () => resolve(req.result);
+                        req.onerror = () => reject(req.error);
+                    });
+                },
+                async set(key, value) {
+                    const db = await this.open();
+                    return new Promise((resolve, reject) => {
+                        const tx = db.transaction(STORE_NAME, 'readwrite');
+                        const store = tx.objectStore(STORE_NAME);
+                        const req = store.put(value, key);
+                        req.onsuccess = () => resolve();
+                        req.onerror = () => reject(req.error);
+                    });
+                },
+                async delete(key) {
+                    const db = await this.open();
+                    return new Promise((resolve, reject) => {
+                        const tx = db.transaction(STORE_NAME, 'readwrite');
+                        const store = tx.objectStore(STORE_NAME);
+                        const req = store.delete(key);
+                        req.onsuccess = () => resolve();
+                        req.onerror = () => reject(req.error);
+                    });
+                }
+            };
+
+            // ==================== DATABASE MANAGEMENT ====================
             const DB = {
                 _data: null,
-                load() {
-                    const raw = localStorage.getItem('ethiohub_data');
-                    if (raw) { try { this._data = JSON.parse(raw); } catch(e) { this._data = null; } }
-                    if (!this._data) { this._data = this.defaults(); this.save(); }
-                    return this._data;
+                async load() {
+                    try {
+                        const raw = await idb.get('ethiohub_data');
+                        if (raw) {
+                            this._data = raw;
+                        } else {
+                            this._data = this.defaults();
+                            await this.save();
+                        }
+                        return this._data;
+                    } catch (e) {
+                        console.error("IndexedDB error, falling back to local storage", e);
+                        // Fallback to localStorage if IndexedDB fails (rare)
+                        const raw = localStorage.getItem('ethiohub_data');
+                        if (raw) { try { this._data = JSON.parse(raw); } catch(e) { this._data = null; } }
+                        if (!this._data) { this._data = this.defaults(); }
+                        return this._data;
+                    }
                 },
-                save() { localStorage.setItem('ethiohub_data', JSON.stringify(this._data)); },
+                async save() {
+                    try {
+                        await idb.set('ethiohub_data', this._data);
+                    } catch (e) {
+                        // Fallback to localStorage
+                        localStorage.setItem('ethiohub_data', JSON.stringify(this._data));
+                    }
+                },
                 defaults() {
                     return {
                         users: [{ id: 'admin_' + uid(), email: 'admin@ethiohub.com', password: 'admin123', role: 'admin', verified: true, approved: true, paymentStatus: 'approved', txnId: 'ADMIN_SETUP', createdAt: Date.now() }],
@@ -499,8 +574,11 @@
             };
 
             let state = { user: null, currentPage: 'register', selectedCategory: 'all', adminTab: 'videos', paymentMethod: 'telebirr', isLoginMode: false };
-            const data = DB.load();
-            const settings = data.settings;
+            
+            // Initialize Database
+            let data = null;
+            let settings = null;
+
             const pages = { register: $('page-register'), profile: $('page-profile'), payment: $('page-payment'), gallery: $('page-gallery'), admin: $('page-admin') };
 
             const navigate = (page) => {
@@ -523,51 +601,59 @@
                 document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.toggle('active', b.dataset.cat === state.selectedCategory));
             };
 
-            // ==================== IN-APP VIDEO PLAYER ====================
             function dataURLtoBlob(dataurl) {
+                if (!dataurl) return null;
                 var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
                     bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
                 while(n--){ u8arr[n] = bstr.charCodeAt(n); }
                 return new Blob([u8arr], {type:mime});
             }
 
-            function openVideoModal(url, fileData) {
+            function openVideoModal(videoId) {
+                const video = DB._data.videos.find(v => v.id === videoId);
+                if (!video) { toast('Video not found.', 'error'); return; }
+                
                 const modal = $('videoModal');
                 const container = $('modalVideoContainer');
                 container.innerHTML = '';
 
-                if (fileData) {
-                    // Direct file upload (Base64)
-                    const blob = dataURLtoBlob(fileData);
+                if (video.fileData) {
+                    // Direct file upload stored as Base64/DataURL
+                    const blob = dataURLtoBlob(video.fileData);
+                    if (!blob) { toast('Failed to load video blob.', 'error'); return; }
                     const blobUrl = URL.createObjectURL(blob);
                     const videoEl = document.createElement('video');
                     videoEl.src = blobUrl;
                     videoEl.controls = true;
                     videoEl.autoplay = true;
+                    videoEl.style.width = '100%';
                     container.appendChild(videoEl);
-                } else if (url) {
+                } else if (video.url) {
                     // YouTube / Vimeo / Direct Link
-                    let embedUrl = url;
-                    // Convert standard youtube links to embed links
-                    if (url.includes('watch?v=')) {
-                        const vidId = url.split('v=')[1]?.split('&')[0];
+                    let embedUrl = video.url;
+                    if (embedUrl.includes('watch?v=')) {
+                        const vidId = embedUrl.split('v=')[1]?.split('&')[0];
                         if (vidId) embedUrl = `https://www.youtube.com/embed/${vidId}`;
-                    } else if (url.includes('youtu.be/')) {
-                        const vidId = url.split('youtu.be/')[1]?.split('?')[0];
+                    } else if (embedUrl.includes('youtu.be/')) {
+                        const vidId = embedUrl.split('youtu.be/')[1]?.split('?')[0];
                         if (vidId) embedUrl = `https://www.youtube.com/embed/${vidId}`;
                     }
                     const iframe = document.createElement('iframe');
                     iframe.src = embedUrl;
                     iframe.allowFullscreen = true;
                     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                    iframe.style.width = '100%';
+                    iframe.style.height = '450px';
                     container.appendChild(iframe);
+                } else {
+                    toast('No video source found.', 'error');
                 }
                 modal.classList.add('active');
             }
 
             $('modalClose').addEventListener('click', () => {
                 const container = $('modalVideoContainer');
-                container.innerHTML = ''; // Stop video playback
+                container.innerHTML = '';
                 $('videoModal').classList.remove('active');
             });
             $('videoModal').addEventListener('click', (e) => {
@@ -579,8 +665,9 @@
             });
 
             // ==================== GALLERY RENDER ====================
-            const renderVideoGrid = (category = state.selectedCategory) => {
+            const renderVideoGrid = async (category = state.selectedCategory) => {
                 const container = $('videoGrid');
+                // DB is synchronous after load, but ensure we use data
                 const videos = DB.getVideos(category);
                 if (!videos.length) {
                     container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-film"></i><h3>No content yet</h3><p>Check back soon for premium videos.</p></div>`;
@@ -621,8 +708,8 @@
                 container.querySelectorAll('.video-card').forEach(el => {
                     el.addEventListener('click', function(e) {
                         if (e.target.closest('.like-container')) return;
-                        const video = DB._data.videos.find(v => v.id === this.dataset.id);
-                        if (!video) { toast('Video not found.', 'error'); return; }
+                        const id = this.dataset.id;
+                        const video = DB._data.videos.find(v => v.id === id);
                         
                         if (!video.isFree && (!state.user || state.user.paymentStatus !== 'approved')) {
                             toast('Please complete payment to unlock premium videos.', 'error');
@@ -630,12 +717,12 @@
                             return;
                         }
 
-                        // Play Video In-App instead of redirecting
-                        openVideoModal(video.url, video.fileData);
+                        // Play Video In-App
+                        openVideoModal(id);
                     });
                 });
                 container.querySelectorAll('.like-container').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
+                    btn.addEventListener('click', async function(e) {
                         e.stopPropagation();
                         if (!state.user) { toast('Please login to like videos.', 'error'); return; }
                         const video = DB._data.videos.find(v => v.id === this.dataset.id);
@@ -643,7 +730,7 @@
                         if (!video.likes) video.likes = [];
                         const idx = video.likes.indexOf(state.user.id);
                         idx > -1 ? video.likes.splice(idx, 1) : video.likes.push(state.user.id);
-                        DB.save();
+                        await DB.save();
                         renderVideoGrid(state.selectedCategory);
                     });
                 });
@@ -663,10 +750,16 @@
                         <td class="actions"><button class="approve edit-video" data-id="${v.id}"><i class="fas fa-edit"></i></button><button class="del delete-video" data-id="${v.id}"><i class="fas fa-trash"></i></button></td>
                     </tr>`).join('')}
                 </tbody></table>`;
-                c.querySelectorAll('.delete-video').forEach(b => b.addEventListener('click', function() {
-                    if (confirm('Delete this video?')) { DB._data.videos = DB._data.videos.filter(v => v.id !== this.dataset.id); DB.save(); renderAdminVideos(); renderVideoGrid(); toast('Video deleted', 'success'); }
+                c.querySelectorAll('.delete-video').forEach(b => b.addEventListener('click', async function() {
+                    if (confirm('Delete this video?')) { 
+                        DB._data.videos = DB._data.videos.filter(v => v.id !== this.dataset.id); 
+                        await DB.save(); 
+                        renderAdminVideos(); 
+                        renderVideoGrid(); 
+                        toast('Video deleted', 'success'); 
+                    }
                 }));
-                c.querySelectorAll('.edit-video').forEach(b => b.addEventListener('click', function() {
+                c.querySelectorAll('.edit-video').forEach(b => b.addEventListener('click', async function() {
                     const v = DB._data.videos.find(v => v.id === this.dataset.id);
                     if (!v) return;
                     const t = prompt('Edit title:', v.title);
@@ -674,7 +767,10 @@
                     const d = prompt('Edit description:', v.description || '');
                     if (d !== null) v.description = d.trim();
                     v.isFree = confirm('Mark as Free? (OK=Yes, Cancel=No)');
-                    DB.save(); renderAdminVideos(); renderVideoGrid(); toast('Video updated', 'success');
+                    await DB.save(); 
+                    renderAdminVideos(); 
+                    renderVideoGrid(); 
+                    toast('Video updated', 'success');
                 }));
             };
 
@@ -700,21 +796,21 @@
                     }).join('')}
                 </tbody></table>`;
                 
-                c.querySelectorAll('.approve-user').forEach(b => b.addEventListener('click', function() {
+                c.querySelectorAll('.approve-user').forEach(b => b.addEventListener('click', async function() {
                     const u = DB._data.users.find(u => u.id === this.dataset.id);
-                    if (u) { u.paymentStatus = 'approved'; u.approved = true; DB.save(); renderAdminUsers(); renderAdminPayments(); toast(`Approved ${u.email}`, 'success'); }
+                    if (u) { u.paymentStatus = 'approved'; u.approved = true; await DB.save(); renderAdminUsers(); renderAdminPayments(); toast(`Approved ${u.email}`, 'success'); }
                 }));
-                c.querySelectorAll('.reject-user').forEach(b => b.addEventListener('click', function() {
+                c.querySelectorAll('.reject-user').forEach(b => b.addEventListener('click', async function() {
                     const u = DB._data.users.find(u => u.id === this.dataset.id);
-                    if (u) { u.paymentStatus = 'rejected'; u.approved = false; DB.save(); renderAdminUsers(); renderAdminPayments(); toast(`Rejected ${u.email}`, 'error'); }
+                    if (u) { u.paymentStatus = 'rejected'; u.approved = false; await DB.save(); renderAdminUsers(); renderAdminPayments(); toast(`Rejected ${u.email}`, 'error'); }
                 }));
-                c.querySelectorAll('.kick-user').forEach(b => b.addEventListener('click', function() {
+                c.querySelectorAll('.kick-user').forEach(b => b.addEventListener('click', async function() {
                     const id = this.dataset.id;
                     if (!confirm('Are you sure you want to kick (delete) this user?')) return;
                     const u = DB._data.users.find(u => u.id === id);
                     if (!u) return;
                     DB._data.users = DB._data.users.filter(user => user.id !== id);
-                    DB.save();
+                    await DB.save();
                     if (state.user && state.user.id === id) {
                         toast('Your account has been removed by the admin.', 'error');
                         handleLogout(); 
@@ -736,13 +832,13 @@
                         <td class="actions"><button class="approve approve-payment" data-id="${p.id}"><i class="fas fa-check"></i></button><button class="reject reject-payment" data-id="${p.id}"><i class="fas fa-times"></i></button></td>
                     </tr>`).join('')}
                 </tbody></table>`;
-                c.querySelectorAll('.approve-payment').forEach(b => b.addEventListener('click', function() {
+                c.querySelectorAll('.approve-payment').forEach(b => b.addEventListener('click', async function() {
                     const pay = DB._data.payments.find(p => p.id === this.dataset.id);
-                    if (pay) { pay.status = 'approved'; const u = DB.getUser(pay.email); if (u) { u.paymentStatus = 'approved'; u.approved = true; } DB.save(); renderAdminPayments(); renderAdminUsers(); toast('Payment approved!', 'success'); }
+                    if (pay) { pay.status = 'approved'; const u = DB.getUser(pay.email); if (u) { u.paymentStatus = 'approved'; u.approved = true; } await DB.save(); renderAdminPayments(); renderAdminUsers(); toast('Payment approved!', 'success'); }
                 }));
-                c.querySelectorAll('.reject-payment').forEach(b => b.addEventListener('click', function() {
+                c.querySelectorAll('.reject-payment').forEach(b => b.addEventListener('click', async function() {
                     const pay = DB._data.payments.find(p => p.id === this.dataset.id);
-                    if (pay) { pay.status = 'rejected'; const u = DB.getUser(pay.email); if (u) { u.paymentStatus = 'rejected'; u.approved = false; } DB.save(); renderAdminPayments(); renderAdminUsers(); toast('Payment rejected.', 'error'); }
+                    if (pay) { pay.status = 'rejected'; const u = DB.getUser(pay.email); if (u) { u.paymentStatus = 'rejected'; u.approved = false; } await DB.save(); renderAdminPayments(); renderAdminUsers(); toast('Payment rejected.', 'error'); }
                 }));
             };
 
@@ -801,14 +897,17 @@
             };
 
             // ==================== AUTHENTICATION ====================
-            const handleRegister = (email, password) => {
+            const handleRegister = async (email, password) => {
                 showLoader();
-                setTimeout(() => {
+                setTimeout(async () => {
                     if (!email || !password || password.length < 6) { toast('Invalid email or password (min 6 chars).', 'error'); hideLoader(); return; }
                     if (DB.getUser(email)) { toast('This email is already registered. Please login.', 'error'); hideLoader(); return; }
                     const user = { id: uid(), email: email.trim(), password: password.trim(), role: 'user', verified: true, approved: false, paymentStatus: 'pending', txnId: '', createdAt: Date.now() };
-                    DB._data.users.push(user); DB.save();
-                    state.user = user; DB._data.currentUser = user; DB.save();
+                    DB._data.users.push(user); 
+                    await DB.save();
+                    state.user = user; 
+                    DB._data.currentUser = user; 
+                    await DB.save();
                     updateUserBadge();
                     navigate('gallery'); renderVideoGrid(); renderCategoryTabs();
                     toast('Account registered! Please pay to unlock premium videos.', 'info');
@@ -816,13 +915,15 @@
                 }, 250);
             };
 
-            const handleLogin = (email, password) => {
+            const handleLogin = async (email, password) => {
                 showLoader();
-                setTimeout(() => {
+                setTimeout(async () => {
                     const user = DB.getUser(email);
                     if (!user) { toast('Account not found.', 'error'); hideLoader(); return; }
                     if (user.password !== password) { toast('Incorrect password.', 'error'); hideLoader(); return; }
-                    state.user = user; DB._data.currentUser = user; DB.save();
+                    state.user = user; 
+                    DB._data.currentUser = user; 
+                    await DB.save();
                     updateUserBadge(); toast(`Welcome back, ${user.email}!`, 'success');
                     if (user.role === 'admin') { navigate('admin'); renderAllAdmin(); } 
                     else { navigate('gallery'); renderVideoGrid(); renderCategoryTabs(); }
@@ -830,17 +931,20 @@
                 }, 250);
             };
 
-            const handleLogout = () => {
-                state.user = null; DB._data.currentUser = null; DB.save();
+            const handleLogout = async () => {
+                state.user = null; 
+                DB._data.currentUser = null; 
+                await DB.save();
                 updateUserBadge(); navigate('register'); toast('Logged out successfully.', 'info');
             };
 
-            const handlePaymentSubmit = (txnId, notes, method) => {
+            const handlePaymentSubmit = async (txnId, notes, method) => {
                 if (!txnId.trim() || !state.user) { toast('Invalid transaction ID or session.', 'error'); return; }
                 showLoader();
-                setTimeout(() => {
+                setTimeout(async () => {
                     DB._data.payments.push({ id: uid(), userId: state.user.id, email: state.user.email, method, txnId: txnId.trim(), notes: notes.trim(), screenshot: '', status: 'pending', createdAt: Date.now() });
-                    state.user.paymentStatus = 'pending'; DB.save();
+                    state.user.paymentStatus = 'pending'; 
+                    await DB.save();
                     toast('Payment submitted! Admin will review shortly.', 'success');
                     $('paymentForm').reset();
                     document.querySelector('.payment-form').innerHTML = `
@@ -861,7 +965,7 @@
             };
 
             // ==================== EXPORT / IMPORT ====================
-            function exportDatabase() {
+            async function exportDatabase() {
                 const dataStr = JSON.stringify(DB._data, null, 2);
                 const blob = new Blob([dataStr], { type: "application/json" });
                 const url = URL.createObjectURL(blob);
@@ -875,9 +979,9 @@
                 toast('Database exported successfully!', 'success');
             }
 
-            function importDatabase(file) {
+            async function importDatabase(file) {
                 const reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = async (e) => {
                     try {
                         const importedData = JSON.parse(e.target.result);
                         if (!importedData.users || !importedData.videos || !importedData.payments || !importedData.settings) {
@@ -885,7 +989,6 @@
                             return;
                         }
                         DB._data = importedData;
-                        // Fix current session
                         if (state.user) {
                             const freshUser = DB.getUser(state.user.email);
                             if (freshUser) state.user = freshUser;
@@ -894,7 +997,7 @@
                                 DB._data.currentUser = null;
                             }
                         }
-                        DB.save();
+                        await DB.save();
                         toast('Database imported successfully! Reloading UI...', 'success');
                         setTimeout(() => {
                             window.location.reload();
@@ -906,9 +1009,14 @@
                 reader.readAsText(file);
             }
 
-            const init = () => {
-                applyTheme(DB._data.theme || 'dark');
-                const saved = DB._data.currentUser;
+            const init = async () => {
+                // Load the DB
+                await DB.load(); 
+                data = DB._data; 
+                settings = data.settings;
+
+                applyTheme(data.theme || 'dark');
+                const saved = data.currentUser;
                 if (saved) {
                     const u = DB.getUser(saved.email);
                     if (u && u.verified) {
@@ -927,7 +1035,6 @@
             $('switchToRegister').addEventListener('click', () => toggleAuthMode(false));
             toggleAuthMode(false);
 
-            // Fix: Added explicit block to prevent default and handle empty fields instantly
             $('authForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 if (state.isLoginMode) { 
@@ -1001,10 +1108,11 @@
                 wrap.classList.toggle('hidden');
                 this.innerHTML = wrap.classList.contains('hidden') ? '<i class="fas fa-plus"></i> Add Video' : 'Cancel';
             });
+
             $('addVideoForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 showLoader();
-                setTimeout(() => {
+                setTimeout(async () => {
                     const title = $('videoTitle').value.trim();
                     const desc = $('videoDesc').value.trim();
                     const category = $('videoCategory').value;
@@ -1018,8 +1126,9 @@
                     
                     if (fileInput.files && fileInput.files[0]) {
                         const file = fileInput.files[0];
-                        if (file.size > 20 * 1024 * 1024) { 
-                            toast('File is too large. Please use a URL or a smaller file (under 20MB).', 'error'); hideLoader(); return;
+                        // Allow up to 1GB
+                        if (file.size > 1024 * 1024 * 1024) { 
+                            toast('File is too large. Max size is 1GB.', 'error'); hideLoader(); return;
                         }
                         const reader = new FileReader();
                         reader.onload = function(ev) {
@@ -1037,14 +1146,14 @@
                 }, 100);
             });
 
-            function saveVideo(title, desc, category, url, thumb, isFree, fileData, fileName) {
+            async function saveVideo(title, desc, category, url, thumb, isFree, fileData, fileName) {
                 const video = { 
                     id: uid(), title, description: desc, category, url, thumbnail: thumb, isFree, likes: [], duration: '00:00', 
                     fileData: fileData, 
                     createdAt: Date.now() 
                 };
                 DB._data.videos.push(video);
-                DB.save();
+                await DB.save();
                 $('addVideoForm').reset();
                 $('addVideoFormWrap').classList.add('hidden');
                 $('showAddVideoForm').innerHTML = '<i class="fas fa-plus"></i> Add Video';
@@ -1054,7 +1163,7 @@
                 hideLoader();
             }
 
-            $('addUserForm').addEventListener('submit', (e) => {
+            $('addUserForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = $('newUserEmail').value.trim();
                 const password = $('newUserPassword').value.trim();
@@ -1062,7 +1171,8 @@
                 if (DB.getUser(email)) { toast('A user with this email already exists.', 'error'); return; }
                 
                 const user = { id: uid(), email: email, password: password, role: 'user', verified: true, approved: false, paymentStatus: 'pending', txnId: '', createdAt: Date.now() };
-                DB._data.users.push(user); DB.save();
+                DB._data.users.push(user); 
+                await DB.save();
                 $('addUserForm').reset();
                 renderAdminUsers();
                 toast(`User ${email} created successfully.`, 'success');
@@ -1088,13 +1198,13 @@
                 document.querySelector('.logo-area span').textContent = '| ' + settings.siteTagline;
             };
             loadSettings();
-            $('settingsForm').addEventListener('submit', (e) => {
+            $('settingsForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 settings.siteTitle = $('siteTitle').value.trim();
                 settings.siteTagline = $('siteTagline').value.trim();
                 settings.categoryDesc = $('categoryDesc').value.trim();
                 settings.paymentAmount = parseFloat($('paymentAmount').value) || 500;
-                DB.save();
+                await DB.save();
                 toast('Settings saved!', 'success');
                 loadSettings(); 
             });

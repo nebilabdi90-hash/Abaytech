@@ -67,17 +67,28 @@
         .logo-area h1 { font-size: 22px; font-weight: 700; background: linear-gradient(135deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .logo-area span { font-size: 12px; color: var(--text-muted); margin-left: 4px; font-weight: 400; -webkit-text-fill-color: var(--text-muted); }
 
-        .header-actions { display: flex; align-items: center; gap: 12px; }
-        .theme-toggle { background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-muted); width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition-hover); font-size: 18px; touch-action: manipulation; }
-        .theme-toggle:hover { background: var(--gold); color: #0a0f0e; border-color: var(--gold); transform: rotate(30deg); }
-        .theme-toggle:active { transform: scale(0.92); transition: var(--transition-active); }
+        /* ===== HEADER ACTIONS (Side by Side) ===== */
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+        
+        .icon-btn {
+            background: var(--bg-input); border: 1px solid var(--border-color);
+            color: var(--text-muted); width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: var(--transition-hover); font-size: 18px; touch-action: manipulation;
+        }
+        .icon-btn:hover { background: var(--gold); color: #0a0f0e; border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
+        .icon-btn:active { transform: scale(0.92); transition: var(--transition-active); }
 
-        /* ===== LANGUAGE TOGGLE ===== */
-        .lang-toggle { background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px 14px; border-radius: 30px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: var(--transition-hover); font-size: 13px; touch-action: manipulation; }
-        .lang-toggle:hover { border-color: var(--gold); color: var(--gold); }
-        .lang-toggle:active { transform: scale(0.96); transition: var(--transition-active); }
-        .lang-toggle i { font-size: 16px; transition: var(--transition-hover); }
-        .lang-toggle .lang-text { font-weight: 600; }
+        .lang-btn {
+            background: var(--bg-input); border: 1px solid var(--border-color);
+            color: var(--text-main); padding: 0 12px; height: 38px; border-radius: 30px;
+            display: flex; align-items: center; gap: 6px; cursor: pointer;
+            transition: var(--transition-hover); font-size: 13px; touch-action: manipulation;
+            font-weight: 600;
+        }
+        .lang-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .lang-btn:active { transform: scale(0.96); transition: var(--transition-active); }
+        .lang-btn i { font-size: 16px; transition: var(--transition-hover); }
 
         .user-badge { display: flex; align-items: center; gap: 10px; background: var(--bg-input); padding: 6px 14px 6px 10px; border-radius: 30px; border: 1px solid var(--border-color); transition: background 0.4s ease, border-color 0.4s ease; cursor: pointer; }
         .user-badge:hover { border-color: var(--gold); }
@@ -94,20 +105,18 @@
         .page.active { display: block; }
         @keyframes fadeUp { 0% { opacity: 0; transform: translateY(16px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* ============================================================
-               TRANSLATION SYSTEM
-               ============================================================ */
-        [data-lang="am"] .en-text { display: none; }
-        [data-lang="en"] .am-text { display: none; }
-        [data-lang="am"] .am-text { display: inline; }
-        [data-lang="en"] .en-text { display: inline; }
+        /* ===== TRANSLATION SYSTEM ===== */
+        [data-lang="en"] .lang-en { display: inline; }
+        [data-lang="en"] .lang-am, [data-lang="en"] .lang-ar { display: none; }
         
-        .am-text, .en-text { transition: opacity 0.3s ease; }
+        [data-lang="am"] .lang-am { display: inline; }
+        [data-lang="am"] .lang-en, [data-lang="am"] .lang-ar { display: none; }
+        
+        [data-lang="ar"] .lang-ar { display: inline; }
+        [data-lang="ar"] .lang-en, [data-lang="ar"] .lang-am { display: none; }
 
-        /* ============================================================
-               REGISTRATION / LOGIN
-               ============================================================ */
-        .hero-description { text-align: center; margin-bottom: 28px; padding: 0 8px; transition: all 0.3s ease; }
+        /* ===== REGISTRATION / LOGIN ===== */
+        .hero-description { text-align: center; margin-bottom: 28px; padding: 0 8px; }
         .hero-description .icon-wrap { font-size: 42px; color: var(--gold); margin-bottom: 6px; display: inline-block; background: var(--bg-input); padding: 10px 16px; border-radius: 50px; border: 1px solid var(--border-color); }
         .hero-description h2 { font-size: 26px; font-weight: 700; margin: 6px 0 4px; background: linear-gradient(135deg, #fff, var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero-description p { color: var(--text-muted); font-size: 14px; max-width: 480px; margin: 0 auto; line-height: 1.5; -webkit-text-fill-color: var(--text-muted); }
@@ -276,7 +285,7 @@
             .logo-area h1 { font-size: 18px; } .logo-area span { display: none; }
             .user-badge .email { max-width: 60px; } .admin-tabs button { font-size: 11px; padding: 8px 10px; min-width: 50px; }
             .video-grid { grid-template-columns: 1fr; } .payment-options, .payment-form { padding: 16px; }
-            .back-btn, .theme-toggle, .lang-toggle { width: 34px; height: 34px; font-size: 14px; }
+            .back-btn, .theme-toggle, .lang-btn { width: 34px; height: 34px; font-size: 14px; padding: 0 10px; }
         }
         .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
         .empty-state i { font-size: 56px; margin-bottom: 16px; opacity: 0.4; color: var(--gold); }
@@ -307,13 +316,14 @@
                 <div class="logo-area"><i class="fas fa-video"></i><h1>Ethio Hub <span>| premium</span></h1></div>
             </div>
             <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle" title="Toggle Theme"><i class="fas fa-moon"></i></button>
+                <button class="icon-btn theme-toggle" id="themeToggle" title="Toggle Theme"><i class="fas fa-moon"></i></button>
                 
-                <!-- ===== LANGUAGE TOGGLE ===== -->
-                <button class="lang-toggle" id="langToggle" title="Toggle Language">
+                <!-- ===== LANGUAGE TOGGLE (3-Way) ===== -->
+                <button class="lang-btn" id="langToggle" title="Toggle Language">
                     <i class="fas fa-language"></i>
-                    <span class="lang-text en-text">EN</span>
-                    <span class="lang-text am-text" style="display:none;">አማ</span>
+                    <span class="lang-en">EN</span>
+                    <span class="lang-am" style="display:none;">አማ</span>
+                    <span class="lang-ar" style="display:none;">عربي</span>
                 </button>
 
                 <div class="user-badge" id="userBadge" title="View Profile">
@@ -328,40 +338,41 @@
             <div class="hero-description">
                 <div class="icon-wrap"><i class="fas fa-video"></i></div>
                 <h2>Ethio Hub</h2>
-                <p class="en-text">Discover premium, exclusive video content and professional training materials. Join our community and unlock full access today.</p>
-                <p class="am-text" style="display:none;">ከፍተኛ ጥራት ያላቸውን ቪዲዮዎች እና ሙያዊ የሥልጠና መሳሪያዎችን ያግኙ። ዛሬ ይቀላቀሉ እና ሙሉ መዳረሻ ያግኙ።</p>
+                <p class="lang-en">Discover premium, exclusive video content and professional training materials. Join our community and unlock full access today.</p>
+                <p class="lang-am" style="display:none;">ከፍተኛ ጥራት ያላቸውን ቪዲዮዎች እና ሙያዊ የሥልጠና መሳሪያዎችን ያግኙ። ዛሬ ይቀላቀሉ እና ሙሉ መዳረሻ ያግኙ።</p>
+                <p class="lang-ar" style="display:none;">اكتشف محتوى فيديو حصريًا ومواد تدريبية احترافية. انضم إلى مجتمعنا وافتح الوصول الكامل اليوم.</p>
             </div>
             <div class="auth-container">
                 <div class="auth-switch">
-                    <button class="active" data-mode="register"><span class="en-text">Register</span><span class="am-text" style="display:none;">ይመዝገቡ</span></button>
-                    <button data-mode="login"><span class="en-text">Login</span><span class="am-text" style="display:none;">ግባ</span></button>
+                    <button class="active" data-mode="register"><span class="lang-en">Register</span><span class="lang-am" style="display:none;">ይመዝገቡ</span><span class="lang-ar" style="display:none;">تسجيل</span></button>
+                    <button data-mode="login"><span class="lang-en">Login</span><span class="lang-am" style="display:none;">ግባ</span><span class="lang-ar" style="display:none;">دخول</span></button>
                 </div>
-                <h2 id="authTitle"><i class="fas fa-lock text-gold"></i> <span class="en-text">Welcome</span><span class="am-text" style="display:none;">እንኳን ደህና መጡ</span></h2>
-                <p class="sub" id="authSub"><span class="en-text">Sign up to access premium content</span><span class="am-text" style="display:none;">ለመግባት ይመዝገቡ</span></p>
+                <h2 id="authTitle"><i class="fas fa-lock text-gold"></i> <span class="lang-en">Welcome</span><span class="lang-am" style="display:none;">እንኳን ደህና መጡ</span><span class="lang-ar" style="display:none;">مرحباً</span></h2>
+                <p class="sub" id="authSub"><span class="lang-en">Sign up to access premium content</span><span class="lang-am" style="display:none;">ለመግባት ይመዝገቡ</span><span class="lang-ar" style="display:none;">سجل للوصول إلى المحتوى المميز</span></p>
                 <form id="authForm" autocomplete="off">
                     <div id="registerFields">
-                        <label for="authEmail"><span class="en-text">Email or Apple ID</span><span class="am-text" style="display:none;">ኢሜይል ወይም አፕል መታወቂያ</span></label>
+                        <label for="authEmail"><span class="lang-en">Email or Apple ID</span><span class="lang-am" style="display:none;">ኢሜይል ወይም አፕል መታወቂያ</span><span class="lang-ar" style="display:none;">البريد الإلكتروني أو معرف Apple</span></label>
                         <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="authEmail" placeholder="you@example.com" required /></div>
-                        <label for="authPassword"><span class="en-text">Password</span><span class="am-text" style="display:none;">የይለፍ ቃል</span></label>
+                        <label for="authPassword"><span class="lang-en">Password</span><span class="lang-am" style="display:none;">የይለፍ ቃል</span><span class="lang-ar" style="display:none;">كلمة المرور</span></label>
                         <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="authPassword" placeholder="Min 6 characters" minlength="6" required /></div>
-                        <label for="authConfirmPassword"><span class="en-text">Confirm Password</span><span class="am-text" style="display:none;">የይለፍ ቃል ያረጋግጡ</span></label>
+                        <label for="authConfirmPassword"><span class="lang-en">Confirm Password</span><span class="lang-am" style="display:none;">የይለፍ ቃል ያረጋግጡ</span><span class="lang-ar" style="display:none;">تأكيد كلمة المرور</span></label>
                         <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="authConfirmPassword" placeholder="Re-enter password" required /></div>
                         <div class="auth-options" id="registerOptions">
-                            <button type="button" class="apple-btn" id="appleSignup"><i class="fab fa-apple"></i> <span class="en-text">Apple</span><span class="am-text" style="display:none;">አፕል</span></button>
-                            <button type="button" id="emailSignup"><i class="fas fa-envelope"></i> <span class="en-text">Email</span><span class="am-text" style="display:none;">ኢሜይል</span></button>
+                            <button type="button" class="apple-btn" id="appleSignup"><i class="fab fa-apple"></i> <span class="lang-en">Apple</span><span class="lang-am" style="display:none;">አፕል</span><span class="lang-ar" style="display:none;">أبل</span></button>
+                            <button type="button" id="emailSignup"><i class="fas fa-envelope"></i> <span class="lang-en">Email</span><span class="lang-am" style="display:none;">ኢሜይል</span><span class="lang-ar" style="display:none;">بريد إلكتروني</span></button>
                         </div>
                     </div>
                     <div id="loginFields" class="hidden">
-                        <label for="loginEmail"><span class="en-text">Email</span><span class="am-text" style="display:none;">ኢሜይል</span></label>
+                        <label for="loginEmail"><span class="lang-en">Email</span><span class="lang-am" style="display:none;">ኢሜይል</span><span class="lang-ar" style="display:none;">البريد الإلكتروني</span></label>
                         <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="loginEmail" placeholder="you@example.com" required /></div>
-                        <label for="loginPassword"><span class="en-text">Password</span><span class="am-text" style="display:none;">የይለፍ ቃል</span></label>
+                        <label for="loginPassword"><span class="lang-en">Password</span><span class="lang-am" style="display:none;">የይለፍ ቃል</span><span class="lang-ar" style="display:none;">كلمة المرور</span></label>
                         <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="Enter password" required /></div>
                     </div>
-                    <button type="submit" class="btn-primary" id="authBtn"><i class="fas fa-chevron-right"></i> <span class="en-text">Register & Start Watching</span><span class="am-text" style="display:none;">ይመዝገቡ እና መመልከት ይጀምሩ</span></button>
+                    <button type="submit" class="btn-primary" id="authBtn"><i class="fas fa-chevron-right"></i> <span class="lang-en">Register & Start Watching</span><span class="lang-am" style="display:none;">ይመዝገቡ እና መመልከት ይጀምሩ</span><span class="lang-ar" style="display:none;">سجل وابدأ المشاهدة</span></button>
                 </form>
                 <div class="auth-footer">
-                    <span id="authFooterRegister"><span class="en-text">Already a member?</span><span class="am-text" style="display:none;">አባል ነዎት?</span> <a id="switchToLogin"><span class="en-text">Login here</span><span class="am-text" style="display:none;">እዚህ ግቡ</span></a></span>
-                    <span id="authFooterLogin" class="hidden"><span class="en-text">New here?</span><span class="am-text" style="display:none;">አዲስ ነዎት?</span> <a id="switchToRegister"><span class="en-text">Register here</span><span class="am-text" style="display:none;">እዚህ ይመዝገቡ</span></a></span>
+                    <span id="authFooterRegister"><span class="lang-en">Already a member?</span><span class="lang-am" style="display:none;">አባል ነዎት?</span><span class="lang-ar" style="display:none;">عضو بالفعل؟</span> <a id="switchToLogin"><span class="lang-en">Login here</span><span class="lang-am" style="display:none;">እዚህ ግቡ</span><span class="lang-ar" style="display:none;">سجل الدخول هنا</span></a></span>
+                    <span id="authFooterLogin" class="hidden"><span class="lang-en">New here?</span><span class="lang-am" style="display:none;">አዲስ ነዎት?</span><span class="lang-ar" style="display:none;">جديد هنا؟</span> <a id="switchToRegister"><span class="lang-en">Register here</span><span class="lang-am" style="display:none;">እዚህ ይመዝገቡ</span><span class="lang-ar" style="display:none;">سجل هنا</span></a></span>
                 </div>
             </div>
         </div>
@@ -369,28 +380,28 @@
         <div class="page" id="page-profile">
             <div class="profile-container">
                 <div class="profile-icon"><i class="fas fa-user-circle"></i></div>
-                <h2><span class="en-text">My Profile</span><span class="am-text" style="display:none;">የእኔ መገለጫ</span></h2>
-                <div class="profile-field"><label><span class="en-text">Email Address</span><span class="am-text" style="display:none;">ኢሜይል አድራሻ</span></label><div class="value" id="profileEmail">-</div></div>
-                <div class="profile-field"><label><span class="en-text">Payment Status</span><span class="am-text" style="display:none;">የክፍያ ሁኔታ</span></label><div class="value" id="profilePaymentStatus"><span class="status pending">Pending</span></div></div>
+                <h2><span class="lang-en">My Profile</span><span class="lang-am" style="display:none;">የእኔ መገለጫ</span><span class="lang-ar" style="display:none;">ملفي الشخصي</span></h2>
+                <div class="profile-field"><label><span class="lang-en">Email Address</span><span class="lang-am" style="display:none;">ኢሜይል አድራሻ</span><span class="lang-ar" style="display:none;">البريد الإلكتروني</span></label><div class="value" id="profileEmail">-</div></div>
+                <div class="profile-field"><label><span class="lang-en">Payment Status</span><span class="lang-am" style="display:none;">የክፍያ ሁኔታ</span><span class="lang-ar" style="display:none;">حالة الدفع</span></label><div class="value" id="profilePaymentStatus"><span class="status pending">Pending</span></div></div>
                 <div class="profile-field">
-                    <label><span class="en-text">Account Status</span><span class="am-text" style="display:none;">የመለያ ሁኔታ</span></label>
-                    <div class="value" id="profileAccountStatus"><span style="color:#f39c12; font-weight:600;"><i class="fas fa-exclamation-triangle"></i> <span class="en-text">Pay to Verify</span><span class="am-text" style="display:none;">ለማረጋገጥ ይክፈሉ</span></span></div>
-                    <div id="profileDescription" style="font-size:13px; color:var(--text-muted); margin-top:4px;"><span class="en-text">Submit your first payment to unlock all premium videos.</span><span class="am-text" style="display:none;">ሁሉንም ቪዲዮዎች ለመክፈት የመጀመሪያ ክፍያዎን ያስገቡ።</span></div>
-                    <button class="btn-primary profile-btn-inline" id="profilePayBtn"><i class="fas fa-credit-card"></i> <span class="en-text">Go to Payment</span><span class="am-text" style="display:none;">ወደ ክፍያ ይሂዱ</span></button>
+                    <label><span class="lang-en">Account Status</span><span class="lang-am" style="display:none;">የመለያ ሁኔታ</span><span class="lang-ar" style="display:none;">حالة الحساب</span></label>
+                    <div class="value" id="profileAccountStatus"><span style="color:#f39c12; font-weight:600;"><i class="fas fa-exclamation-triangle"></i> <span class="lang-en">Pay to Verify</span><span class="lang-am" style="display:none;">ለማረጋገጥ ይክፈሉ</span><span class="lang-ar" style="display:none;">ادفع للتحقق</span></span></div>
+                    <div id="profileDescription" style="font-size:13px; color:var(--text-muted); margin-top:4px;"><span class="lang-en">Submit your first payment to unlock all premium videos.</span><span class="lang-am" style="display:none;">ሁሉንም ቪዲዮዎች ለመክፈት የመጀመሪያ ክፍያዎን ያስገቡ።</span><span class="lang-ar" style="display:none;">قم بتقديم دفعتك الأولى لفتح جميع مقاطع الفيديو المتميزة.</span></div>
+                    <button class="btn-primary profile-btn-inline" id="profilePayBtn"><i class="fas fa-credit-card"></i> <span class="lang-en">Go to Payment</span><span class="lang-am" style="display:none;">ወደ ክፍያ ይሂዱ</span><span class="lang-ar" style="display:none;">اذهب إلى الدفع</span></button>
                 </div>
-                <button class="btn-primary" id="profileBackBtn" style="margin-top:16px;"><i class="fas fa-arrow-left"></i> <span class="en-text">Back to Gallery</span><span class="am-text" style="display:none;">ወደ ጋለሪ ተመለስ</span></button>
+                <button class="btn-primary" id="profileBackBtn" style="margin-top:16px;"><i class="fas fa-arrow-left"></i> <span class="lang-en">Back to Gallery</span><span class="lang-am" style="display:none;">ወደ ጋለሪ ተመለስ</span><span class="lang-ar" style="display:none;">العودة إلى المعرض</span></button>
             </div>
         </div>
 
         <div class="page" id="page-payment">
             <div class="payment-grid">
                 <div class="payment-options">
-                    <h3><i class="fas fa-credit-card"></i> <span class="en-text">Choose Payment Method</span><span class="am-text" style="display:none;">የክፍያ ዘዴ ይምረጡ</span></h3>
+                    <h3><i class="fas fa-credit-card"></i> <span class="lang-en">Choose Payment Method</span><span class="lang-am" style="display:none;">የክፍያ ዘዴ ይምረጡ</span><span class="lang-ar" style="display:none;">اختر طريقة الدفع</span></h3>
                     <div class="payment-info-box">
-                        <p><i class="fas fa-info-circle"></i> <span class="en-text">Send payment to the following accounts:</span><span class="am-text" style="display:none;">ክፍያ ወደ ተጠቀሱት ሂሳቦች ይላኩ፡</span></p>
+                        <p><i class="fas fa-info-circle"></i> <span class="lang-en">Send payment to the following accounts:</span><span class="lang-am" style="display:none;">ክፍያ ወደ ተጠቀሱት ሂሳቦች ይላኩ፡</span><span class="lang-ar" style="display:none;">أرسل الدفع إلى الحسابات التالية:</span></p>
                         <p><i class="fas fa-mobile-screen-button"></i> Telebirr / eBirr: <strong>0986318990</strong></p>
                         <p><i class="fas fa-building-columns"></i> CBE: <strong>1000392469657</strong></p>
-                        <p class="amount"><i class="fas fa-coins"></i> <span class="en-text">Amount:</span><span class="am-text" style="display:none;">መጠን:</span> <strong><span id="paymentAmountDisplay">500</span> ETB</strong> (<span class="en-text">Lifetime Access</span><span class="am-text" style="display:none;">የህይወት ተደራሽነት</span>)</p>
+                        <p class="amount"><i class="fas fa-coins"></i> <span class="lang-en">Amount:</span><span class="lang-am" style="display:none;">መጠን:</span><span class="lang-ar" style="display:none;">المبلغ:</span> <strong><span id="paymentAmountDisplay">500</span> ETB</strong> (<span class="lang-en">Lifetime Access</span><span class="lang-am" style="display:none;">የህይወት ተደራሽነት</span><span class="lang-ar" style="display:none;">وصول مدى الحياة</span>)</p>
                     </div>
                     <div id="paymentMethods">
                         <div class="payment-method selected" data-method="telebirr"><div class="icon"><i class="fas fa-mobile-screen-button"></i></div><div class="info"><div class="name">Telebirr</div><div class="desc">Ethiopia's leading mobile money</div></div><div class="check"><i class="fas fa-check-circle"></i></div></div>
@@ -399,14 +410,14 @@
                     </div>
                 </div>
                 <div class="payment-form">
-                    <h3><i class="fas fa-file-invoice"></i> <span class="en-text">Submit Payment Details</span><span class="am-text" style="display:none;">የክፍያ ዝርዝሮችን ያስገቡ</span></h3>
+                    <h3><i class="fas fa-file-invoice"></i> <span class="lang-en">Submit Payment Details</span><span class="lang-am" style="display:none;">የክፍያ ዝርዝሮችን ያስገቡ</span><span class="lang-ar" style="display:none;">إرسال تفاصيل الدفع</span></h3>
                     <form id="paymentForm">
-                        <label><span class="en-text">Transaction ID / Reference</span><span class="am-text" style="display:none;">የግብይት መታወቂያ</span></label><input type="text" id="txnId" placeholder="e.g. TXN-2026-123456" required />
-                        <label><span class="en-text">Upload Screenshot (optional)</span><span class="am-text" style="display:none;">ስክሪን ሾት ያስገቡ (አማራጭ)</span></label>
-                        <div class="file-upload" id="fileUpload"><i class="fas fa-cloud-upload-alt"></i><p><span class="en-text">Click to upload a screenshot</span><span class="am-text" style="display:none;">ስክሪን ሾት ለመስቀል ይንኩ</span></p><div class="filename"></div><input type="file" accept="image/*" id="screenshotFile" /></div>
-                        <label><span class="en-text">Additional Notes</span><span class="am-text" style="display:none;">ተጨማሪ ማስታወሻ</span></label><textarea id="paymentNotes" placeholder="Any extra info for admin..."></textarea>
-                        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> <span class="en-text">Submit for Approval</span><span class="am-text" style="display:none;">ለጥቅም ያስገቡ</span></button>
-                        <p class="text-muted mt-10" style="font-size:12px; text-align:center;"><i class="fas fa-clock"></i> <span class="en-text">Admin reviews within 24 hours.</span><span class="am-text" style="display:none;">አስተዳዳሪ በ24 ሰዓታት ውስጥ ይገመግማል።</span></p>
+                        <label><span class="lang-en">Transaction ID / Reference</span><span class="lang-am" style="display:none;">የግብይት መታወቂያ</span><span class="lang-ar" style="display:none;">معرف المعاملة</span></label><input type="text" id="txnId" placeholder="e.g. TXN-2026-123456" required />
+                        <label><span class="lang-en">Upload Screenshot (optional)</span><span class="lang-am" style="display:none;">ስክሪን ሾት ያስገቡ (አማራጭ)</span><span class="lang-ar" style="display:none;">رفع لقطة شاشة (اختياري)</span></label>
+                        <div class="file-upload" id="fileUpload"><i class="fas fa-cloud-upload-alt"></i><p><span class="lang-en">Click to upload a screenshot</span><span class="lang-am" style="display:none;">ስክሪን ሾት ለመስቀል ይንኩ</span><span class="lang-ar" style="display:none;">انقر لرفع لقطة شاشة</span></p><div class="filename"></div><input type="file" accept="image/*" id="screenshotFile" /></div>
+                        <label><span class="lang-en">Additional Notes</span><span class="lang-am" style="display:none;">ተጨማሪ ማስታወሻ</span><span class="lang-ar" style="display:none;">ملاحظات إضافية</span></label><textarea id="paymentNotes" placeholder="Any extra info for admin..."></textarea>
+                        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> <span class="lang-en">Submit for Approval</span><span class="lang-am" style="display:none;">ለጥቅም ያስገቡ</span><span class="lang-ar" style="display:none;">إرسال للموافقة</span></button>
+                        <p class="text-muted mt-10" style="font-size:12px; text-align:center;"><i class="fas fa-clock"></i> <span class="lang-en">Admin reviews within 24 hours.</span><span class="lang-am" style="display:none;">አስተዳዳሪ በ24 ሰዓታት ውስጥ ይገመግማል።</span><span class="lang-ar" style="display:none;">يراجع المسؤول في غضون 24 ساعة.</span></p>
                     </form>
                 </div>
             </div>
@@ -414,11 +425,11 @@
 
         <div class="page" id="page-gallery">
             <div class="gallery-header">
-                <h2><i class="fas fa-play-circle text-gold"></i> <span class="en-text">Premium Content</span><span class="am-text" style="display:none;">ከፍተኛ ይዘት</span></h2>
+                <h2><i class="fas fa-play-circle text-gold"></i> <span class="lang-en">Premium Content</span><span class="lang-am" style="display:none;">ከፍተኛ ይዘት</span><span class="lang-ar" style="display:none;">محتوى مميز</span></h2>
                 <div class="category-tabs" id="categoryTabs">
-                    <button class="active" data-cat="all"><span class="en-text">All</span><span class="am-text" style="display:none;">ሁሉም</span></button>
-                    <button data-cat="exclusive"><span class="en-text">Exclusive Hub</span><span class="am-text" style="display:none;">ብቸኛ ማዕከል</span></button>
-                    <button data-cat="training"><span class="en-text">Training</span><span class="am-text" style="display:none;">ሥልጠና</span></button>
+                    <button class="active" data-cat="all"><span class="lang-en">All</span><span class="lang-am" style="display:none;">ሁሉም</span><span class="lang-ar" style="display:none;">الكل</span></button>
+                    <button data-cat="exclusive"><span class="lang-en">Exclusive Hub</span><span class="lang-am" style="display:none;">ብቸኛ ማዕከል</span><span class="lang-ar" style="display:none;">مركز حصري</span></button>
+                    <button data-cat="training"><span class="lang-en">Training</span><span class="lang-am" style="display:none;">ሥልጠና</span><span class="lang-ar" style="display:none;">تدريب</span></button>
                 </div>
             </div>
             <div id="videoGrid" class="video-grid"></div>
@@ -426,70 +437,70 @@
 
         <div class="page" id="page-admin">
             <div class="admin-tabs" id="adminTabs">
-                <button class="active" data-tab="videos"><i class="fas fa-video"></i> <span class="en-text">Videos</span><span class="am-text" style="display:none;">ቪዲዮዎች</span></button>
-                <button data-tab="users"><i class="fas fa-users"></i> <span class="en-text">Users</span><span class="am-text" style="display:none;">ተጠቃሚዎች</span></button>
-                <button data-tab="payments"><i class="fas fa-credit-card"></i> <span class="en-text">Payments</span><span class="am-text" style="display:none;">ክፍያዎች</span></button>
-                <button data-tab="settings"><i class="fas fa-cog"></i> <span class="en-text">Settings</span><span class="am-text" style="display:none;">ቅንብሮች</span></button>
+                <button class="active" data-tab="videos"><i class="fas fa-video"></i> <span class="lang-en">Videos</span><span class="lang-am" style="display:none;">ቪዲዮዎች</span><span class="lang-ar" style="display:none;">فيديو</span></button>
+                <button data-tab="users"><i class="fas fa-users"></i> <span class="lang-en">Users</span><span class="lang-am" style="display:none;">ተጠቃሚዎች</span><span class="lang-ar" style="display:none;">المستخدمون</span></button>
+                <button data-tab="payments"><i class="fas fa-credit-card"></i> <span class="lang-en">Payments</span><span class="lang-am" style="display:none;">ክፍያዎች</span><span class="lang-ar" style="display:none;">المدفوعات</span></button>
+                <button data-tab="settings"><i class="fas fa-cog"></i> <span class="lang-en">Settings</span><span class="lang-am" style="display:none;">ቅንብሮች</span><span class="lang-ar" style="display:none;">الإعدادات</span></button>
             </div>
             <div class="admin-panel active" id="panel-videos">
-                <div class="flex-between mb-10"><h3><i class="fas fa-video text-gold"></i> <span class="en-text">Manage Videos</span><span class="am-text" style="display:none;">ቪዲዮዎችን ያስተዳድሩ</span></h3><button class="btn-primary" style="width:auto; padding:8px 22px; border-radius:30px;" id="showAddVideoForm"><i class="fas fa-plus"></i> <span class="en-text">Add Video</span><span class="am-text" style="display:none;">ቪዲዮ ጨምር</span></button></div>
+                <div class="flex-between mb-10"><h3><i class="fas fa-video text-gold"></i> <span class="lang-en">Manage Videos</span><span class="lang-am" style="display:none;">ቪዲዮዎችን ያስተዳድሩ</span><span class="lang-ar" style="display:none;">إدارة مقاطع الفيديو</span></h3><button class="btn-primary" style="width:auto; padding:8px 22px; border-radius:30px;" id="showAddVideoForm"><i class="fas fa-plus"></i> <span class="lang-en">Add Video</span><span class="lang-am" style="display:none;">ቪዲዮ ጨምር</span><span class="lang-ar" style="display:none;">إضافة فيديو</span></button></div>
                 <div id="addVideoFormWrap" class="hidden">
-                    <div class="admin-form"><h4 style="margin-bottom:14px;"><span class="en-text">Add New Premium Video</span><span class="am-text" style="display:none;">አዲስ ቪዲዮ ጨምር</span></h4>
+                    <div class="admin-form"><h4 style="margin-bottom:14px;"><span class="lang-en">Add New Premium Video</span><span class="lang-am" style="display:none;">አዲስ ቪዲዮ ጨምር</span><span class="lang-ar" style="display:none;">إضافة فيديو مميز جديد</span></h4>
                         <form id="addVideoForm">
-                            <label><span class="en-text">Video Title</span><span class="am-text" style="display:none;">የቪዲዮ ርዕስ</span></label><input type="text" id="videoTitle" placeholder="Enter title" required />
-                            <label><span class="en-text">Description</span><span class="am-text" style="display:none;">መግለጫ</span></label><textarea id="videoDesc" placeholder="Describe this content..."></textarea>
-                            <label><span class="en-text">Category</span><span class="am-text" style="display:none;">ምድብ</span></label><select id="videoCategory"><option value="exclusive">Exclusive Hub</option><option value="training">Training</option></select>
+                            <label><span class="lang-en">Video Title</span><span class="lang-am" style="display:none;">የቪዲዮ ርዕስ</span><span class="lang-ar" style="display:none;">عنوان الفيديو</span></label><input type="text" id="videoTitle" placeholder="Enter title" required />
+                            <label><span class="lang-en">Description</span><span class="lang-am" style="display:none;">መግለጫ</span><span class="lang-ar" style="display:none;">الوصف</span></label><textarea id="videoDesc" placeholder="Describe this content..."></textarea>
+                            <label><span class="lang-en">Category</span><span class="lang-am" style="display:none;">ምድብ</span><span class="lang-ar" style="display:none;">الفئة</span></label><select id="videoCategory"><option value="exclusive">Exclusive Hub</option><option value="training">Training</option></select>
                             
                             <div class="file-input-group">
-                                <label style="margin:0; display:flex; align-items:center; gap:8px; color:var(--text-main);"><i class="fas fa-upload"></i> <span class="en-text">Upload Video File (Up to 1GB):</span><span class="am-text" style="display:none;">የቪዲዮ ፋይል ስቀል (እስከ 1 ጂቢ):</span></label>
+                                <label style="margin:0; display:flex; align-items:center; gap:8px; color:var(--text-main);"><i class="fas fa-upload"></i> <span class="lang-en">Upload Video File (Up to 1GB):</span><span class="lang-am" style="display:none;">የቪዲዮ ፋይል ስቀል (እስከ 1 ጂቢ):</span><span class="lang-ar" style="display:none;">رفع ملف الفيديو (حتى 1 جيجابايت):</span></label>
                                 <input type="file" id="videoFile" accept="video/*" />
                             </div>
                             
-                            <label><span class="en-text">OR Video URL (YouTube / Vimeo / direct)</span><span class="am-text" style="display:none;">ወይም የቪዲዮ አድራሻ</span></label>
+                            <label><span class="lang-en">OR Video URL (YouTube / Vimeo / direct)</span><span class="lang-am" style="display:none;">ወይም የቪዲዮ አድራሻ</span><span class="lang-ar" style="display:none;">أو رابط الفيديو (يوتيوب / فيميو / مباشر)</span></label>
                             <input type="url" id="videoUrl" placeholder="https://..." />
-                            <label><span class="en-text">Thumbnail URL (optional)</span><span class="am-text" style="display:none;">የምስል አድራሻ (አማራጭ)</span></label>
+                            <label><span class="lang-en">Thumbnail URL (optional)</span><span class="lang-am" style="display:none;">የምስል አድራሻ (አማራጭ)</span><span class="lang-ar" style="display:none;">رابط الصورة المصغرة (اختياري)</span></label>
                             <input type="url" id="videoThumb" placeholder="https://..." />
-                            <div class="checkbox-group"><input type="checkbox" id="videoIsFree" /><label for="videoIsFree"><span class="en-text">Free to watch (no payment required)</span><span class="am-text" style="display:none;">ነፃ ማየት (ክፍያ አያስፈልግም)</span></label></div>
-                            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span class="en-text">Publish Video</span><span class="am-text" style="display:none;">ቪዲዮ አሳትም</span></button>
+                            <div class="checkbox-group"><input type="checkbox" id="videoIsFree" /><label for="videoIsFree"><span class="lang-en">Free to watch (no payment required)</span><span class="lang-am" style="display:none;">ነፃ ማየት (ክፍያ አያስፈልግም)</span><span class="lang-ar" style="display:none;">مشاهدة مجانية (لا يتطلب دفع)</span></label></div>
+                            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span class="lang-en">Publish Video</span><span class="lang-am" style="display:none;">ቪዲዮ አሳትም</span><span class="lang-ar" style="display:none;">نشر الفيديو</span></button>
                         </form>
                     </div>
                 </div>
                 <div class="admin-table-wrap mt-10" id="adminVideoList"></div>
             </div>
             <div class="admin-panel" id="panel-users">
-                <h3 class="mb-10"><i class="fas fa-users text-gold"></i> <span class="en-text">Manage Users</span><span class="am-text" style="display:none;">ተጠቃሚዎችን ያስተዳድሩ</span></h3>
+                <h3 class="mb-10"><i class="fas fa-users text-gold"></i> <span class="lang-en">Manage Users</span><span class="lang-am" style="display:none;">ተጠቃሚዎችን ያስተዳድሩ</span><span class="lang-ar" style="display:none;">إدارة المستخدمين</span></h3>
                 
                 <div class="admin-form" style="margin-bottom:20px;">
-                    <h4 style="margin-bottom:12px;"><span class="en-text">Add New User</span><span class="am-text" style="display:none;">አዲስ ተጠቃሚ ጨምር</span></h4>
+                    <h4 style="margin-bottom:12px;"><span class="lang-en">Add New User</span><span class="lang-am" style="display:none;">አዲስ ተጠቃሚ ጨምር</span><span class="lang-ar" style="display:none;">إضافة مستخدم جديد</span></h4>
                     <form id="addUserForm">
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                            <div><label><span class="en-text">Email</span><span class="am-text" style="display:none;">ኢሜይል</span></label><input type="email" id="newUserEmail" placeholder="new@user.com" required /></div>
-                            <div><label><span class="en-text">Password</span><span class="am-text" style="display:none;">የይለፍ ቃል</span></label><input type="text" id="newUserPassword" placeholder="password" required /></div>
+                            <div><label><span class="lang-en">Email</span><span class="lang-am" style="display:none;">ኢሜይል</span><span class="lang-ar" style="display:none;">البريد الإلكتروني</span></label><input type="email" id="newUserEmail" placeholder="new@user.com" required /></div>
+                            <div><label><span class="lang-en">Password</span><span class="lang-am" style="display:none;">የይለፍ ቃል</span><span class="lang-ar" style="display:none;">كلمة المرور</span></label><input type="text" id="newUserPassword" placeholder="password" required /></div>
                         </div>
-                        <button type="submit" class="btn-primary" style="margin-top:8px;"><i class="fas fa-user-plus"></i> <span class="en-text">Create User</span><span class="am-text" style="display:none;">ተጠቃሚ ፍጠር</span></button>
+                        <button type="submit" class="btn-primary" style="margin-top:8px;"><i class="fas fa-user-plus"></i> <span class="lang-en">Create User</span><span class="lang-am" style="display:none;">ተጠቃሚ ፍጠር</span><span class="lang-ar" style="display:none;">إنشاء مستخدم</span></button>
                     </form>
                 </div>
 
                 <div class="admin-table-wrap" id="adminUserList"></div>
             </div>
-            <div class="admin-panel" id="panel-payments"><h3 class="mb-10"><i class="fas fa-credit-card text-gold"></i> <span class="en-text">Payment Approvals</span><span class="am-text" style="display:none;">የክፍያ ማረጋገጫ</span></h3><div class="admin-table-wrap" id="adminPaymentList"></div></div>
+            <div class="admin-panel" id="panel-payments"><h3 class="mb-10"><i class="fas fa-credit-card text-gold"></i> <span class="lang-en">Payment Approvals</span><span class="lang-am" style="display:none;">የክፍያ ማረጋገጫ</span><span class="lang-ar" style="display:none;">الموافقات على الدفع</span></h3><div class="admin-table-wrap" id="adminPaymentList"></div></div>
             <div class="admin-panel" id="panel-settings">
-                <h3 class="mb-10"><i class="fas fa-cog text-gold"></i> <span class="en-text">General Settings</span><span class="am-text" style="display:none;">አጠቃላይ ቅንብሮች</span></h3>
+                <h3 class="mb-10"><i class="fas fa-cog text-gold"></i> <span class="lang-en">General Settings</span><span class="lang-am" style="display:none;">አጠቃላይ ቅንብሮች</span><span class="lang-ar" style="display:none;">الإعدادات العامة</span></h3>
                 <div class="admin-form" style="max-width:600px;">
                     <form id="settingsForm">
-                        <label><span class="en-text">Site Title</span><span class="am-text" style="display:none;">የጣቢያ ርዕስ</span></label><input type="text" id="siteTitle" value="Ethio Hub" />
-                        <label><span class="en-text">Tagline</span><span class="am-text" style="display:none;">መሪ ሀሳብ</span></label><input type="text" id="siteTagline" value="Premium Videos & Training" />
-                        <label><span class="en-text">Default Category Description</span><span class="am-text" style="display:none;">ነባሪ የምድብ መግለጫ</span></label><textarea id="categoryDesc" rows="2">Access the most exclusive video content and professional training materials.</textarea>
-                        <label><span class="en-text">Payment Amount (ETB)</span><span class="am-text" style="display:none;">የክፍያ መጠን</span></label><input type="number" id="paymentAmount" value="500" />
-                        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span class="en-text">Save Settings</span><span class="am-text" style="display:none;">ቅንብሮችን አስቀምጥ</span></button>
+                        <label><span class="lang-en">Site Title</span><span class="lang-am" style="display:none;">የጣቢያ ርዕስ</span><span class="lang-ar" style="display:none;">عنوان الموقع</span></label><input type="text" id="siteTitle" value="Ethio Hub" />
+                        <label><span class="lang-en">Tagline</span><span class="lang-am" style="display:none;">መሪ ሀሳብ</span><span class="lang-ar" style="display:none;">شعار</span></label><input type="text" id="siteTagline" value="Premium Videos & Training" />
+                        <label><span class="lang-en">Default Category Description</span><span class="lang-am" style="display:none;">ነባሪ የምድብ መግለጫ</span><span class="lang-ar" style="display:none;">وصف الفئة الافتراضي</span></label><textarea id="categoryDesc" rows="2">Access the most exclusive video content and professional training materials.</textarea>
+                        <label><span class="lang-en">Payment Amount (ETB)</span><span class="lang-am" style="display:none;">የክፍያ መጠን</span><span class="lang-ar" style="display:none;">مبلغ الدفع (ETB)</span></label><input type="number" id="paymentAmount" value="500" />
+                        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span class="lang-en">Save Settings</span><span class="lang-am" style="display:none;">ቅንብሮችን አስቀምጥ</span><span class="lang-ar" style="display:none;">حفظ الإعدادات</span></button>
                     </form>
                     <hr style="border-color:var(--border-color); margin: 20px 0;" />
-                    <h4 style="margin-bottom:12px;"><span class="en-text">Sync Database Across Devices</span><span class="am-text" style="display:none;">በመሳሪያዎች መካከል ዳታቤዝ ያመሳስሉ</span></h4>
-                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;"><span class="en-text">Export the current database to a .json file and import it on another browser/device.</span><span class="am-text" style="display:none;">የአሁኑን ዳታቤዝ ወደ .json ፋይል አስቀምጥ እና በሌላ መሳሪያ ላይ አስገባ።</span></p>
+                    <h4 style="margin-bottom:12px;"><span class="lang-en">Sync Database Across Devices</span><span class="lang-am" style="display:none;">በመሳሪያዎች መካከል ዳታቤዝ ያመሳስሉ</span><span class="lang-ar" style="display:none;">مزامنة قاعدة البيانات عبر الأجهزة</span></h4>
+                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;"><span class="lang-en">Export the current database to a .json file and import it on another browser/device.</span><span class="lang-am" style="display:none;">የአሁኑን ዳታቤዝ ወደ .json ፋይል አስቀምጥ እና በሌላ መሳሪያ ላይ አስገባ።</span><span class="lang-ar" style="display:none;">قم بتصدير قاعدة البيانات الحالية إلى ملف .json واستيراده على متصفح/جهاز آخر.</span></p>
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <button class="btn-primary" id="exportDbBtn" style="width:auto; padding:10px 20px;"><i class="fas fa-download"></i> <span class="en-text">Export Data</span><span class="am-text" style="display:none;">ውሂብ አስቀምጥ</span></button>
+                        <button class="btn-primary" id="exportDbBtn" style="width:auto; padding:10px 20px;"><i class="fas fa-download"></i> <span class="lang-en">Export Data</span><span class="lang-am" style="display:none;">ውሂብ አስቀምጥ</span><span class="lang-ar" style="display:none;">تصدير البيانات</span></button>
                         <div style="flex:1;">
-                            <label for="importDbInput" class="btn-primary" style="display:block; text-align:center; padding:10px 20px; cursor:pointer; width:100%;"><i class="fas fa-upload"></i> <span class="en-text">Import Data</span><span class="am-text" style="display:none;">ውሂብ አስገባ</span></label>
+                            <label for="importDbInput" class="btn-primary" style="display:block; text-align:center; padding:10px 20px; cursor:pointer; width:100%;"><i class="fas fa-upload"></i> <span class="lang-en">Import Data</span><span class="lang-am" style="display:none;">ውሂብ አስገባ</span><span class="lang-ar" style="display:none;">استيراد البيانات</span></label>
                             <input type="file" id="importDbInput" accept=".json" style="display:none;" />
                         </div>
                     </div>
@@ -898,40 +909,36 @@
             const applyLanguage = (lang) => {
                 const html = document.documentElement;
                 const toggleBtn = $('langToggle');
-                const textSpan = toggleBtn.querySelector('.lang-text');
+                
+                // Update HTML attribute for CSS visibility
                 html.setAttribute('data-lang', lang);
                 
-                // Toggle visible label
-                if (lang === 'am') {
-                    toggleBtn.querySelector('.en-text').style.display = 'none';
-                    toggleBtn.querySelector('.am-text').style.display = 'inline';
-                } else {
-                    toggleBtn.querySelector('.en-text').style.display = 'inline';
-                    toggleBtn.querySelector('.am-text').style.display = 'none';
-                }
+                // Update the button label
+                const enSpan = toggleBtn.querySelector('.lang-en');
+                const amSpan = toggleBtn.querySelector('.lang-am');
+                const arSpan = toggleBtn.querySelector('.lang-ar');
                 
-                // Toggle all page elements
-                document.querySelectorAll('.en-text').forEach(el => {
-                    if (html.getAttribute('data-lang') === 'am') {
-                        el.style.display = 'none';
-                    } else {
-                        el.style.display = 'inline';
-                    }
-                });
-                document.querySelectorAll('.am-text').forEach(el => {
-                    if (html.getAttribute('data-lang') === 'am') {
-                        el.style.display = 'inline';
-                    } else {
-                        el.style.display = 'none';
-                    }
-                });
+                if (lang === 'en') {
+                    enSpan.style.display = 'inline';
+                    amSpan.style.display = 'none';
+                    arSpan.style.display = 'none';
+                } else if (lang === 'am') {
+                    enSpan.style.display = 'none';
+                    amSpan.style.display = 'inline';
+                    arSpan.style.display = 'none';
+                } else if (lang === 'ar') {
+                    enSpan.style.display = 'none';
+                    amSpan.style.display = 'none';
+                    arSpan.style.display = 'inline';
+                }
 
                 DB._data.language = lang;
                 DB.save();
             };
             const toggleLanguage = () => {
                 const current = DB._data.language || 'en';
-                applyLanguage(current === 'en' ? 'am' : 'en');
+                const next = current === 'en' ? 'am' : current === 'am' ? 'ar' : 'en';
+                applyLanguage(next);
             };
 
             const renderProfile = () => {

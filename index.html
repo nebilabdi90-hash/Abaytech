@@ -64,8 +64,12 @@
 
         .logo-area { display: flex; align-items: center; gap: 10px; }
         .logo-area i { font-size: 28px; color: var(--gold); }
-        .logo-area h1 { font-size: 22px; font-weight: 700; background: linear-gradient(135deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-area h1 { font-size: 22px; font-weight: 700; }
         .logo-area span { font-size: 12px; color: var(--text-muted); margin-left: 4px; font-weight: 400; -webkit-text-fill-color: var(--text-muted); }
+        /* #siteTitleText is a <span> too (so its text node can be updated without destroying
+           the tagline span next to it), so it needs its own rule to win back the gradient
+           look instead of falling into the generic ".logo-area span" (muted, small) style. */
+        #siteTitleText { font-size: 22px; font-weight: 700; margin-left: 0; background: linear-gradient(135deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         /* ===== HEADER ACTIONS (Side by Side, wrapping allowed as a whole unit) ===== */
         .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
@@ -288,7 +292,7 @@
 
         @media (max-width: 600px) {
             #app { padding: 16px; } .auth-container, .profile-container { padding: 24px 18px; }
-            .logo-area h1 { font-size: 18px; } .logo-area span { display: none; }
+            .logo-area h1 { font-size: 18px; } #siteTitleText { font-size: 18px; } #siteTaglineText { display: none; }
             .user-badge .email { max-width: 60px; } .admin-tabs button { font-size: 11px; padding: 8px 10px; min-width: 50px; }
             .video-grid { grid-template-columns: 1fr; } .payment-options, .payment-form { padding: 16px; }
             .back-btn, .icon-btn, .lang-btn { width: 34px; height: 34px; font-size: 14px; padding: 0 10px; }
@@ -322,7 +326,7 @@
         <header class="app-header">
             <div class="header-left">
                 <button class="back-btn" id="backBtn" title="Go back"><i class="fas fa-arrow-left"></i></button>
-                <div class="logo-area"><i class="fas fa-video"></i><h1>Ethio Hub <span>| premium</span></h1></div>
+                <div class="logo-area"><i class="fas fa-video"></i><h1><span id="siteTitleText">Ethio Hub</span> <span id="siteTaglineText">| premium</span></h1></div>
             </div>
             <div class="header-actions">
                 <div class="toggle-group">
@@ -1131,5 +1135,4 @@
                     btnEl.style.display = 'none';
                 } else if (userStatus === 'rejected') {
                     accStatusEl.innerHTML = `<span class="status rejected">Verification Failed ❌</span>`;
-                    descEl.innerHTML = `<span class="lang-en">Your payment was rejected. Please resubmit a valid payment.</span><span class="lang-am">ክፍያዎ ውድቅ ተደርጓል። እባክዎ ትክክለኛ ክፍያ እንደገና ያስገቡ።</span><span class="lang-ar">تم رفض دفعتك. يرجى إعادة تقديم دفعة صالحة.</span>`;
-                    btnEl.style.display = 'block'; btnEl.innerHTML = `<i class="fas fa-credit-card"></i> <span class="lang-en">Resubmit Payment</span><span class="lang-am">ክፍያ እንደገና አስገባ</span><span class="lang-ar">إعادة 
+                    descEl.innerHTML = `<span 

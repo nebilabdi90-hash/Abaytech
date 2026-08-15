@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
@@ -42,272 +42,1365 @@
             --shadow-heavy: 0 12px 48px rgba(0, 0, 0, 0.1);
             --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent !important; outline: none !important; }
-        *:focus, *:focus-visible, *:active, *:hover { outline: none !important; box-shadow: none !important; }
-        input, textarea, select, button { -webkit-appearance: none; appearance: none; }
-        body { background: var(--bg-body); color: var(--text-main); font-size: var(--font-base); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; transition: background 0.4s ease, color 0.4s ease; }
-        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: var(--bg-body); } ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+        }
+        *:focus,
+        *:focus-visible,
+        *:active,
+        *:hover {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        input,
+        textarea,
+        select,
+        button {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        body {
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-size: var(--font-base);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 20px;
+        }
 
-        .loader-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 99999; backdrop-filter: blur(4px); transition: opacity 0.4s ease; }
-        .loader-overlay.active { display: flex; }
-        .spinner { width: 44px; height: 44px; border: 4px solid var(--border-color); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            backdrop-filter: blur(4px);
+            transition: opacity 0.4s ease;
+        }
+        .loader-overlay.active {
+            display: flex;
+        }
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-        #app { width: 100%; max-width: 1280px; background: var(--bg-app); border-radius: var(--radius); box-shadow: var(--shadow-heavy); padding: 24px 30px 30px; position: relative; min-height: 88vh; border: 1px solid var(--border-color); transition: background 0.4s ease, border-color 0.4s ease; }
+        #app {
+            width: 100%;
+            max-width: 1280px;
+            background: var(--bg-app);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-heavy);
+            padding: 24px 30px 30px;
+            position: relative;
+            min-height: 88vh;
+            border: 1px solid var(--border-color);
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
 
         /* ===== HEADER ===== */
-        .app-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color); margin-bottom: 22px; transition: border-color 0.4s ease; }
-        .header-left { display: flex; align-items: center; gap: 14px; }
-        .back-btn { background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-muted); width: 38px; height: 38px; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition-hover); font-size: 16px; touch-action: manipulation; }
-        .back-btn:hover { background: var(--gold); border-color: var(--gold); color: #0a0f0e; transform: scale(1.05); }
-        .back-btn:active { transform: scale(0.92); transition: var(--transition-active); }
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 22px;
+            transition: border-color 0.4s ease;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .back-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-hover);
+            font-size: 16px;
+            touch-action: manipulation;
+        }
+        .back-btn:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: #0a0f0e;
+            transform: scale(1.05);
+        }
+        .back-btn:active {
+            transform: scale(0.92);
+            transition: var(--transition-active);
+        }
 
-        .logo-area { display: flex; align-items: center; gap: 10px; }
-        .logo-area i { font-size: 28px; color: var(--gold); }
-        .logo-area h1 { font-size: 22px; font-weight: 700; }
-        .logo-area span { font-size: 12px; color: var(--text-muted); margin-left: 4px; font-weight: 400; -webkit-text-fill-color: var(--text-muted); }
-        /* #siteTitleText is a <span> too (so its text node can be updated without destroying
-           the tagline span next to it), so it needs its own rule to win back the gradient
-           look instead of falling into the generic ".logo-area span" (muted, small) style. */
-        #siteTitleText { font-size: 22px; font-weight: 700; margin-left: 0; background: linear-gradient(135deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-area i {
+            font-size: 28px;
+            color: var(--gold);
+        }
+        .logo-area h1 {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .logo-area span {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: 4px;
+            font-weight: 400;
+            -webkit-text-fill-color: var(--text-muted);
+        }
+        #siteTitleText {
+            font-size: 22px;
+            font-weight: 700;
+            margin-left: 0;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        /* ===== HEADER ACTIONS (Side by Side, wrapping allowed as a whole unit) ===== */
-        .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
 
-        /* Theme + Language stay grouped together so they never split apart or overlap other controls when wrapping on narrow screens */
-        .toggle-group { display: flex; align-items: center; gap: 10px; flex-shrink: 0; white-space: nowrap; }
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
 
         .icon-btn {
-            background: var(--bg-input); border: 1px solid var(--border-color);
-            color: var(--text-muted); width: 38px; height: 38px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            transition: var(--transition-hover); font-size: 18px; touch-action: manipulation;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-hover);
+            font-size: 18px;
+            touch-action: manipulation;
             flex-shrink: 0;
         }
-        .icon-btn:hover { background: var(--gold); color: #0a0f0e; border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
-        .icon-btn:active { transform: scale(0.92); transition: var(--transition-active); }
+        .icon-btn:hover {
+            background: var(--gold);
+            color: #0a0f0e;
+            border-color: var(--gold);
+            transform: rotate(15deg) scale(1.05);
+        }
+        .icon-btn:active {
+            transform: scale(0.92);
+            transition: var(--transition-active);
+        }
 
         .lang-btn {
-            background: var(--bg-input); border: 1px solid var(--border-color);
-            color: var(--text-main); padding: 0 12px; height: 38px; border-radius: 30px;
-            display: flex; align-items: center; gap: 6px; cursor: pointer;
-            transition: var(--transition-hover); font-size: 13px; touch-action: manipulation;
-            font-weight: 600; flex-shrink: 0;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0 12px;
+            height: 38px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: var(--transition-hover);
+            font-size: 13px;
+            touch-action: manipulation;
+            font-weight: 600;
+            flex-shrink: 0;
         }
-        .lang-btn:hover { border-color: var(--gold); color: var(--gold); }
-        .lang-btn:active { transform: scale(0.96); transition: var(--transition-active); }
-        .lang-btn i { font-size: 16px; transition: var(--transition-hover); }
+        .lang-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .lang-btn:active {
+            transform: scale(0.96);
+            transition: var(--transition-active);
+        }
+        .lang-btn i {
+            font-size: 16px;
+            transition: var(--transition-hover);
+        }
 
-        .user-badge { display: flex; align-items: center; gap: 10px; background: var(--bg-input); padding: 6px 14px 6px 10px; border-radius: 30px; border: 1px solid var(--border-color); transition: background 0.4s ease, border-color 0.4s ease; cursor: pointer; flex-shrink: 0; }
-        .user-badge:hover { border-color: var(--gold); }
-        .user-badge:active { transform: scale(0.96); transition: var(--transition-active); }
-        .profile-icon-wrapper { position: relative; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 16px; }
-        .notification-dot { position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; background-color: #e74c3c; border-radius: 50%; border: 2px solid var(--bg-input); display: none; }
-        .user-badge .email { font-size: 13px; font-weight: 500; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .user-badge .role { font-size: 10px; color: var(--text-muted); background: var(--primary); padding: 2px 12px; border-radius: 30px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-        .user-badge .logout-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; transition: var(--transition-hover); touch-action: manipulation; }
-        .user-badge .logout-btn:hover { color: var(--red); transform: rotate(6deg); }
-        .user-badge .logout-btn:active { transform: scale(0.92); transition: var(--transition-active); }
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-input);
+            padding: 6px 14px 6px 10px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            transition: background 0.4s ease, border-color 0.4s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .user-badge:hover {
+            border-color: var(--gold);
+        }
+        .user-badge:active {
+            transform: scale(0.96);
+            transition: var(--transition-active);
+        }
+        .profile-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 16px;
+        }
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 10px;
+            height: 10px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            border: 2px solid var(--bg-input);
+            display: none;
+        }
+        .user-badge .email {
+            font-size: 13px;
+            font-weight: 500;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .user-badge .role {
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--primary);
+            padding: 2px 12px;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .user-badge .logout-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            transition: var(--transition-hover);
+            touch-action: manipulation;
+        }
+        .user-badge .logout-btn:hover {
+            color: var(--red);
+            transform: rotate(6deg);
+        }
+        .user-badge .logout-btn:active {
+            transform: scale(0.92);
+            transition: var(--transition-active);
+        }
 
-        .page { display: none; animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
-        .page.active { display: block; }
-        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(16px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        .page {
+            display: none;
+            animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(16px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
 
         /* ===== TRANSLATION SYSTEM ===== */
-        [data-lang="en"] .lang-en { display: inline; }
-        [data-lang="en"] .lang-am, [data-lang="en"] .lang-ar { display: none; }
-        
-        [data-lang="am"] .lang-am { display: inline; }
-        [data-lang="am"] .lang-en, [data-lang="am"] .lang-ar { display: none; }
-        
-        [data-lang="ar"] .lang-ar { display: inline; }
-        [data-lang="ar"] .lang-en, [data-lang="ar"] .lang-am { display: none; }
+        [data-lang="en"] .lang-en {
+            display: inline;
+        }
+        [data-lang="en"] .lang-am,
+        [data-lang="en"] .lang-ar {
+            display: none;
+        }
+
+        [data-lang="am"] .lang-am {
+            display: inline;
+        }
+        [data-lang="am"] .lang-en,
+        [data-lang="am"] .lang-ar {
+            display: none;
+        }
+
+        [data-lang="ar"] .lang-ar {
+            display: inline;
+        }
+        [data-lang="ar"] .lang-en,
+        [data-lang="ar"] .lang-am {
+            display: none;
+        }
 
         /* ===== REGISTRATION / LOGIN ===== */
-        .hero-description { text-align: center; margin-bottom: 28px; padding: 0 8px; }
-        .hero-description .icon-wrap { font-size: 42px; color: var(--gold); margin-bottom: 6px; display: inline-block; background: var(--bg-input); padding: 10px 16px; border-radius: 50px; border: 1px solid var(--border-color); }
-        .hero-description h2 { font-size: 26px; font-weight: 700; margin: 6px 0 4px; background: linear-gradient(135deg, #fff, var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero-description p { color: var(--text-muted); font-size: 14px; max-width: 480px; margin: 0 auto; line-height: 1.5; -webkit-text-fill-color: var(--text-muted); }
+        .hero-description {
+            text-align: center;
+            margin-bottom: 28px;
+            padding: 0 8px;
+        }
+        .hero-description .icon-wrap {
+            font-size: 42px;
+            color: var(--gold);
+            margin-bottom: 6px;
+            display: inline-block;
+            background: var(--bg-input);
+            padding: 10px 16px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+        .hero-description h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 6px 0 4px;
+            background: linear-gradient(135deg, #fff, var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-description p {
+            color: var(--text-muted);
+            font-size: 14px;
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.5;
+            -webkit-text-fill-color: var(--text-muted);
+        }
 
-        .auth-container { max-width: 460px; margin: 0 auto; background: var(--bg-glass); backdrop-filter: blur(12px); padding: 32px 30px; border-radius: var(--radius); border: 1px solid var(--border-color); box-shadow: var(--shadow-light); transition: background 0.4s ease, border-color 0.4s ease; }
-        .auth-container .auth-switch { display: flex; justify-content: center; gap: 14px; margin-bottom: 20px; }
-        .auth-container .auth-switch button { background: transparent; border: none; color: var(--text-muted); font-size: 15px; font-weight: 600; cursor: pointer; transition: var(--transition-hover); padding-bottom: 4px; border-bottom: 2px solid transparent; touch-action: manipulation; }
-        .auth-container .auth-switch button.active { color: var(--gold); border-bottom-color: var(--gold); }
-        .auth-container .auth-switch button:hover { color: var(--text-main); }
-        .auth-container .auth-switch button:active { transform: scale(0.96); transition: var(--transition-active); }
+        .auth-container {
+            max-width: 460px;
+            margin: 0 auto;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            padding: 32px 30px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-light);
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+        .auth-container .auth-switch {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .auth-container .auth-switch button {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-hover);
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+            touch-action: manipulation;
+        }
+        .auth-container .auth-switch button.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+        .auth-container .auth-switch button:hover {
+            color: var(--text-main);
+        }
+        .auth-container .auth-switch button:active {
+            transform: scale(0.96);
+            transition: var(--transition-active);
+        }
 
-        .auth-container h2 { text-align: center; font-size: 20px; margin-bottom: 4px; }
-        .auth-container .sub { text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 24px; }
-        .auth-container label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px; color: var(--text-muted); }
+        .auth-container h2 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .auth-container .sub {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+        .auth-container label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: var(--text-muted);
+        }
 
-        .auth-container .input-group { display: flex; align-items: center; background: var(--bg-input); border-radius: 10px; padding: 0 14px; border: 1px solid transparent; transition: var(--transition-hover); margin-bottom: 16px; }
-        .auth-container .input-group i { color: var(--text-muted); font-size: 16px; margin-right: 12px; transition: var(--transition-hover); }
-        .auth-container .input-group:focus-within i { color: var(--gold); }
-        .auth-container .input-group input { background: transparent; border: none; padding: 13px 0; width: 100%; color: var(--text-main); font-size: 14px; outline: none; }
-        .auth-container .input-group input::placeholder { color: var(--text-muted); opacity: 0.6; }
+        .auth-container .input-group {
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border-radius: 10px;
+            padding: 0 14px;
+            border: 1px solid transparent;
+            transition: var(--transition-hover);
+            margin-bottom: 16px;
+        }
+        .auth-container .input-group i {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-right: 12px;
+            transition: var(--transition-hover);
+        }
+        .auth-container .input-group:focus-within i {
+            color: var(--gold);
+        }
+        .auth-container .input-group input {
+            background: transparent;
+            border: none;
+            padding: 13px 0;
+            width: 100%;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+        }
+        .auth-container .input-group input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
 
-        .auth-options { display: flex; gap: 10px; margin: 4px 0 20px; }
-        .auth-options button { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition-hover); display: flex; align-items: center; justify-content: center; gap: 8px; touch-action: manipulation; }
-        .auth-options button:hover { border-color: var(--gold); background: rgba(212, 160, 23, 0.06); transform: translateY(-1px); }
-        .auth-options button:active { transform: scale(0.96); transition: var(--transition-active); }
-        .auth-options button.apple-btn { border-color: var(--border-color); }
-        .auth-options button.apple-btn:hover { border-color: #fff; background: rgba(255, 255, 255, 0.05); }
+        .auth-options {
+            display: flex;
+            gap: 10px;
+            margin: 4px 0 20px;
+        }
+        .auth-options button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: var(--transition-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            touch-action: manipulation;
+        }
+        .auth-options button:hover {
+            border-color: var(--gold);
+            background: rgba(212, 160, 23, 0.06);
+            transform: translateY(-1px);
+        }
+        .auth-options button:active {
+            transform: scale(0.96);
+            transition: var(--transition-active);
+        }
+        .auth-options button.apple-btn {
+            border-color: var(--border-color);
+        }
+        .auth-options button.apple-btn:hover {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
 
-        .btn-primary { width: 100%; padding: 14px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #0a0f0e; font-size: 15px; font-weight: 700; cursor: pointer; transition: var(--transition-hover); touch-action: manipulation; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(212, 160, 23, 0.35); }
-        .btn-primary:active { transform: scale(0.96); transition: var(--transition-active); }
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: #0a0f0e;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-hover);
+            touch-action: manipulation;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(212, 160, 23, 0.35);
+        }
+        .btn-primary:active {
+            transform: scale(0.96);
+            transition: var(--transition-active);
+        }
 
-        .auth-footer { text-align: center; margin-top: 18px; font-size: 13px; color: var(--text-muted); }
-        .auth-footer a { color: var(--gold); text-decoration: none; font-weight: 600; cursor: pointer; transition: var(--transition-hover); touch-action: manipulation; }
-        .auth-footer a:hover { text-decoration: underline; }
-        .auth-footer a:active { transform: scale(0.96); transition: var(--transition-active); }
+        .auth-footer {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .auth-footer a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-hover);
+            touch-action: manipulation;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        .auth-footer a:active {
+            transform: scale(0.96);
+            transition: var(--transition-active);
+        }
 
-        .profile-container { max-width: 420px; margin: 0 auto; background: var(--bg-glass); backdrop-filter: blur(12px); padding: 32px 30px; border-radius: var(--radius); border: 1px solid var(--border-color); box-shadow: var(--shadow-light); }
-        .profile-container .profile-icon { font-size: 56px; color: var(--gold); text-align: center; margin-bottom: 12px; }
-        .profile-container h2 { text-align: center; font-size: 22px; margin-bottom: 20px; }
-        .profile-field { margin-bottom: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
-        .profile-field:last-child { border-bottom: none; margin-bottom: 0; }
-        .profile-field label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
-        .profile-field .value { font-size: 15px; font-weight: 600; }
-        .profile-btn-inline { width: auto; padding: 8px 16px; font-size: 13px; margin-top: 10px; }
+        .profile-container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            padding: 32px 30px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-light);
+        }
+        .profile-container .profile-icon {
+            font-size: 56px;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .profile-container h2 {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .profile-field {
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+        .profile-field:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .profile-field label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .profile-field .value {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .profile-btn-inline {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 13px;
+            margin-top: 10px;
+        }
 
-        .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 6px; }
-        @media (max-width: 700px) { .payment-grid { grid-template-columns: 1fr; } }
-        .payment-options, .payment-form { background: var(--bg-glass); backdrop-filter: blur(8px); border-radius: var(--radius); padding: 24px; border: 1px solid var(--border-color); box-shadow: var(--shadow-light); transition: background 0.4s ease, border-color 0.4s ease; }
-        .payment-options h3, .payment-form h3 { font-size: 17px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
-        .payment-options h3 i, .payment-form h3 i { color: var(--gold); }
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-top: 6px;
+        }
+        @media (max-width: 700px) {
+            .payment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .payment-options,
+        .payment-form {
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-light);
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+        .payment-options h3,
+        .payment-form h3 {
+            font-size: 17px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+        }
+        .payment-options h3 i,
+        .payment-form h3 i {
+            color: var(--gold);
+        }
 
-        .payment-method { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: var(--bg-input); border-radius: 10px; border: 2px solid transparent; cursor: pointer; transition: var(--transition-hover); margin-bottom: 10px; touch-action: manipulation; }
-        .payment-method:hover { border-color: var(--border-color); background: var(--bg-glass); }
-        .payment-method:active { transform: scale(0.98); transition: var(--transition-active); }
-        .payment-method.selected { border-color: var(--gold); background: rgba(212, 160, 23, 0.06); }
-        .payment-method .icon { font-size: 24px; width: 36px; text-align: center; color: var(--gold); }
-        .payment-method .info { flex: 1; }
-        .payment-method .info .name { font-weight: 600; font-size: 15px; }
-        .payment-method .info .desc { font-size: 12px; color: var(--text-muted); }
-        .payment-method .check { color: var(--gold); font-size: 18px; opacity: 0; transition: var(--transition-hover); transform: scale(0.5); }
-        .payment-method.selected .check { opacity: 1; transform: scale(1); }
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            background: var(--bg-input);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: var(--transition-hover);
+            margin-bottom: 10px;
+            touch-action: manipulation;
+        }
+        .payment-method:hover {
+            border-color: var(--border-color);
+            background: var(--bg-glass);
+        }
+        .payment-method:active {
+            transform: scale(0.98);
+            transition: var(--transition-active);
+        }
+        .payment-method.selected {
+            border-color: var(--gold);
+            background: rgba(212, 160, 23, 0.06);
+        }
+        .payment-method .icon {
+            font-size: 24px;
+            width: 36px;
+            text-align: center;
+            color: var(--gold);
+        }
+        .payment-method .info {
+            flex: 1;
+        }
+        .payment-method .info .name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .payment-method .info .desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .payment-method .check {
+            color: var(--gold);
+            font-size: 18px;
+            opacity: 0;
+            transition: var(--transition-hover);
+            transform: scale(0.5);
+        }
+        .payment-method.selected .check {
+            opacity: 1;
+            transform: scale(1);
+        }
 
-        .payment-info-box { background: var(--bg-input); padding: 16px 18px; border-radius: 10px; margin-bottom: 18px; border-left: 3px solid var(--gold); }
-        .payment-info-box p { font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-        .payment-info-box p i { color: var(--gold); width: 18px; }
-        .payment-info-box .amount { font-size: 17px; font-weight: 700; color: var(--gold); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-color); }
+        .payment-info-box {
+            background: var(--bg-input);
+            padding: 16px 18px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            border-left: 3px solid var(--gold);
+        }
+        .payment-info-box p {
+            font-size: 13px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .payment-info-box p i {
+            color: var(--gold);
+            width: 18px;
+        }
+        .payment-info-box .amount {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+        }
 
-        .payment-form label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 4px; }
-        .payment-form input, .payment-form textarea { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-size: 14px; outline: none; transition: var(--transition-hover); margin-bottom: 14px; }
-        .payment-form textarea { resize: vertical; min-height: 70px; }
-        .payment-form .file-upload { border: 2px dashed var(--border-color); border-radius: 10px; padding: 24px; text-align: center; cursor: pointer; transition: var(--transition-hover); margin-bottom: 14px; background: var(--bg-input); touch-action: manipulation; }
-        .payment-form .file-upload:hover { border-color: var(--gold); background: rgba(212, 160, 23, 0.04); }
-        .payment-form .file-upload:active { transform: scale(0.98); transition: var(--transition-active); }
-        .payment-form .file-upload i { font-size: 30px; color: var(--text-muted); margin-bottom: 6px; }
-        .payment-form .file-upload p { color: var(--text-muted); font-size: 13px; }
-        .payment-form .file-upload .filename { color: var(--gold); font-weight: 600; margin-top: 4px; }
-        .payment-form .file-upload input[type="file"] { display: none; }
+        .payment-form label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .payment-form input,
+        .payment-form textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition-hover);
+            margin-bottom: 14px;
+        }
+        .payment-form textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+        .payment-form .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-hover);
+            margin-bottom: 14px;
+            background: var(--bg-input);
+            touch-action: manipulation;
+        }
+        .payment-form .file-upload:hover {
+            border-color: var(--gold);
+            background: rgba(212, 160, 23, 0.04);
+        }
+        .payment-form .file-upload:active {
+            transform: scale(0.98);
+            transition: var(--transition-active);
+        }
+        .payment-form .file-upload i {
+            font-size: 30px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .payment-form .file-upload p {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        .payment-form .file-upload .filename {
+            color: var(--gold);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .payment-form .file-upload input[type="file"] {
+            display: none;
+        }
 
-        .gallery-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 22px; }
-        .gallery-header h2 { font-size: 21px; }
-        .gallery-header .category-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-        .gallery-header .category-tabs button { padding: 8px 20px; border-radius: 30px; border: 1px solid var(--border-color); background: transparent; color: var(--text-muted); cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition-hover); touch-action: manipulation; }
-        .gallery-header .category-tabs button.active { background: var(--gold); color: #0a0f0e; border-color: var(--gold); box-shadow: 0 4px 12px rgba(212, 160, 23, 0.2); }
-        .gallery-header .category-tabs button:hover:not(.active) { border-color: var(--text-main); color: var(--text-main); }
-        .gallery-header .category-tabs button:active { transform: scale(0.96); transition: var(--transition-active); }
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+        .gallery-header h2 {
+            font-size: 21px;
+        }
+        .gallery-header .category-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .gallery-header .category-tabs button {
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: var(--transition-hover);
+            touch-action: manipulation;
+        }
+        .gallery-header .category-tabs button.active {
+            background: var(--gold);
+            color: #0a0f0e;
+            border-color: var(--gold);
+            box-shadow: 0 4px 12px rgba(212, 160, 23, 0.2);
+        }
+        .gallery-header .category-tabs button:hover:not(.active) {
+            border-color: var(--text-main);
+            color: var(--text-main);
+        }
+        .gallery-header .category-tabs button:active {
+            transform: scale(0.96);
+            transition: var(--transition-active);
+        }
 
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 24px; }
-        .video-card { background: var(--bg-glass); backdrop-filter: blur(4px); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border-color); transition: var(--transition-hover); cursor: pointer; box-shadow: var(--shadow-light); will-change: transform; touch-action: manipulation; }
-        .video-card:hover { transform: translateY(-6px); border-color: var(--gold); box-shadow: var(--shadow-heavy); }
-        .video-card:active { transform: scale(0.98); transition: var(--transition-active); }
-        .video-card .thumb { height: 170px; background: var(--bg-input); display: flex; align-items: center; justify-content: center; font-size: 42px; color: var(--text-muted); position: relative; background-size: cover; background-position: center; transition: filter 0.4s ease, opacity 0.4s ease; }
-        .video-card .thumb.locked { filter: blur(6px) brightness(0.7); }
-        .video-card .thumb .play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.3); opacity: 0; transition: var(--transition-hover); backdrop-filter: blur(2px); }
-        .video-card:hover .thumb .play-overlay { opacity: 1; }
-        .video-card .thumb .play-overlay i { font-size: 48px; color: var(--gold); filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6)); transition: var(--transition-hover); }
-        .video-card:hover .thumb .play-overlay i { transform: scale(1.1); }
-        .video-card .body { padding: 16px 18px 18px; }
-        .video-card .body .title { font-size: 16px; font-weight: 700; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
-        .video-card .body .desc { font-size: 13px; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 10px; line-height: 1.4; }
-        .video-card .body .meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-muted); padding-top: 8px; border-top: 1px solid var(--border-color); }
-        .video-card .body .meta .cat { background: var(--primary); padding: 3px 12px; border-radius: 30px; color: var(--text-main); font-weight: 500; font-size: 10px; }
-        .video-card .body .meta .like-container { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: var(--transition-hover); touch-action: manipulation; }
-        .video-card .body .meta .like-container:hover { color: var(--gold); }
-        .video-card .body .meta .like-container:active { transform: scale(0.92); transition: var(--transition-active); }
-        .video-card .body .meta .like-container i { font-size: 16px; }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 24px;
+        }
+        .video-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(4px);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: var(--transition-hover);
+            cursor: pointer;
+            box-shadow: var(--shadow-light);
+            will-change: transform;
+            touch-action: manipulation;
+        }
+        .video-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--gold);
+            box-shadow: var(--shadow-heavy);
+        }
+        .video-card:active {
+            transform: scale(0.98);
+            transition: var(--transition-active);
+        }
+        .video-card .thumb {
+            height: 170px;
+            background: var(--bg-input);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: var(--text-muted);
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            transition: filter 0.4s ease, opacity 0.4s ease;
+        }
+        .video-card .thumb.locked {
+            filter: blur(6px) brightness(0.7);
+        }
+        .video-card .thumb .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: var(--transition-hover);
+            backdrop-filter: blur(2px);
+        }
+        .video-card:hover .thumb .play-overlay {
+            opacity: 1;
+        }
+        .video-card .thumb .play-overlay i {
+            font-size: 48px;
+            color: var(--gold);
+            filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6));
+            transition: var(--transition-hover);
+        }
+        .video-card:hover .thumb .play-overlay i {
+            transform: scale(1.1);
+        }
+        .video-card .body {
+            padding: 16px 18px 18px;
+        }
+        .video-card .body .title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .video-card .body .desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .video-card .body .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+        }
+        .video-card .body .meta .cat {
+            background: var(--primary);
+            padding: 3px 12px;
+            border-radius: 30px;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 10px;
+        }
+        .video-card .body .meta .like-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: var(--transition-hover);
+            touch-action: manipulation;
+        }
+        .video-card .body .meta .like-container:hover {
+            color: var(--gold);
+        }
+        .video-card .body .meta .like-container:active {
+            transform: scale(0.92);
+            transition: var(--transition-active);
+        }
+        .video-card .body .meta .like-container i {
+            font-size: 16px;
+        }
 
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
-        .modal-overlay.active { display: flex; }
-        .modal-content { position: relative; width: 90%; max-width: 800px; background: var(--bg-app); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-heavy); padding: 20px; }
-        .modal-close { position: absolute; top: 10px; right: 15px; font-size: 28px; color: var(--text-muted); cursor: pointer; transition: var(--transition-hover); background: none; border: none; z-index: 10; }
-        .modal-close:hover { color: var(--gold); transform: scale(1.1); }
-        #modalVideoContainer { width: 100%; display: flex; justify-content: center; background: #000; border-radius: 8px; min-height: 200px; }
-        #modalVideoContainer iframe, #modalVideoContainer video { width: 100%; max-height: 450px; border-radius: 8px; border: none; }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            background: var(--bg-app);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-heavy);
+            padding: 20px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition-hover);
+            background: none;
+            border: none;
+            z-index: 10;
+        }
+        .modal-close:hover {
+            color: var(--gold);
+            transform: scale(1.1);
+        }
+        #modalVideoContainer {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background: #000;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+        #modalVideoContainer iframe,
+        #modalVideoContainer video {
+            width: 100%;
+            max-height: 450px;
+            border-radius: 8px;
+            border: none;
+        }
 
-        .admin-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 22px; background: var(--bg-glass); padding: 6px; border-radius: 12px; border: 1px solid var(--border-color); backdrop-filter: blur(4px); }
-        .admin-tabs button { padding: 10px 22px; border: none; border-radius: 8px; background: transparent; color: var(--text-muted); cursor: pointer; font-weight: 600; font-size: 13px; transition: var(--transition-hover); flex: 1; min-width: 80px; touch-action: manipulation; }
-        .admin-tabs button.active { background: var(--gold); color: #0a0f0e; box-shadow: 0 4px 12px rgba(212, 160, 23, 0.15); }
-        .admin-tabs button:hover:not(.active) { color: var(--text-main); background: var(--bg-input); }
-        .admin-tabs button:active { transform: scale(0.96); transition: var(--transition-active); }
+        .admin-tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+            background: var(--bg-glass);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(4px);
+        }
+        .admin-tabs button {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition-hover);
+            flex: 1;
+            min-width: 80px;
+            touch-action: manipulation;
+        }
+        .admin-tabs button.active {
+            background: var(--gold);
+            color: #0a0f0e;
+            box-shadow: 0 4px 12px rgba(212, 160, 23, 0.15);
+        }
+        .admin-tabs button:hover:not(.active) {
+            color: var(--text-main);
+            background: var(--bg-input);
+        }
+        .admin-tabs button:active {
+            transform: scale(0.96);
+            transition: var(--transition-active);
+        }
 
-        .admin-panel { display: none; animation: fadeUp 0.3s ease; }
-        .admin-panel.active { display: block; }
+        .admin-panel {
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .admin-panel.active {
+            display: block;
+        }
 
-        .admin-form { background: var(--bg-glass); backdrop-filter: blur(4px); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border-color); max-width: 700px; box-shadow: var(--shadow-light); }
-        .admin-form label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 4px; }
-        .admin-form input, .admin-form select, .admin-form textarea { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-size: 14px; outline: none; transition: var(--transition-hover); margin-bottom: 14px; }
-        .admin-form textarea { min-height: 80px; resize: vertical; }
-        .admin-form select option { background: var(--bg-input); }
-        .admin-form .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-        .admin-form .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; margin: 0; border-radius: 4px; }
-        .admin-form .checkbox-group label { margin: 0; cursor: pointer; color: var(--text-main); font-size: 14px; }
-        .admin-form .file-input-group { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
-        .admin-form .file-input-group input[type="file"] { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); }
+        .admin-form {
+            background: var(--bg-glass);
+            backdrop-filter: blur(4px);
+            padding: 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            max-width: 700px;
+            box-shadow: var(--shadow-light);
+        }
+        .admin-form label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .admin-form input,
+        .admin-form select,
+        .admin-form textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition-hover);
+            margin-bottom: 14px;
+        }
+        .admin-form textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .admin-form select option {
+            background: var(--bg-input);
+        }
+        .admin-form .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .admin-form .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--gold);
+            cursor: pointer;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .admin-form .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+        .admin-form .file-input-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .admin-form .file-input-group input[type="file"] {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-main);
+        }
 
-        .admin-table-wrap { overflow-x: auto; background: var(--bg-glass); backdrop-filter: blur(4px); border-radius: var(--radius); border: 1px solid var(--border-color); padding: 4px; box-shadow: var(--shadow-light); }
-        .admin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .admin-table th { text-align: left; padding: 14px 16px; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border-color); background: var(--bg-input); }
-        .admin-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        .admin-table tr:last-child td { border-bottom: none; }
-        .admin-table .status { padding: 3px 14px; border-radius: 30px; font-size: 11px; font-weight: 600; display: inline-block; }
-        .admin-table .status.pending { background: #7a5a00; color: #ffd966; }
-        .admin-table .status.approved { background: #0f5a3a; color: #6fcf97; }
-        .admin-table .status.rejected { background: #5a1a1a; color: #f28b82; }
-        .admin-table .actions button { padding: 5px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: var(--transition-hover); margin-right: 4px; touch-action: manipulation; }
-        .admin-table .actions .approve { background: #0f5a3a; color: #6fcf97; }
-        .admin-table .actions .approve:hover { background: #1a7a4a; transform: scale(1.04); }
-        .admin-table .actions .reject { background: #5a1a1a; color: #f28b82; }
-        .admin-table .actions .reject:hover { background: #7a2a2a; transform: scale(1.04); }
-        .admin-table .actions .del { background: #3a0a0a; color: #f28b82; }
-        .admin-table .actions .del:hover { background: #5a1a1a; transform: scale(1.04); }
-        .admin-table .actions .kick { background: #5a1a1a; color: #f28b82; }
-        .admin-table .actions .kick:hover { background: #7a2a2a; transform: scale(1.04); }
-        .admin-table .actions button:active { transform: scale(0.94); transition: var(--transition-active); }
-        .admin-table .view-link { color: var(--gold); font-weight: 600; text-decoration: none; font-size: 12px; }
-        .admin-table .view-link:hover { text-decoration: underline; }
+        .admin-table-wrap {
+            overflow-x: auto;
+            background: var(--bg-glass);
+            backdrop-filter: blur(4px);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            padding: 4px;
+            box-shadow: var(--shadow-light);
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .admin-table th {
+            text-align: left;
+            padding: 14px 16px;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-input);
+        }
+        .admin-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+        .admin-table .status {
+            padding: 3px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .admin-table .status.pending {
+            background: #7a5a00;
+            color: #ffd966;
+        }
+        .admin-table .status.approved {
+            background: #0f5a3a;
+            color: #6fcf97;
+        }
+        .admin-table .status.rejected {
+            background: #5a1a1a;
+            color: #f28b82;
+        }
+        .admin-table .actions button {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: var(--transition-hover);
+            margin-right: 4px;
+            touch-action: manipulation;
+        }
+        .admin-table .actions .approve {
+            background: #0f5a3a;
+            color: #6fcf97;
+        }
+        .admin-table .actions .approve:hover {
+            background: #1a7a4a;
+            transform: scale(1.04);
+        }
+        .admin-table .actions .reject {
+            background: #5a1a1a;
+            color: #f28b82;
+        }
+        .admin-table .actions .reject:hover {
+            background: #7a2a2a;
+            transform: scale(1.04);
+        }
+        .admin-table .actions .del {
+            background: #3a0a0a;
+            color: #f28b82;
+        }
+        .admin-table .actions .del:hover {
+            background: #5a1a1a;
+            transform: scale(1.04);
+        }
+        .admin-table .actions .kick {
+            background: #5a1a1a;
+            color: #f28b82;
+        }
+        .admin-table .actions .kick:hover {
+            background: #7a2a2a;
+            transform: scale(1.04);
+        }
+        .admin-table .actions button:active {
+            transform: scale(0.94);
+            transition: var(--transition-active);
+        }
+        .admin-table .view-link {
+            color: var(--gold);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        .admin-table .view-link:hover {
+            text-decoration: underline;
+        }
 
-        #toast { position: fixed; bottom: 30px; right: 30px; background: var(--bg-app); border: 1px solid var(--border-color); padding: 14px 22px; border-radius: 12px; box-shadow: var(--shadow-heavy); display: flex; align-items: center; gap: 12px; transform: translateY(100px); opacity: 0; transition: var(--transition-hover); z-index: 999; max-width: 400px; backdrop-filter: blur(12px); }
-        #toast.show { transform: translateY(0); opacity: 1; }
-        #toast i { font-size: 22px; }
-        #toast .msg { font-size: 14px; font-weight: 500; }
-        #toast.success i { color: #6fcf97; }
-        #toast.error i { color: #f28b82; }
-        #toast.info i { color: var(--gold); }
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-app);
+            border: 1px solid var(--border-color);
+            padding: 14px 22px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-heavy);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition-hover);
+            z-index: 999;
+            max-width: 400px;
+            backdrop-filter: blur(12px);
+        }
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        #toast i {
+            font-size: 22px;
+        }
+        #toast .msg {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        #toast.success i {
+            color: #6fcf97;
+        }
+        #toast.error i {
+            color: #f28b82;
+        }
+        #toast.info i {
+            color: var(--gold);
+        }
 
         @media (max-width: 600px) {
-            #app { padding: 16px; } .auth-container, .profile-container { padding: 24px 18px; }
-            .logo-area h1 { font-size: 18px; } #siteTitleText { font-size: 18px; } #siteTaglineText { display: none; }
-            .user-badge .email { max-width: 60px; } .admin-tabs button { font-size: 11px; padding: 8px 10px; min-width: 50px; }
-            .video-grid { grid-template-columns: 1fr; } .payment-options, .payment-form { padding: 16px; }
-            .back-btn, .icon-btn, .lang-btn { width: 34px; height: 34px; font-size: 14px; padding: 0 10px; }
-            .lang-btn { width: auto; }
-            .header-actions { justify-content: flex-end; gap: 8px; }
-            .toggle-group { gap: 8px; }
+            #app {
+                padding: 16px;
+            }
+            .auth-container,
+            .profile-container {
+                padding: 24px 18px;
+            }
+            .logo-area h1 {
+                font-size: 18px;
+            }
+            #siteTitleText {
+                font-size: 18px;
+            }
+            #siteTaglineText {
+                display: none;
+            }
+            .user-badge .email {
+                max-width: 60px;
+            }
+            .admin-tabs button {
+                font-size: 11px;
+                padding: 8px 10px;
+                min-width: 50px;
+            }
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            .payment-options,
+            .payment-form {
+                padding: 16px;
+            }
+            .back-btn,
+            .icon-btn,
+            .lang-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 14px;
+                padding: 0 10px;
+            }
+            .lang-btn {
+                width: auto;
+            }
+            .header-actions {
+                justify-content: flex-end;
+                gap: 8px;
+            }
+            .toggle-group {
+                gap: 8px;
+            }
         }
-        .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
-        .empty-state i { font-size: 56px; margin-bottom: 16px; opacity: 0.4; color: var(--gold); }
-        .empty-state h3 { font-size: 20px; color: var(--text-main); margin-bottom: 6px; }
-        .empty-state p { font-size: 14px; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .mt-10 { margin-top: 10px; } .mb-10 { margin-bottom: 10px; }
-        .text-gold { color: var(--gold); } .text-muted { color: var(--text-muted); }
-        .hidden { display: none !important; }
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 56px;
+            margin-bottom: 16px;
+            opacity: 0.4;
+            color: var(--gold);
+        }
+        .empty-state h3 {
+            font-size: 20px;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+        .empty-state p {
+            font-size: 14px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .mt-10 {
+            margin-top: 10px;
+        }
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+        .text-gold {
+            color: var(--gold);
+        }
+        .text-muted {
+            color: var(--text-muted);
+        }
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -326,13 +1419,14 @@
         <header class="app-header">
             <div class="header-left">
                 <button class="back-btn" id="backBtn" title="Go back"><i class="fas fa-arrow-left"></i></button>
-                <div class="logo-area"><i class="fas fa-video"></i><h1><span id="siteTitleText">Ethio Hub</span> <span id="siteTaglineText">| premium</span></h1></div>
+                <div class="logo-area"><i class="fas fa-video"></i>
+                    <h1><span id="siteTitleText">Ethio Hub</span> <span id="siteTaglineText">| premium</span></h1>
+                </div>
             </div>
             <div class="header-actions">
                 <div class="toggle-group">
                     <button class="icon-btn theme-toggle" id="themeToggle" title="Toggle Theme"><i class="fas fa-moon"></i></button>
 
-                    <!-- ===== LANGUAGE TOGGLE (3-Way) ===== -->
                     <button class="lang-btn" id="langToggle" title="Toggle Language">
                         <i class="fas fa-language"></i>
                         <span class="lang-en">EN</span>
@@ -392,8 +1486,12 @@
             <div class="profile-container">
                 <div class="profile-icon"><i class="fas fa-user-circle"></i></div>
                 <h2><span class="lang-en">My Profile</span><span class="lang-am">የእኔ መገለጫ</span><span class="lang-ar">ملفي الشخصي</span></h2>
-                <div class="profile-field"><label><span class="lang-en">Email Address</span><span class="lang-am">ኢሜይል አድራሻ</span><span class="lang-ar">البريد الإلكتروني</span></label><div class="value" id="profileEmail">-</div></div>
-                <div class="profile-field"><label><span class="lang-en">Payment Status</span><span class="lang-am">የክፍያ ሁኔታ</span><span class="lang-ar">حالة الدفع</span></label><div class="value" id="profilePaymentStatus"><span class="status pending">Pending</span></div></div>
+                <div class="profile-field"><label><span class="lang-en">Email Address</span><span class="lang-am">ኢሜይል አድራሻ</span><span class="lang-ar">البريد الإلكتروني</span></label>
+                    <div class="value" id="profileEmail">-</div>
+                </div>
+                <div class="profile-field"><label><span class="lang-en">Payment Status</span><span class="lang-am">የክፍያ ሁኔታ</span><span class="lang-ar">حالة الدفع</span></label>
+                    <div class="value" id="profilePaymentStatus"><span class="status pending">Pending</span></div>
+                </div>
                 <div class="profile-field">
                     <label><span class="lang-en">Account Status</span><span class="lang-am">የመለያ ሁኔታ</span><span class="lang-ar">حالة الحساب</span></label>
                     <div class="value" id="profileAccountStatus"><span style="color:#f39c12; font-weight:600;"><i class="fas fa-exclamation-triangle"></i> <span class="lang-en">Pay to Verify</span><span class="lang-am">ለማረጋገጥ ይክፈሉ</span><span class="lang-ar">ادفع للتحقق</span></span></div>
@@ -415,9 +1513,30 @@
                         <p class="amount"><i class="fas fa-coins"></i> <span class="lang-en">Amount:</span><span class="lang-am">መጠን:</span><span class="lang-ar">المبلغ:</span> <strong><span id="paymentAmountDisplay">500</span> ETB</strong> (<span class="lang-en">Lifetime Access</span><span class="lang-am">የህይወት ተደራሽነት</span><span class="lang-ar">وصول مدى الحياة</span>)</p>
                     </div>
                     <div id="paymentMethods">
-                        <div class="payment-method selected" data-method="telebirr"><div class="icon"><i class="fas fa-mobile-screen-button"></i></div><div class="info"><div class="name">Telebirr</div><div class="desc">Ethiopia's leading mobile money</div></div><div class="check"><i class="fas fa-check-circle"></i></div></div>
-                        <div class="payment-method" data-method="cbe"><div class="icon"><i class="fas fa-building-columns"></i></div><div class="info"><div class="name">CBE</div><div class="desc">Commercial Bank of Ethiopia</div></div><div class="check"><i class="fas fa-check-circle"></i></div></div>
-                        <div class="payment-method" data-method="ebirr"><div class="icon"><i class="fas fa-wallet"></i></div><div class="info"><div class="name">eBirr</div><div class="desc">Digital wallet service</div></div><div class="check"><i class="fas fa-check-circle"></i></div></div>
+                        <div class="payment-method selected" data-method="telebirr">
+                            <div class="icon"><i class="fas fa-mobile-screen-button"></i></div>
+                            <div class="info">
+                                <div class="name">Telebirr</div>
+                                <div class="desc">Ethiopia's leading mobile money</div>
+                            </div>
+                            <div class="check"><i class="fas fa-check-circle"></i></div>
+                        </div>
+                        <div class="payment-method" data-method="cbe">
+                            <div class="icon"><i class="fas fa-building-columns"></i></div>
+                            <div class="info">
+                                <div class="name">CBE</div>
+                                <div class="desc">Commercial Bank of Ethiopia</div>
+                            </div>
+                            <div class="check"><i class="fas fa-check-circle"></i></div>
+                        </div>
+                        <div class="payment-method" data-method="ebirr">
+                            <div class="icon"><i class="fas fa-wallet"></i></div>
+                            <div class="info">
+                                <div class="name">eBirr</div>
+                                <div class="desc">Digital wallet service</div>
+                            </div>
+                            <div class="check"><i class="fas fa-check-circle"></i></div>
+                        </div>
                     </div>
                 </div>
                 <div class="payment-form">
@@ -425,7 +1544,10 @@
                     <form id="paymentForm">
                         <label><span class="lang-en">Transaction ID / Reference</span><span class="lang-am">የግብይት መታወቂያ</span><span class="lang-ar">معرف المعاملة</span></label><input type="text" id="txnId" placeholder="e.g. TXN-2026-123456" required />
                         <label><span class="lang-en">Upload Screenshot (optional)</span><span class="lang-am">ስክሪን ሾት ያስገቡ (አማራጭ)</span><span class="lang-ar">رفع لقطة شاشة (اختياري)</span></label>
-                        <div class="file-upload" id="fileUpload"><i class="fas fa-cloud-upload-alt"></i><p><span class="lang-en">Click to upload a screenshot</span><span class="lang-am">ስክሪን ሾት ለመስቀል ይንኩ</span><span class="lang-ar">انقر لرفع لقطة شاشة</span></p><div class="filename"></div><input type="file" accept="image/*" id="screenshotFile" /></div>
+                        <div class="file-upload" id="fileUpload"><i class="fas fa-cloud-upload-alt"></i>
+                            <p><span class="lang-en">Click to upload a screenshot</span><span class="lang-am">ስክሪን ሾት ለመስቀል ይንኩ</span><span class="lang-ar">انقر لرفع لقطة شاشة</span></p>
+                            <div class="filename"></div><input type="file" accept="image/*" id="screenshotFile" />
+                        </div>
                         <label><span class="lang-en">Additional Notes</span><span class="lang-am">ተጨማሪ ማስታወሻ</span><span class="lang-ar">ملاحظات إضافية</span></label><textarea id="paymentNotes" placeholder="Any extra info for admin..."></textarea>
                         <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> <span class="lang-en">Submit for Approval</span><span class="lang-am">ለጥቅም ያስገቡ</span><span class="lang-ar">إرسال للموافقة</span></button>
                         <p class="text-muted mt-10" style="font-size:12px; text-align:center;"><i class="fas fa-clock"></i> <span class="lang-en">Admin reviews within 24 hours.</span><span class="lang-am">አስተዳዳሪ በ24 ሰዓታት ውስጥ ይገመግማል።</span><span class="lang-ar">يراجع المسؤول في غضون 24 ساعة.</span></p>
@@ -461,12 +1583,12 @@
                             <label><span class="lang-en">Video Title</span><span class="lang-am">የቪዲዮ ርዕስ</span><span class="lang-ar">عنوان الفيديو</span></label><input type="text" id="videoTitle" placeholder="Enter title" required />
                             <label><span class="lang-en">Description</span><span class="lang-am">መግለጫ</span><span class="lang-ar">الوصف</span></label><textarea id="videoDesc" placeholder="Describe this content..."></textarea>
                             <label><span class="lang-en">Category</span><span class="lang-am">ምድብ</span><span class="lang-ar">الفئة</span></label><select id="videoCategory"><option value="exclusive">Exclusive Hub</option><option value="training">Training</option></select>
-                            
+
                             <div class="file-input-group">
                                 <label style="margin:0; display:flex; align-items:center; gap:8px; color:var(--text-main);"><i class="fas fa-upload"></i> <span class="lang-en">Upload Video File (Up to 1GB):</span><span class="lang-am">የቪዲዮ ፋይል ስቀል (እስከ 1 ጂቢ):</span><span class="lang-ar">رفع ملف الفيديو (حتى 1 جيجابايت):</span></label>
                                 <input type="file" id="videoFile" accept="video/*" />
                             </div>
-                            
+
                             <label><span class="lang-en">OR Video URL (YouTube / Vimeo / direct)</span><span class="lang-am">ወይም የቪዲዮ አድራሻ</span><span class="lang-ar">أو رابط الفيديو (يوتيوب / فيميو / مباشر)</span></label>
                             <input type="url" id="videoUrl" placeholder="https://..." />
                             <label><span class="lang-en">Thumbnail URL (optional)</span><span class="lang-am">የምስል አድራሻ (አማራጭ)</span><span class="lang-ar">رابط الصورة المصغرة (اختياري)</span></label>
@@ -480,7 +1602,7 @@
             </div>
             <div class="admin-panel" id="panel-users">
                 <h3 class="mb-10"><i class="fas fa-users text-gold"></i> <span class="lang-en">Manage Users</span><span class="lang-am">ተጠቃሚዎችን ያስተዳድሩ</span><span class="lang-ar">إدارة المستخدمين</span></h3>
-                
+
                 <div class="admin-form" style="margin-bottom:20px;">
                     <h4 style="margin-bottom:12px;"><span class="lang-en">Add New User</span><span class="lang-am">አዲስ ተጠቃሚ ጨምር</span><span class="lang-ar">إضافة مستخدم جديد</span></h4>
                     <form id="addUserForm">
@@ -494,7 +1616,9 @@
 
                 <div class="admin-table-wrap" id="adminUserList"></div>
             </div>
-            <div class="admin-panel" id="panel-payments"><h3 class="mb-10"><i class="fas fa-credit-card text-gold"></i> <span class="lang-en">Payment Approvals</span><span class="lang-am">የክፍያ ማረጋገጫ</span><span class="lang-ar">الموافقات على الدفع</span></h3><div class="admin-table-wrap" id="adminPaymentList"></div></div>
+            <div class="admin-panel" id="panel-payments"><h3 class="mb-10"><i class="fas fa-credit-card text-gold"></i> <span class="lang-en">Payment Approvals</span><span class="lang-am">የክፍያ ማረጋገጫ</span><span class="lang-ar">الموافقات على الدفع</span></h3>
+                <div class="admin-table-wrap" id="adminPaymentList"></div>
+            </div>
             <div class="admin-panel" id="panel-settings">
                 <h3 class="mb-10"><i class="fas fa-cog text-gold"></i> <span class="lang-en">General Settings</span><span class="lang-am">አጠቃላይ ቅንብሮች</span><span class="lang-ar">الإعدادات العامة</span></h3>
                 <div class="admin-form" style="max-width:600px;">
@@ -529,7 +1653,8 @@
                 const el = $('toast');
                 const icon = el.querySelector('i');
                 const span = el.querySelector('.msg');
-                span.textContent = msg; el.className = type;
+                span.textContent = msg;
+                el.className = type;
                 icon.className = { success: 'fas fa-check-circle', error: 'fas fa-times-circle', info: 'fas fa-info-circle' } [type] || 'fas fa-info-circle';
                 el.classList.add('show');
                 clearTimeout(el._timer);
@@ -537,106 +1662,254 @@
             };
             const showLoader = () => $('globalLoader').classList.add('active');
             const hideLoader = () => $('globalLoader').classList.remove('active');
-            const escapeHtml = (str) => String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            const escapeHtml = (str) => String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
+                "'": '&#39;' } [c]));
 
             // ============================================================
-            //  FULL-APP TRANSLATION SYSTEM
-            //  The static markup already switches via CSS (.lang-en/.lang-am/.lang-ar
-            //  spans keyed off [data-lang] on <html>). Everything the JS *generates*
-            //  at runtime (toasts, admin tables, gallery card labels, confirm/prompt
-            //  dialogs) used to be hardcoded English and never changed language.
-            //  This dictionary + t() covers that dynamic content so switching the
-            //  toggle changes the whole app, not just the parts written in HTML.
+            //  TRANSLATION DICTIONARY
             // ============================================================
             const TRANSLATIONS = {
                 en: {
-                    videoNotFound: 'Video not found.', failedLoadVideo: 'Failed to load video file.', noVideoSource: 'No video source found.',
-                    noContentTitle: 'No content yet', noContentDesc: 'Check back soon for premium videos.',
-                    completePayment: 'Please complete payment to unlock premium videos.', loginToLike: 'Please login to like videos.',
-                    noDescription: 'No description', catExclusive: 'Exclusive Hub', catTraining: 'Training', free: 'Free', premium: 'Premium',
-                    confirmDeleteVideo: 'Delete this video?', videoDeleted: 'Video deleted', promptEditTitle: 'Edit title:', promptEditDesc: 'Edit description:',
-                    confirmMarkFree: 'Mark as Free? (OK = Yes, Cancel = No)', videoUpdated: 'Video updated',
-                    thTitle: 'Title', thCategory: 'Category', thType: 'Type', thDuration: 'Duration', thActions: 'Actions',
-                    thEmail: 'Email', thRole: 'Role', thVerified: 'Verified', thPayment: 'Payment',
-                    thUser: 'User', thMethod: 'Method', thTxnId: 'Txn ID', thNotes: 'Notes', thScreenshot: 'Screenshot', kick: 'Kick',
-                    noVideos: 'No videos', noUsers: 'No users', noPendingPayments: 'No pending payments',
-                    yes: 'Yes', no: 'No', systemAdmin: 'System Admin', none: 'None', view: 'View', allowPopups: 'Please allow popups to view the screenshot.',
-                    confirmKick: 'Are you sure you want to kick (delete) this user?', accountRemoved: 'Your account has been removed by the admin.',
-                    userApproved: 'Approved {email}', userRejected: 'Rejected {email}', userKicked: 'User {email} has been kicked.',
-                    paymentApproved: 'Payment approved!', paymentRejected: 'Payment rejected.',
-                    invalidEmailPass: 'Invalid email or password (min 6 chars).', emailRegistered: 'This email is already registered. Please login.',
-                    accountRegistered: 'Account registered! Please pay to unlock premium videos.', accountNotFound: 'Account not found.',
-                    incorrectPassword: 'Incorrect password.', welcomeBack: 'Welcome back, {email}!', loggedOut: 'Logged out successfully.',
-                    invalidTxn: 'Invalid transaction ID or session.', paymentSubmitted: 'Payment submitted! Admin will review shortly.',
+                    videoNotFound: 'Video not found.',
+                    failedLoadVideo: 'Failed to load video file.',
+                    noVideoSource: 'No video source found.',
+                    noContentTitle: 'No content yet',
+                    noContentDesc: 'Check back soon for premium videos.',
+                    completePayment: 'Please complete payment to unlock premium videos.',
+                    loginToLike: 'Please login to like videos.',
+                    noDescription: 'No description',
+                    catExclusive: 'Exclusive Hub',
+                    catTraining: 'Training',
+                    free: 'Free',
+                    premium: 'Premium',
+                    confirmDeleteVideo: 'Delete this video?',
+                    videoDeleted: 'Video deleted',
+                    promptEditTitle: 'Edit title:',
+                    promptEditDesc: 'Edit description:',
+                    confirmMarkFree: 'Mark as Free? (OK = Yes, Cancel = No)',
+                    videoUpdated: 'Video updated',
+                    thTitle: 'Title',
+                    thCategory: 'Category',
+                    thType: 'Type',
+                    thDuration: 'Duration',
+                    thActions: 'Actions',
+                    thEmail: 'Email',
+                    thRole: 'Role',
+                    thVerified: 'Verified',
+                    thPayment: 'Payment',
+                    thUser: 'User',
+                    thMethod: 'Method',
+                    thTxnId: 'Txn ID',
+                    thNotes: 'Notes',
+                    thScreenshot: 'Screenshot',
+                    kick: 'Kick',
+                    noVideos: 'No videos',
+                    noUsers: 'No users',
+                    noPendingPayments: 'No pending payments',
+                    yes: 'Yes',
+                    no: 'No',
+                    systemAdmin: 'System Admin',
+                    none: 'None',
+                    view: 'View',
+                    allowPopups: 'Please allow popups to view the screenshot.',
+                    confirmKick: 'Are you sure you want to kick (delete) this user?',
+                    accountRemoved: 'Your account has been removed by the admin.',
+                    userApproved: 'Approved {email}',
+                    userRejected: 'Rejected {email}',
+                    userKicked: 'User {email} has been kicked.',
+                    paymentApproved: 'Payment approved!',
+                    paymentRejected: 'Payment rejected.',
+                    invalidEmailPass: 'Invalid email or password (min 6 chars).',
+                    emailRegistered: 'This email is already registered. Please login.',
+                    accountRegistered: 'Account registered! Please pay to unlock premium videos.',
+                    accountNotFound: 'Account not found.',
+                    incorrectPassword: 'Incorrect password.',
+                    welcomeBack: 'Welcome back, {email}!',
+                    loggedOut: 'Logged out successfully.',
+                    invalidTxn: 'Invalid transaction ID or session.',
+                    paymentSubmitted: 'Payment submitted! Admin will review shortly.',
                     paymentSubmitError: 'Something went wrong submitting your payment. Please try again.',
                     dbExported: 'Database exported. Note: large uploaded video files stay in this browser only and are not included in the export.',
-                    invalidBackup: 'Invalid backup file.', dbImported: 'Database imported successfully! Reloading UI...', backupParseError: 'Failed to parse the backup file.',
-                    fillAllFields: 'Please fill in all fields.', passwordsNoMatch: 'Passwords do not match.',
-                    screenshotTooLarge: 'Screenshot is too large (max 8MB). Please choose a smaller image.', screenshotReadError: 'Could not read the screenshot file.',
-                    screenshotAttached: 'Screenshot attached: {name}', titleRequired: 'Title is required.', fileTooLarge: 'File is too large. Max size is 1GB.',
-                    provideFileOrUrl: 'Please upload a file or provide a URL.', videoSaveError: 'Failed to save the video. Please try again.',
-                    videoPublished: '🎬 Video "{title}" published!', userExists: 'A user with this email already exists.', userCreated: 'User {email} created successfully.',
-                    settingsSaved: 'Settings saved!', approvedExclaim: 'Approved!', stillPending: 'Still pending. Please wait.',
+                    invalidBackup: 'Invalid backup file.',
+                    dbImported: 'Database imported successfully! Reloading UI...',
+                    backupParseError: 'Failed to parse the backup file.',
+                    fillAllFields: 'Please fill in all fields.',
+                    passwordsNoMatch: 'Passwords do not match.',
+                    screenshotTooLarge: 'Screenshot is too large (max 8MB). Please choose a smaller image.',
+                    screenshotReadError: 'Could not read the screenshot file.',
+                    screenshotAttached: 'Screenshot attached: {name}',
+                    titleRequired: 'Title is required.',
+                    fileTooLarge: 'File is too large. Max size is 1GB.',
+                    provideFileOrUrl: 'Please upload a file or provide a URL.',
+                    videoSaveError: 'Failed to save the video. Please try again.',
+                    videoPublished: '🎬 Video "{title}" published!',
+                    userExists: 'A user with this email already exists.',
+                    userCreated: 'User {email} created successfully.',
+                    settingsSaved: 'Settings saved!',
+                    approvedExclaim: 'Approved!',
+                    stillPending: 'Still pending. Please wait.',
                     paymentPendingReview: 'Your payment {txnId} is under review.'
                 },
                 am: {
-                    videoNotFound: 'ቪዲዮ አልተገኘም።', failedLoadVideo: 'ቪዲዮውን መጫን አልተሳካም።', noVideoSource: 'የቪዲዮ ምንጭ አልተገኘም።',
-                    noContentTitle: 'እስካሁን ይዘት የለም', noContentDesc: 'ለከፍተኛ ደረጃ ቪዲዮዎች ቆይተው ይመልከቱ።',
-                    completePayment: 'ከፍተኛ ደረጃ ቪዲዮዎችን ለመክፈት እባክዎ ክፍያውን ያጠናቅቁ።', loginToLike: 'ቪዲዮዎችን ለመውደድ እባክዎ ይግቡ።',
-                    noDescription: 'መግለጫ የለም', catExclusive: 'ብቸኛ ማዕከል', catTraining: 'ሥልጠና', free: 'ነፃ', premium: 'ከፍተኛ ደረጃ',
-                    confirmDeleteVideo: 'ይህን ቪዲዮ ይሰርዙ?', videoDeleted: 'ቪዲዮ ተሰርዟል', promptEditTitle: 'ርዕስ ያርትዑ፡', promptEditDesc: 'መግለጫ ያርትዑ፡',
-                    confirmMarkFree: 'እንደ ነፃ ምልክት ያድርጉ? (እሺ = አዎ, ይቅር = አይ)', videoUpdated: 'ቪዲዮ ተዘምኗል',
-                    thTitle: 'ርዕስ', thCategory: 'ምድብ', thType: 'ዓይነት', thDuration: 'ቆይታ', thActions: 'ተግባራት',
-                    thEmail: 'ኢሜይል', thRole: 'ሚና', thVerified: 'የተረጋገጠ', thPayment: 'ክፍያ',
-                    thUser: 'ተጠቃሚ', thMethod: 'ዘዴ', thTxnId: 'የግብይት መታወቂያ', thNotes: 'ማስታወሻ', thScreenshot: 'ስክሪን ሾት', kick: 'አባርር',
-                    noVideos: 'ቪዲዮዎች የሉም', noUsers: 'ተጠቃሚዎች የሉም', noPendingPayments: 'በመጠባበቅ ላይ ያሉ ክፍያዎች የሉም',
-                    yes: 'አዎ', no: 'አይ', systemAdmin: 'የስርዓት አስተዳዳሪ', none: 'የለም', view: 'ይመልከቱ', allowPopups: 'ስክሪን ሾቱን ለማየት እባክዎ ፖፕአፖችን ይፍቀዱ።',
-                    confirmKick: 'ይህን ተጠቃሚ ማስወገድ (መሰረዝ) እርግጠኛ ነዎት?', accountRemoved: 'መለያዎ በአስተዳዳሪው ተወግዷል።',
-                    userApproved: '{email} ጸድቋል', userRejected: '{email} ውድቅ ተደርጓል', userKicked: 'ተጠቃሚ {email} ተባርሯል።',
-                    paymentApproved: 'ክፍያ ጸድቋል!', paymentRejected: 'ክፍያ ውድቅ ተደርጓል።',
-                    invalidEmailPass: 'ልክ ያልሆነ ኢሜይል ወይም የይለፍ ቃል (ቢያንስ 6 ቁምፊዎች)።', emailRegistered: 'ይህ ኢሜይል ቀድሞውኑ ተመዝግቧል። እባክዎ ይግቡ።',
-                    accountRegistered: 'መለያ ተመዝግቧል! ከፍተኛ ደረጃ ቪዲዮዎችን ለመክፈት እባክዎ ይክፈሉ።', accountNotFound: 'መለያ አልተገኘም።',
-                    incorrectPassword: 'የተሳሳተ የይለፍ ቃል።', welcomeBack: 'እንኳን ደህና መጡ, {email}!', loggedOut: 'በተሳካ ሁኔታ ወጥተዋል።',
-                    invalidTxn: 'ልክ ያልሆነ የግብይት መታወቂያ ወይም ክፍለ ጊዜ።', paymentSubmitted: 'ክፍያ ገብቷል! አስተዳዳሪ በቅርቡ ይገመግማል።',
+                    videoNotFound: 'ቪዲዮ አልተገኘም።',
+                    failedLoadVideo: 'ቪዲዮውን መጫን አልተሳካም።',
+                    noVideoSource: 'የቪዲዮ ምንጭ አልተገኘም።',
+                    noContentTitle: 'እስካሁን ይዘት የለም',
+                    noContentDesc: 'ለከፍተኛ ደረጃ ቪዲዮዎች ቆይተው ይመልከቱ።',
+                    completePayment: 'ከፍተኛ ደረጃ ቪዲዮዎችን ለመክፈት እባክዎ ክፍያውን ያጠናቅቁ።',
+                    loginToLike: 'ቪዲዮዎችን ለመውደድ እባክዎ ይግቡ።',
+                    noDescription: 'መግለጫ የለም',
+                    catExclusive: 'ብቸኛ ማዕከል',
+                    catTraining: 'ሥልጠና',
+                    free: 'ነፃ',
+                    premium: 'ከፍተኛ ደረጃ',
+                    confirmDeleteVideo: 'ይህን ቪዲዮ ይሰርዙ?',
+                    videoDeleted: 'ቪዲዮ ተሰርዟል',
+                    promptEditTitle: 'ርዕስ ያርትዑ፡',
+                    promptEditDesc: 'መግለጫ ያርትዑ፡',
+                    confirmMarkFree: 'እንደ ነፃ ምልክት ያድርጉ? (እሺ = አዎ, ይቅር = አይ)',
+                    videoUpdated: 'ቪዲዮ ተዘምኗል',
+                    thTitle: 'ርዕስ',
+                    thCategory: 'ምድብ',
+                    thType: 'ዓይነት',
+                    thDuration: 'ቆይታ',
+                    thActions: 'ተግባራት',
+                    thEmail: 'ኢሜይል',
+                    thRole: 'ሚና',
+                    thVerified: 'የተረጋገጠ',
+                    thPayment: 'ክፍያ',
+                    thUser: 'ተጠቃሚ',
+                    thMethod: 'ዘዴ',
+                    thTxnId: 'የግብይት መታወቂያ',
+                    thNotes: 'ማስታወሻ',
+                    thScreenshot: 'ስክሪን ሾት',
+                    kick: 'አባርር',
+                    noVideos: 'ቪዲዮዎች የሉም',
+                    noUsers: 'ተጠቃሚዎች የሉም',
+                    noPendingPayments: 'በመጠባበቅ ላይ ያሉ ክፍያዎች የሉም',
+                    yes: 'አዎ',
+                    no: 'አይ',
+                    systemAdmin: 'የስርዓት አስተዳዳሪ',
+                    none: 'የለም',
+                    view: 'ይመልከቱ',
+                    allowPopups: 'ስክሪን ሾቱን ለማየት እባክዎ ፖፕአፖችን ይፍቀዱ።',
+                    confirmKick: 'ይህን ተጠቃሚ ማስወገድ (መሰረዝ) እርግጠኛ ነዎት?',
+                    accountRemoved: 'መለያዎ በአስተዳዳሪው ተወግዷል።',
+                    userApproved: '{email} ጸድቋል',
+                    userRejected: '{email} ውድቅ ተደርጓል',
+                    userKicked: 'ተጠቃሚ {email} ተባርሯል።',
+                    paymentApproved: 'ክፍያ ጸድቋል!',
+                    paymentRejected: 'ክፍያ ውድቅ ተደርጓል።',
+                    invalidEmailPass: 'ልክ ያልሆነ ኢሜይል ወይም የይለፍ ቃል (ቢያንስ 6 ቁምፊዎች)።',
+                    emailRegistered: 'ይህ ኢሜይል ቀድሞውኑ ተመዝግቧል። እባክዎ ይግቡ።',
+                    accountRegistered: 'መለያ ተመዝግቧል! ከፍተኛ ደረጃ ቪዲዮዎችን ለመክፈት እባክዎ ይክፈሉ።',
+                    accountNotFound: 'መለያ አልተገኘም።',
+                    incorrectPassword: 'የተሳሳተ የይለፍ ቃል።',
+                    welcomeBack: 'እንኳን ደህና መጡ, {email}!',
+                    loggedOut: 'በተሳካ ሁኔታ ወጥተዋል።',
+                    invalidTxn: 'ልክ ያልሆነ የግብይት መታወቂያ ወይም ክፍለ ጊዜ።',
+                    paymentSubmitted: 'ክፍያ ገብቷል! አስተዳዳሪ በቅርቡ ይገመግማል።',
                     paymentSubmitError: 'ክፍያዎን በማስገባት ላይ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።',
                     dbExported: 'ዳታቤዝ ወጥቷል። ማስታወሻ፡ ትላልቅ የተሰቀሉ ቪዲዮ ፋይሎች በዚህ አሳሽ ብቻ ይቀመጣሉ እና በኤክስፖርት ውስጥ አይካተቱም።',
-                    invalidBackup: 'ልክ ያልሆነ የመጠባበቂያ ፋይል።', dbImported: 'ዳታቤዝ በተሳካ ሁኔታ ገብቷል! በይነገጽ በድጋሚ በመጫን ላይ...', backupParseError: 'የመጠባበቂያ ፋይሉን መተንተን አልተሳካም።',
-                    fillAllFields: 'እባክዎ ሁሉንም መስኮች ይሙሉ።', passwordsNoMatch: 'የይለፍ ቃሎች አይዛመዱም።',
-                    screenshotTooLarge: 'ስክሪን ሾቱ በጣም ትልቅ ነው (ከፍተኛ 8MB)። እባክዎ ትንሽ ምስል ይምረጡ።', screenshotReadError: 'ስክሪን ሾት ፋይሉን ማንበብ አልተቻለም።',
-                    screenshotAttached: 'ስክሪን ሾት ተያይዟል፡ {name}', titleRequired: 'ርዕስ ያስፈልጋል።', fileTooLarge: 'ፋይሉ በጣም ትልቅ ነው። ከፍተኛ መጠን 1ጂቢ ነው።',
-                    provideFileOrUrl: 'እባክዎ ፋይል ይስቀሉ ወይም አድራሻ ያቅርቡ።', videoSaveError: 'ቪዲዮውን ማስቀመጥ አልተሳካም። እባክዎ እንደገና ይሞክሩ።',
-                    videoPublished: '🎬 ቪዲዮ "{title}" ታትሟል!', userExists: 'በዚህ ኢሜይል የተያዘ ተጠቃሚ አስቀድሞ አለ።', userCreated: 'ተጠቃሚ {email} በተሳካ ሁኔታ ተፈጥሯል።',
-                    settingsSaved: 'ቅንብሮች ተቀምጠዋል!', approvedExclaim: 'ጸድቋል!', stillPending: 'አሁንም በመጠባበቅ ላይ ነው። እባክዎ ይጠብቁ።',
+                    invalidBackup: 'ልክ ያልሆነ የመጠባበቂያ ፋይል።',
+                    dbImported: 'ዳታቤዝ በተሳካ ሁኔታ ገብቷል! በይነገጽ በድጋሚ በመጫን ላይ...',
+                    backupParseError: 'የመጠባበቂያ ፋይሉን መተንተን አልተሳካም።',
+                    fillAllFields: 'እባክዎ ሁሉንም መስኮች ይሙሉ።',
+                    passwordsNoMatch: 'የይለፍ ቃሎች አይዛመዱም።',
+                    screenshotTooLarge: 'ስክሪን ሾቱ በጣም ትልቅ ነው (ከፍተኛ 8MB)። እባክዎ ትንሽ ምስል ይምረጡ።',
+                    screenshotReadError: 'ስክሪን ሾት ፋይሉን ማንበብ አልተቻለም።',
+                    screenshotAttached: 'ስክሪን ሾት ተያይዟል፡ {name}',
+                    titleRequired: 'ርዕስ ያስፈልጋል።',
+                    fileTooLarge: 'ፋይሉ በጣም ትልቅ ነው። ከፍተኛ መጠን 1ጂቢ ነው።',
+                    provideFileOrUrl: 'እባክዎ ፋይል ይስቀሉ ወይም አድራሻ ያቅርቡ።',
+                    videoSaveError: 'ቪዲዮውን ማስቀመጥ አልተሳካም። እባክዎ እንደገና ይሞክሩ።',
+                    videoPublished: '🎬 ቪዲዮ "{title}" ታትሟል!',
+                    userExists: 'በዚህ ኢሜይል የተያዘ ተጠቃሚ አስቀድሞ አለ።',
+                    userCreated: 'ተጠቃሚ {email} በተሳካ ሁኔታ ተፈጥሯል።',
+                    settingsSaved: 'ቅንብሮች ተቀምጠዋል!',
+                    approvedExclaim: 'ጸድቋል!',
+                    stillPending: 'አሁንም በመጠባበቅ ላይ ነው። እባክዎ ይጠብቁ።',
                     paymentPendingReview: 'ክፍያዎ {txnId} በግምገማ ላይ ነው።'
                 },
                 ar: {
-                    videoNotFound: 'الفيديو غير موجود.', failedLoadVideo: 'فشل تحميل ملف الفيديو.', noVideoSource: 'لم يتم العثور على مصدر الفيديو.',
-                    noContentTitle: 'لا يوجد محتوى بعد', noContentDesc: 'تحقق مرة أخرى قريبًا للحصول على مقاطع فيديو مميزة.',
-                    completePayment: 'يرجى إتمام الدفع لفتح مقاطع الفيديو المميزة.', loginToLike: 'يرجى تسجيل الدخول للإعجاب بمقاطع الفيديو.',
-                    noDescription: 'لا يوجد وصف', catExclusive: 'مركز حصري', catTraining: 'تدريب', free: 'مجاني', premium: 'مميز',
-                    confirmDeleteVideo: 'حذف هذا الفيديو؟', videoDeleted: 'تم حذف الفيديو', promptEditTitle: 'تعديل العنوان:', promptEditDesc: 'تعديل الوصف:',
-                    confirmMarkFree: 'وضع علامة مجاني؟ (موافق = نعم، إلغاء = لا)', videoUpdated: 'تم تحديث الفيديو',
-                    thTitle: 'العنوان', thCategory: 'الفئة', thType: 'النوع', thDuration: 'المدة', thActions: 'الإجراءات',
-                    thEmail: 'البريد الإلكتروني', thRole: 'الدور', thVerified: 'موثّق', thPayment: 'الدفع',
-                    thUser: 'المستخدم', thMethod: 'الطريقة', thTxnId: 'معرف المعاملة', thNotes: 'ملاحظات', thScreenshot: 'لقطة شاشة', kick: 'طرد',
-                    noVideos: 'لا توجد مقاطع فيديو', noUsers: 'لا يوجد مستخدمون', noPendingPayments: 'لا توجد مدفوعات معلقة',
-                    yes: 'نعم', no: 'لا', systemAdmin: 'مسؤول النظام', none: 'لا شيء', view: 'عرض', allowPopups: 'يرجى السماح بالنوافذ المنبثقة لعرض لقطة الشاشة.',
-                    confirmKick: 'هل أنت متأكد أنك تريد طرد (حذف) هذا المستخدم؟', accountRemoved: 'تمت إزالة حسابك بواسطة المسؤول.',
-                    userApproved: 'تمت الموافقة على {email}', userRejected: 'تم رفض {email}', userKicked: 'تم طرد المستخدم {email}.',
-                    paymentApproved: 'تمت الموافقة على الدفع!', paymentRejected: 'تم رفض الدفع.',
-                    invalidEmailPass: 'بريد إلكتروني أو كلمة مرور غير صالحة (6 أحرف على الأقل).', emailRegistered: 'هذا البريد الإلكتروني مسجل بالفعل. يرجى تسجيل الدخول.',
-                    accountRegistered: 'تم تسجيل الحساب! يرجى الدفع لفتح مقاطع الفيديو المميزة.', accountNotFound: 'الحساب غير موجود.',
-                    incorrectPassword: 'كلمة المرور غير صحيحة.', welcomeBack: 'مرحباً بعودتك، {email}!', loggedOut: 'تم تسجيل الخروج بنجاح.',
-                    invalidTxn: 'معرف معاملة أو جلسة غير صالحة.', paymentSubmitted: 'تم إرسال الدفعة! سيقوم المسؤول بالمراجعة قريبًا.',
+                    videoNotFound: 'الفيديو غير موجود.',
+                    failedLoadVideo: 'فشل تحميل ملف الفيديو.',
+                    noVideoSource: 'لم يتم العثور على مصدر الفيديو.',
+                    noContentTitle: 'لا يوجد محتوى بعد',
+                    noContentDesc: 'تحقق مرة أخرى قريبًا للحصول على مقاطع فيديو مميزة.',
+                    completePayment: 'يرجى إتمام الدفع لفتح مقاطع الفيديو المميزة.',
+                    loginToLike: 'يرجى تسجيل الدخول للإعجاب بمقاطع الفيديو.',
+                    noDescription: 'لا يوجد وصف',
+                    catExclusive: 'مركز حصري',
+                    catTraining: 'تدريب',
+                    free: 'مجاني',
+                    premium: 'مميز',
+                    confirmDeleteVideo: 'حذف هذا الفيديو؟',
+                    videoDeleted: 'تم حذف الفيديو',
+                    promptEditTitle: 'تعديل العنوان:',
+                    promptEditDesc: 'تعديل الوصف:',
+                    confirmMarkFree: 'وضع علامة مجاني؟ (موافق = نعم، إلغاء = لا)',
+                    videoUpdated: 'تم تحديث الفيديو',
+                    thTitle: 'العنوان',
+                    thCategory: 'الفئة',
+                    thType: 'النوع',
+                    thDuration: 'المدة',
+                    thActions: 'الإجراءات',
+                    thEmail: 'البريد الإلكتروني',
+                    thRole: 'الدور',
+                    thVerified: 'موثّق',
+                    thPayment: 'الدفع',
+                    thUser: 'المستخدم',
+                    thMethod: 'الطريقة',
+                    thTxnId: 'معرف المعاملة',
+                    thNotes: 'ملاحظات',
+                    thScreenshot: 'لقطة شاشة',
+                    kick: 'طرد',
+                    noVideos: 'لا توجد مقاطع فيديو',
+                    noUsers: 'لا يوجد مستخدمون',
+                    noPendingPayments: 'لا توجد مدفوعات معلقة',
+                    yes: 'نعم',
+                    no: 'لا',
+                    systemAdmin: 'مسؤول النظام',
+                    none: 'لا شيء',
+                    view: 'عرض',
+                    allowPopups: 'يرجى السماح بالنوافذ المنبثقة لعرض لقطة الشاشة.',
+                    confirmKick: 'هل أنت متأكد أنك تريد طرد (حذف) هذا المستخدم؟',
+                    accountRemoved: 'تمت إزالة حسابك بواسطة المسؤول.',
+                    userApproved: 'تمت الموافقة على {email}',
+                    userRejected: 'تم رفض {email}',
+                    userKicked: 'تم طرد المستخدم {email}.',
+                    paymentApproved: 'تمت الموافقة على الدفع!',
+                    paymentRejected: 'تم رفض الدفع.',
+                    invalidEmailPass: 'بريد إلكتروني أو كلمة مرور غير صالحة (6 أحرف على الأقل).',
+                    emailRegistered: 'هذا البريد الإلكتروني مسجل بالفعل. يرجى تسجيل الدخول.',
+                    accountRegistered: 'تم تسجيل الحساب! يرجى الدفع لفتح مقاطع الفيديو المميزة.',
+                    accountNotFound: 'الحساب غير موجود.',
+                    incorrectPassword: 'كلمة المرور غير صحيحة.',
+                    welcomeBack: 'مرحباً بعودتك، {email}!',
+                    loggedOut: 'تم تسجيل الخروج بنجاح.',
+                    invalidTxn: 'معرف معاملة أو جلسة غير صالحة.',
+                    paymentSubmitted: 'تم إرسال الدفعة! سيقوم المسؤول بالمراجعة قريبًا.',
                     paymentSubmitError: 'حدث خطأ ما أثناء إرسال دفعتك. يرجى المحاولة مرة أخرى.',
                     dbExported: 'تم تصدير قاعدة البيانات. ملاحظة: تبقى ملفات الفيديو الكبيرة المرفوعة في هذا المتصفح فقط ولا يتم تضمينها في التصدير.',
-                    invalidBackup: 'ملف نسخ احتياطي غير صالح.', dbImported: 'تم استيراد قاعدة البيانات بنجاح! جارٍ إعادة تحميل الواجهة...', backupParseError: 'فشل تحليل ملف النسخ الاحتياطي.',
-                    fillAllFields: 'يرجى ملء جميع الحقول.', passwordsNoMatch: 'كلمتا المرور غير متطابقتين.',
-                    screenshotTooLarge: 'لقطة الشاشة كبيرة جدًا (الحد الأقصى 8 ميجابايت). يرجى اختيار صورة أصغر.', screenshotReadError: 'تعذرت قراءة ملف لقطة الشاشة.',
-                    screenshotAttached: 'تم إرفاق لقطة الشاشة: {name}', titleRequired: 'العنوان مطلوب.', fileTooLarge: 'الملف كبير جدًا. الحد الأقصى للحجم 1 جيجابايت.',
-                    provideFileOrUrl: 'يرجى رفع ملف أو تقديم رابط.', videoSaveError: 'فشل حفظ الفيديو. يرجى المحاولة مرة أخرى.',
-                    videoPublished: '🎬 تم نشر الفيديو "{title}"!', userExists: 'يوجد مستخدم بهذا البريد الإلكتروني بالفعل.', userCreated: 'تم إنشاء المستخدم {email} بنجاح.',
-                    settingsSaved: 'تم حفظ الإعدادات!', approvedExclaim: 'تمت الموافقة!', stillPending: 'لا يزال معلقًا. يرجى الانتظار.',
+                    invalidBackup: 'ملف نسخ احتياطي غير صالح.',
+                    dbImported: 'تم استيراد قاعدة البيانات بنجاح! جارٍ إعادة تحميل الواجهة...',
+                    backupParseError: 'فشل تحليل ملف النسخ الاحتياطي.',
+                    fillAllFields: 'يرجى ملء جميع الحقول.',
+                    passwordsNoMatch: 'كلمتا المرور غير متطابقتين.',
+                    screenshotTooLarge: 'لقطة الشاشة كبيرة جدًا (الحد الأقصى 8 ميجابايت). يرجى اختيار صورة أصغر.',
+                    screenshotReadError: 'تعذرت قراءة ملف لقطة الشاشة.',
+                    screenshotAttached: 'تم إرفاق لقطة الشاشة: {name}',
+                    titleRequired: 'العنوان مطلوب.',
+                    fileTooLarge: 'الملف كبير جدًا. الحد الأقصى للحجم 1 جيجابايت.',
+                    provideFileOrUrl: 'يرجى رفع ملف أو تقديم رابط.',
+                    videoSaveError: 'فشل حفظ الفيديو. يرجى المحاولة مرة أخرى.',
+                    videoPublished: '🎬 تم نشر الفيديو "{title}"!',
+                    userExists: 'يوجد مستخدم بهذا البريد الإلكتروني بالفعل.',
+                    userCreated: 'تم إنشاء المستخدم {email} بنجاح.',
+                    settingsSaved: 'تم حفظ الإعدادات!',
+                    approvedExclaim: 'تمت الموافقة!',
+                    stillPending: 'لا يزال معلقًا. يرجى الانتظار.',
                     paymentPendingReview: 'دفعتك {txnId} قيد المراجعة.'
                 }
             };
@@ -663,8 +1936,10 @@
                     const url = URL.createObjectURL(file);
                     const v = document.createElement('video');
                     v.preload = 'metadata';
-                    v.onloadedmetadata = () => { URL.revokeObjectURL(url); resolve(v.duration || 0); };
-                    v.onerror = () => { URL.revokeObjectURL(url); resolve(0); };
+                    v.onloadedmetadata = () => { URL.revokeObjectURL(url);
+                        resolve(v.duration || 0); };
+                    v.onerror = () => { URL.revokeObjectURL(url);
+                        resolve(0); };
                     v.src = url;
                 } catch (e) { resolve(0); }
             });
@@ -756,7 +2031,7 @@
                     } catch (e) {
                         console.error("IndexedDB error, falling back to local storage", e);
                         const raw = localStorage.getItem('ethiohub_data');
-                        if (raw) { try { this._data = JSON.parse(raw); } catch(e) { this._data = null; } }
+                        if (raw) { try { this._data = JSON.parse(raw); } catch (e) { this._data = null; } }
                         if (!this._data) { this._data = this.defaults(); }
                         return this._data;
                     }
@@ -765,7 +2040,6 @@
                     try {
                         await idb.set('ethiohub_data', this._data);
                     } catch (e) {
-                        // Large Blobs can't go through JSON.stringify for localStorage; strip them for the fallback path
                         try {
                             const safeCopy = JSON.parse(JSON.stringify(this._data, (k, v) => (v instanceof Blob ? undefined : v)));
                             localStorage.setItem('ethiohub_data', JSON.stringify(safeCopy));
@@ -774,9 +2048,6 @@
                         }
                     }
                 },
-                // Large video files are kept in their own object store as native Blobs,
-                // referenced from the video record by fileKey. This avoids turning a
-                // ~1GB upload into a ~1.3GB base64 string sitting in memory/JSON.
                 async saveVideoFile(fileKey, blob) {
                     await idb.set(fileKey, blob, FILES_STORE);
                 },
@@ -788,15 +2059,30 @@
                 },
                 defaults() {
                     return {
-                        users: [{ id: 'admin_' + uid(), email: 'admin@ethiohub.com', password: 'admin123', role: 'admin', verified: true, approved: true, paymentStatus: 'approved', txnId: 'ADMIN_SETUP', createdAt: Date.now() }],
+                        users: [{ id: 'admin_' + uid(), email: 'admin@ethiohub.com', password: 'admin123', role: 'admin', verified: true,
+                            approved: true, paymentStatus: 'approved', txnId: 'ADMIN_SETUP', createdAt: Date.now() }],
                         videos: [
-                            { id: 'v1', title: 'Exclusive: Ethiopian Tech Future', description: 'A deep dive into Ethiopia\'s tech revolution. Exclusive insights from industry leaders.', category: 'exclusive', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', thumbnail: '', isFree: false, likes: [], duration: '12:30', fileKey: null, createdAt: Date.now() - 200000 },
-                            { id: 'v2', title: 'Training: Data Science for Beginners', description: 'Learn the fundamentals of data science with real-world examples tailored for Ethiopian context.', category: 'training', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', thumbnail: '', isFree: false, likes: [], duration: '08:15', fileKey: null, createdAt: Date.now() - 100000 },
-                            { id: 'v3', title: 'Exclusive: Behind the Scenes', description: 'Never-before-seen footage from Ethiopia\'s top creators. Only on Ethio Hub.', category: 'exclusive', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', thumbnail: '', isFree: false, likes: [], duration: '05:45', fileKey: null, createdAt: Date.now() - 50000 }
+                            { id: 'v1', title: 'Exclusive: Ethiopian Tech Future', description: 'A deep dive into Ethiopia\'s tech revolution. Exclusive insights from industry leaders.',
+                                category: 'exclusive', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', thumbnail: '',
+                                isFree: false, likes: [], duration: '12:30', fileKey: null, createdAt: Date.now() - 200000 },
+                            { id: 'v2', title: 'Training: Data Science for Beginners',
+                                description: 'Learn the fundamentals of data science with real-world examples tailored for Ethiopian context.',
+                                category: 'training', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', thumbnail: '',
+                                isFree: false, likes: [], duration: '08:15', fileKey: null, createdAt: Date.now() - 100000 },
+                            { id: 'v3', title: 'Exclusive: Behind the Scenes',
+                                description: 'Never-before-seen footage from Ethiopia\'s top creators. Only on Ethio Hub.',
+                                category: 'exclusive', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', thumbnail: '',
+                                isFree: false, likes: [], duration: '05:45', fileKey: null, createdAt: Date.now() - 50000 }
                         ],
-                        payments: [{ id: 'pay1', userId: 'admin_' + uid(), email: 'admin@ethiohub.com', method: 'telebirr', txnId: 'ADMIN_SEED', notes: 'Admin seed payment', screenshot: '', status: 'approved', createdAt: Date.now() - 300000 }],
-                        settings: { siteTitle: 'Ethio Hub', siteTagline: 'Premium Videos & Training', categoryDesc: 'Access the most exclusive video content and professional training materials.', paymentAmount: 500 },
-                        currentUser: null, theme: 'dark', language: 'en'
+                        payments: [{ id: 'pay1', userId: 'admin_' + uid(), email: 'admin@ethiohub.com', method: 'telebirr',
+                            txnId: 'ADMIN_SEED', notes: 'Admin seed payment', screenshot: '', status: 'approved',
+                            createdAt: Date.now() - 300000 }],
+                        settings: { siteTitle: 'Ethio Hub', siteTagline: 'Premium Videos & Training',
+                            categoryDesc: 'Access the most exclusive video content and professional training materials.',
+                            paymentAmount: 500 },
+                        currentUser: null,
+                        theme: 'dark',
+                        language: 'en'
                     };
                 },
                 getUser(email) { return this._data.users.find(u => u.email.toLowerCase() === email.toLowerCase()); },
@@ -804,13 +2090,17 @@
                     let vids = this._data.videos.slice().sort((a, b) => b.createdAt - a.createdAt);
                     return cat === 'all' ? vids : vids.filter(v => v.category === cat);
                 },
-                getPendingPayments() { return this._data.payments.filter(p => p.status === 'pending').sort((a, b) => b.createdAt - a.createdAt); },
+                getPendingPayments() { return this._data.payments.filter(p => p.status === 'pending').sort((a, b) => b.createdAt - a
+                        .createdAt); },
                 getUsers() { return this._data.users.slice(); }
             };
 
-            let state = { user: null, currentPage: 'register', selectedCategory: 'all', adminTab: 'videos', paymentMethod: 'telebirr', isLoginMode: false, pendingScreenshotDataUrl: '', pendingScreenshotName: '' };
-            let data = null; let settings = null;
-            const pages = { register: $('page-register'), profile: $('page-profile'), payment: $('page-payment'), gallery: $('page-gallery'), admin: $('page-admin') };
+            let state = { user: null, currentPage: 'register', selectedCategory: 'all', adminTab: 'videos',
+                paymentMethod: 'telebirr', isLoginMode: false, pendingScreenshotDataUrl: '', pendingScreenshotName: '' };
+            let data = null;
+            let settings = null;
+            const pages = { register: $('page-register'), profile: $('page-profile'), payment: $('page-payment'),
+                gallery: $('page-gallery'), admin: $('page-admin') };
 
             const navigate = (page) => {
                 Object.keys(pages).forEach(k => pages[k].classList.toggle('active', k === page));
@@ -825,11 +2115,13 @@
                     $('userRole').textContent = state.user.role;
                     $('userBadge').style.display = 'flex';
                     dot.style.display = state.user.paymentStatus !== 'approved' ? 'block' : 'none';
-                } else { $('userBadge').style.display = 'none'; dot.style.display = 'none'; }
+                } else { $('userBadge').style.display = 'none';
+                    dot.style.display = 'none'; }
             };
 
             const renderCategoryTabs = () => {
-                document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.toggle('active', b.dataset.cat === state.selectedCategory));
+                document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.toggle('active', b.dataset.cat === state
+                    .selectedCategory));
             };
 
             async function openVideoModal(videoId) {
@@ -862,7 +2154,8 @@
                     const iframe = document.createElement('iframe');
                     iframe.src = embedUrl;
                     iframe.allowFullscreen = true;
-                    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                    iframe.allow =
+                        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
                     iframe.style.width = '100%';
                     iframe.style.height = '450px';
                     container.appendChild(iframe);
@@ -893,15 +2186,19 @@
                 const container = $('videoGrid');
                 const videos = DB.getVideos(category);
                 if (!videos.length) {
-                    container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-film"></i><h3>${t('noContentTitle')}</h3><p>${t('noContentDesc')}</p></div>`;
+                    container.innerHTML =
+                        `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-film"></i><h3>${t('noContentTitle')}</h3><p>${t('noContentDesc')}</p></div>`;
                     return;
                 }
                 const isLocked = !state.user || state.user.paymentStatus !== 'approved';
                 const lockedClass = isLocked ? 'locked' : '';
                 container.innerHTML = videos.map(v => {
-                    const thumb = v.thumbnail || `https://via.placeholder.com/320x180/0f3b2e/d4a017?text=${encodeURIComponent(v.title)}`;
+                    const thumb = v.thumbnail ||
+                        `https://via.placeholder.com/320x180/0f3b2e/d4a017?text=${encodeURIComponent(v.title)}`;
                     const catLabel = v.category === 'exclusive' ? t('catExclusive') : t('catTraining');
-                    const freeBadge = v.isFree ? `<span style="background:var(--gold);color:#0a0f0e;padding:2px 10px;border-radius:30px;font-size:10px;font-weight:600;"><i class="fas fa-unlock" style="font-size:10px;"></i> ${t('free')}</span>` : '';
+                    const freeBadge = v.isFree ?
+                        `<span style="background:var(--gold);color:#0a0f0e;padding:2px 10px;border-radius:30px;font-size:10px;font-weight:600;"><i class="fas fa-unlock" style="font-size:10px;"></i> ${t('free')}</span>` :
+                        '';
                     const liked = state.user && v.likes && v.likes.includes(state.user.id);
                     const likeIcon = liked ? 'fa-solid fa-thumbs-up' : 'fa-regular fa-thumbs-up';
                     return `
@@ -963,7 +2260,8 @@
             const renderAdminVideos = () => {
                 const c = $('adminVideoList');
                 const vids = DB._data.videos.slice().sort((a, b) => b.createdAt - a.createdAt);
-                if (!vids.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-video"></i><h3>${t('noVideos')}</h3></div>`; return; }
+                if (!vids.length) { c.innerHTML =
+                    `<div class="empty-state"><i class="fas fa-video"></i><h3>${t('noVideos')}</h3></div>`; return; }
                 c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thTitle')}</th><th>${t('thCategory')}</th><th>${t('thType')}</th><th>${t('thDuration')}</th><th>${t('thActions')}</th></tr></thead><tbody>
                     ${vids.map(v => `<tr>
                         <td><strong>${escapeHtml(v.title)}</strong><br><span style="font-size:12px;color:var(--text-muted)">${escapeHtml((v.description||'').slice(0,40))}${(v.description||'').length > 40 ? '...' : ''}</span></td>
@@ -979,7 +2277,9 @@
                         if (v && v.fileKey) { await DB.deleteVideoFile(v.fileKey); }
                         DB._data.videos = DB._data.videos.filter(v => v.id !== this.dataset.id);
                         await DB.save();
-                        renderAdminVideos(); renderVideoGrid(); toast(t('videoDeleted'), 'success');
+                        renderAdminVideos();
+                        renderVideoGrid();
+                        toast(t('videoDeleted'), 'success');
                     }
                 }));
                 c.querySelectorAll('.edit-video').forEach(b => b.addEventListener('click', async function() {
@@ -990,14 +2290,18 @@
                     const newDesc = prompt(t('promptEditDesc'), v.description || '');
                     if (newDesc !== null) v.description = newDesc.trim();
                     v.isFree = confirm(t('confirmMarkFree'));
-                    await DB.save(); renderAdminVideos(); renderVideoGrid(); toast(t('videoUpdated'), 'success');
+                    await DB.save();
+                    renderAdminVideos();
+                    renderVideoGrid();
+                    toast(t('videoUpdated'), 'success');
                 }));
             };
 
             const renderAdminUsers = () => {
                 const c = $('adminUserList');
                 const users = DB.getUsers();
-                if (!users.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><h3>${t('noUsers')}</h3></div>`; return; }
+                if (!users.length) { c.innerHTML =
+                    `<div class="empty-state"><i class="fas fa-users"></i><h3>${t('noUsers')}</h3></div>`; return; }
                 c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thEmail')}</th><th>${t('thRole')}</th><th>${t('thVerified')}</th><th>${t('thPayment')}</th><th>${t('thActions')}</th></tr></thead><tbody>
                     ${users.map(u => {
                         const cls = u.paymentStatus === 'approved' ? 'approved' : (u.paymentStatus === 'rejected' ? 'rejected' : 'pending');
@@ -1018,11 +2322,21 @@
 
                 c.querySelectorAll('.approve-user').forEach(b => b.addEventListener('click', async function() {
                     const u = DB._data.users.find(u => u.id === this.dataset.id);
-                    if (u) { u.paymentStatus = 'approved'; u.approved = true; await DB.save(); renderAdminUsers(); renderAdminPayments(); toast(t('userApproved', { email: u.email }), 'success'); }
+                    if (u) { u.paymentStatus = 'approved';
+                        u.approved = true;
+                        await DB.save();
+                        renderAdminUsers();
+                        renderAdminPayments();
+                        toast(t('userApproved', { email: u.email }), 'success'); }
                 }));
                 c.querySelectorAll('.reject-user').forEach(b => b.addEventListener('click', async function() {
                     const u = DB._data.users.find(u => u.id === this.dataset.id);
-                    if (u) { u.paymentStatus = 'rejected'; u.approved = false; await DB.save(); renderAdminUsers(); renderAdminPayments(); toast(t('userRejected', { email: u.email }), 'error'); }
+                    if (u) { u.paymentStatus = 'rejected';
+                        u.approved = false;
+                        await DB.save();
+                        renderAdminUsers();
+                        renderAdminPayments();
+                        toast(t('userRejected', { email: u.email }), 'error'); }
                 }));
                 c.querySelectorAll('.kick-user').forEach(b => b.addEventListener('click', async function() {
                     const id = this.dataset.id;
@@ -1037,14 +2351,16 @@
                     } else {
                         toast(t('userKicked', { email: u.email }), 'info');
                     }
-                    renderAdminUsers(); renderAdminPayments();
+                    renderAdminUsers();
+                    renderAdminPayments();
                 }));
             };
 
             const renderAdminPayments = () => {
                 const c = $('adminPaymentList');
                 const pays = DB.getPendingPayments();
-                if (!pays.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-credit-card"></i><h3>${t('noPendingPayments')}</h3></div>`; return; }
+                if (!pays.length) { c.innerHTML =
+                    `<div class="empty-state"><i class="fas fa-credit-card"></i><h3>${t('noPendingPayments')}</h3></div>`; return; }
                 c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thUser')}</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thNotes')}</th><th>${t('thScreenshot')}</th><th>${t('thActions')}</th></tr></thead><tbody>
                     ${pays.map(p => `<tr>
                         <td>${escapeHtml(p.email)}</td><td>${escapeHtml(p.method)}</td><td>${escapeHtml(p.txnId) || '—'}</td><td style="font-size:12px;color:var(--text-muted)">${escapeHtml(p.notes) || '—'}</td>
@@ -1054,11 +2370,21 @@
                 </tbody></table>`;
                 c.querySelectorAll('.approve-payment').forEach(b => b.addEventListener('click', async function() {
                     const pay = DB._data.payments.find(p => p.id === this.dataset.id);
-                    if (pay) { pay.status = 'approved'; const u = DB.getUser(pay.email); if (u) { u.paymentStatus = 'approved'; u.approved = true; } await DB.save(); renderAdminPayments(); renderAdminUsers(); toast(t('paymentApproved'), 'success'); }
+                    if (pay) { pay.status = 'approved'; const u = DB.getUser(pay.email); if (u) { u.paymentStatus =
+                            'approved';
+                            u.approved = true; } await DB.save();
+                        renderAdminPayments();
+                        renderAdminUsers();
+                        toast(t('paymentApproved'), 'success'); }
                 }));
                 c.querySelectorAll('.reject-payment').forEach(b => b.addEventListener('click', async function() {
                     const pay = DB._data.payments.find(p => p.id === this.dataset.id);
-                    if (pay) { pay.status = 'rejected'; const u = DB.getUser(pay.email); if (u) { u.paymentStatus = 'rejected'; u.approved = false; } await DB.save(); renderAdminPayments(); renderAdminUsers(); toast(t('paymentRejected'), 'error'); }
+                    if (pay) { pay.status = 'rejected'; const u = DB.getUser(pay.email); if (u) { u.paymentStatus =
+                            'rejected';
+                            u.approved = false; } await DB.save();
+                        renderAdminPayments();
+                        renderAdminUsers();
+                        toast(t('paymentRejected'), 'error'); }
                 }));
                 c.querySelectorAll('.view-screenshot').forEach(b => b.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -1066,28 +2392,31 @@
                     if (!pay || !pay.screenshot) return;
                     const w = window.open('');
                     if (w) {
-                        w.document.write(`<title>Payment Screenshot - ${escapeHtml(pay.email)}</title><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${pay.screenshot}" style="max-width:100%;max-height:100vh;" /></body>`);
+                        w.document.write(
+                            `<title>Payment Screenshot - ${escapeHtml(pay.email)}</title><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${pay.screenshot}" style="max-width:100%;max-height:100vh;" /></body>`
+                            );
                     } else {
                         toast(t('allowPopups'), 'error');
                     }
                 }));
             };
 
-            const renderAllAdmin = () => { renderAdminVideos(); renderAdminUsers(); renderAdminPayments(); };
+            const renderAllAdmin = () => { renderAdminVideos();
+                renderAdminUsers();
+                renderAdminPayments(); };
 
             const applyTheme = (theme) => {
                 const html = document.documentElement;
                 const icon = $('themeToggle').querySelector('i');
-                if (theme === 'light') { html.classList.add('light-theme'); icon.className = 'fas fa-sun'; } 
-                else { html.classList.remove('light-theme'); icon.className = 'fas fa-moon'; }
-                DB._data.theme = theme; DB.save();
+                if (theme === 'light') { html.classList.add('light-theme');
+                    icon.className = 'fas fa-sun'; } else { html.classList.remove('light-theme');
+                    icon.className = 'fas fa-moon'; }
+                DB._data.theme = theme;
+                DB.save();
             };
             const toggleTheme = () => { applyTheme(DB._data.theme === 'dark' ? 'light' : 'dark'); };
 
             // ===== LANGUAGE LOGIC =====
-            // Switches BOTH the static markup (via [data-lang] + CSS, already instant)
-            // AND every piece of JS-generated content (toasts, admin tables, gallery
-            // card labels) by re-rendering whatever is currently on screen using t().
             const applyLanguage = (lang) => {
                 document.documentElement.setAttribute('data-lang', lang);
                 document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
@@ -1100,8 +2429,6 @@
                 const next = current === 'en' ? 'am' : current === 'am' ? 'ar' : 'en';
                 applyLanguage(next);
             };
-            // Re-renders whichever JS-built views are currently visible so they pick
-            // up the new language immediately, without needing a page reload.
             const refreshDynamicUI = () => {
                 if (!DB._data) return;
                 if (state.currentPage === 'gallery') renderVideoGrid(state.selectedCategory);
@@ -1109,12 +2436,17 @@
                 if (state.currentPage === 'profile') renderProfile();
             };
 
+            // ============================================================
+            //  PROFILE RENDER (COMPLETED)
+            // ============================================================
             const renderProfile = () => {
                 if (!state.user) { navigate('register'); return; }
                 $('profileEmail').textContent = state.user.email;
                 const payStatusEl = $('profilePaymentStatus');
                 const userStatus = state.user.paymentStatus;
-                payStatusEl.innerHTML = userStatus === 'approved' ? '<span class="status approved">Approved ✅</span>' : userStatus === 'rejected' ? '<span class="status rejected">Rejected ❌</span>' : '<span class="status pending">Pending ⏳</span>';
+                payStatusEl.innerHTML = userStatus === 'approved' ? '<span class="status approved">Approved ✅</span>' :
+                    userStatus === 'rejected' ? '<span class="status rejected">Rejected ❌</span>' :
+                    '<span class="status pending">Pending ⏳</span>';
 
                 const accStatusEl = $('profileAccountStatus');
                 const descEl = $('profileDescription');
@@ -1122,17 +2454,306 @@
                 const hasPaymentHistory = DB._data.payments.some(p => p.userId === state.user.id);
 
                 if (!hasPaymentHistory) {
-                    accStatusEl.innerHTML = `<span style="color:#f39c12; font-weight:600;"><i class="fas fa-exclamation-triangle"></i> <span class="lang-en">Pay to Verify</span><span class="lang-am">ለማረጋገጥ ይክፈሉ</span><span class="lang-ar">ادفع للتحقق</span></span>`;
-                    descEl.innerHTML = `<span class="lang-en">Submit your first payment to unlock all premium videos.</span><span class="lang-am">ሁሉንም ቪዲዮዎች ለመክፈት የመጀመሪያ ክፍያዎን ያስገቡ።</span><span class="lang-ar">قم بتقديم دفعتك الأولى لفتح جميع مقاطع الفيديو المتميزة.</span>`;
-                    btnEl.style.display = 'block'; btnEl.innerHTML = `<i class="fas fa-credit-card"></i> <span class="lang-en">Go to Payment</span><span class="lang-am">ወደ ክፍያ ይሂዱ</span><span class="lang-ar">اذهب إلى الدفع</span>`;
+                    accStatusEl.innerHTML =
+                        `<span style="color:#f39c12; font-weight:600;"><i class="fas fa-exclamation-triangle"></i> <span class="lang-en">Pay to Verify</span><span class="lang-am">ለማረጋገጥ ይክፈሉ</span><span class="lang-ar">ادفع للتحقق</span></span>`;
+                    descEl.innerHTML =
+                        `<span class="lang-en">Submit your first payment to unlock all premium videos.</span><span class="lang-am">ሁሉንም ቪዲዮዎች ለመክፈት የመጀመሪያ ክፍያዎን ያስገቡ።</span><span class="lang-ar">قم بتقديم دفعتك الأولى لفتح جميع مقاطع الفيديو المتميزة.</span>`;
+                    btnEl.style.display = 'block';
+                    btnEl.innerHTML =
+                        `<i class="fas fa-credit-card"></i> <span class="lang-en">Go to Payment</span><span class="lang-am">ወደ ክፍያ ይሂዱ</span><span class="lang-ar">اذهب إلى الدفع</span>`;
                 } else if (userStatus === 'pending') {
                     accStatusEl.innerHTML = `<span class="status pending">Waiting for Approval ⏳</span>`;
-                    descEl.innerHTML = `<span class="lang-en">Your payment is currently under review by the admin.</span><span class="lang-am">ክፍያዎ በአስተዳዳሪ ግምገማ ላይ ነው።</span><span class="lang-ar">دفعتك قيد المراجعة من قبل المسؤول.</span>`;
+                    descEl.innerHTML =
+                        `<span class="lang-en">Your payment is currently under review by the admin.</span><span class="lang-am">ክፍያዎ በአስተዳዳሪ ግምገማ ላይ ነው።</span><span class="lang-ar">دفعتك قيد المراجعة من قبل المسؤول.</span>`;
                     btnEl.style.display = 'none';
                 } else if (userStatus === 'approved') {
                     accStatusEl.innerHTML = `<span class="status approved">Verified ✓</span>`;
-                    descEl.innerHTML = `<span class="lang-en">You have full access to all premium content.</span><span class="lang-am">ሁሉንም ከፍተኛ ይዘት ሙሉ መዳረሻ አለዎት።</span><span class="lang-ar">لديك وصول كامل إلى جميع المحتويات المتميزة.</span>`;
+                    descEl.innerHTML =
+                        `<span class="lang-en">You have full access to all premium content.</span><span class="lang-am">ሁሉንም ከፍተኛ ይዘት ሙሉ መዳረሻ አለዎት።</span><span class="lang-ar">لديك وصول كامل إلى جميع المحتويات المتميزة.</span>`;
                     btnEl.style.display = 'none';
                 } else if (userStatus === 'rejected') {
                     accStatusEl.innerHTML = `<span class="status rejected">Verification Failed ❌</span>`;
-                    descEl.innerHTML = `<span
+                    descEl.innerHTML =
+                        `<span class="lang-en">Your payment was rejected. Please submit a new payment with correct details.</span><span class="lang-am">ክፍያዎ ውድቅ ተደርጓል። እባክዎ ትክክለኛ መረጃ ይዘው አዲስ ክፍያ ያስገቡ።</span><span class="lang-ar">تم رفض دفعتك. يرجى تقديم دفعة جديدة بالتفاصيل الصحيحة.</span>`;
+                    btnEl.style.display = 'block';
+                    btnEl.innerHTML =
+                        `<i class="fas fa-credit-card"></i> <span class="lang-en">Submit New Payment</span><span class="lang-am">አዲስ ክፍያ ያስገቡ</span><span class="lang-ar">تقديم دفعة جديدة</span>`;
+                }
+            };
+
+            // ============================================================
+            //  AUTH HANDLING
+            // ============================================================
+            const handleLogin = async (email, password) => {
+                const user = DB.getUser(email);
+                if (!user) { toast(t('accountNotFound'), 'error'); return false; }
+                if (user.password !== password) { toast(t('incorrectPassword'), 'error'); return false; }
+                state.user = user;
+                DB._data.currentUser = user;
+                await DB.save();
+                toast(t('welcomeBack', { email: user.email }), 'success');
+                updateUserBadge();
+                if (user.role === 'admin') { navigate('admin');
+                    renderAllAdmin(); } else { navigate('gallery');
+                    renderVideoGrid(); }
+                return true;
+            };
+
+            const handleRegister = async (email, password, confirm) => {
+                if (password !== confirm) { toast(t('passwordsNoMatch'), 'error'); return false; }
+                if (password.length < 6) { toast(t('invalidEmailPass'), 'error'); return false; }
+                if (DB.getUser(email)) { toast(t('emailRegistered'), 'error'); return false; }
+                const newUser = { id: uid(), email, password, role: 'user', verified: false, approved: false,
+                    paymentStatus: 'pending', txnId: '', createdAt: Date.now() };
+                DB._data.users.push(newUser);
+                state.user = newUser;
+                DB._data.currentUser = newUser;
+                await DB.save();
+                toast(t('accountRegistered'), 'success');
+                updateUserBadge();
+                navigate('payment');
+                return true;
+            };
+
+            const handleLogout = async () => {
+                state.user = null;
+                DB._data.currentUser = null;
+                await DB.save();
+                updateUserBadge();
+                navigate('register');
+                toast(t('loggedOut'), 'info');
+            };
+
+            // ============================================================
+            //  EVENT BINDING
+            // ============================================================
+            // Theme
+            $('themeToggle').addEventListener('click', toggleTheme);
+
+            // Language
+            $('langToggle').addEventListener('click', toggleLanguage);
+
+            // Back
+            $('backBtn').addEventListener('click', () => {
+                if (state.currentPage === 'admin' && state.user && state.user.role === 'admin') {
+                    navigate('admin');
+                    return;
+                }
+                navigate('gallery');
+                renderVideoGrid();
+            });
+
+            // User Badge -> Profile
+            $('userBadge').addEventListener('click', () => {
+                if (state.user) { navigate('profile');
+                    renderProfile(); }
+            });
+
+            // Logout
+            $('logoutBtn').addEventListener('click', async (e) => {
+                e.stopPropagation();
+                await handleLogout();
+            });
+
+            // Profile back
+            $('profileBackBtn').addEventListener('click', () => {
+                if (state.user && state.user.role === 'admin') { navigate('admin');
+                    renderAllAdmin(); } else { navigate('gallery');
+                    renderVideoGrid(); }
+            });
+
+            // Profile pay
+            $('profilePayBtn').addEventListener('click', () => { navigate('payment'); });
+
+            // Auth switch
+            document.querySelectorAll('.auth-switch button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.auth-switch button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    state.isLoginMode = this.dataset.mode === 'login';
+                    $('registerFields').classList.toggle('hidden', state.isLoginMode);
+                    $('loginFields').classList.toggle('hidden', !state.isLoginMode);
+                    $('authFooterRegister').classList.toggle('hidden', state.isLoginMode);
+                    $('authFooterLogin').classList.toggle('hidden', !state.isLoginMode);
+                    $('authBtn').innerHTML = state.isLoginMode ?
+                        `<i class="fas fa-chevron-right"></i> <span class="lang-en">Login</span><span class="lang-am">ግባ</span><span class="lang-ar">دخول</span>` :
+                        `<i class="fas fa-chevron-right"></i> <span class="lang-en">Register & Start Watching</span><span class="lang-am">ይመዝገቡ እና መመልከት ይጀምሩ</span><span class="lang-ar">سجل وابدأ المشاهدة</span>`;
+                    $('authTitle').innerHTML =
+                        `<i class="fas fa-lock text-gold"></i> <span class="lang-en">${state.isLoginMode ? 'Welcome Back' : 'Welcome'}</span><span class="lang-am">${state.isLoginMode ? 'እንኳን ተመልሰው' : 'እንኳን ደህና መጡ'}</span><span class="lang-ar">${state.isLoginMode ? 'مرحباً بعودتك' : 'مرحباً'}</span>`;
+                    $('authSub').innerHTML =
+                        `<span class="lang-en">${state.isLoginMode ? 'Login to access premium content' : 'Sign up to access premium content'}</span><span class="lang-am">${state.isLoginMode ? 'ለመግባት ይግቡ' : 'ለመግባት ይመዝገቡ'}</span><span class="lang-ar">${state.isLoginMode ? 'سجل الدخول للوصول إلى المحتوى المميز' : 'سجل للوصول إلى المحتوى المميز'}</span>`;
+                });
+            });
+
+            // Switch links
+            $('switchToLogin').addEventListener('click', () => {
+                document.querySelector('.auth-switch button[data-mode="login"]').click();
+            });
+            $('switchToRegister').addEventListener('click', () => {
+                document.querySelector('.auth-switch button[data-mode="register"]').click();
+            });
+
+            // Auth form submit
+            $('authForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                showLoader();
+                try {
+                    if (state.isLoginMode) {
+                        const email = $('loginEmail').value.trim();
+                        const password = $('loginPassword').value;
+                        await handleLogin(email, password);
+                    } else {
+                        const email = $('authEmail').value.trim();
+                        const password = $('authPassword').value;
+                        const confirm = $('authConfirmPassword').value;
+                        await handleRegister(email, password, confirm);
+                    }
+                } catch (err) { toast(err.message || 'Error', 'error'); } finally { hideLoader(); }
+            });
+
+            // Category tabs
+            document.querySelectorAll('#categoryTabs button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    state.selectedCategory = this.dataset.cat;
+                    renderVideoGrid(state.selectedCategory);
+                });
+            });
+
+            // Payment method selection
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                    this.classList.add('selected');
+                    state.paymentMethod = this.dataset.method;
+                });
+            });
+
+            // File upload for payment screenshot
+            const fileUploadEl = $('fileUpload');
+            const fileInput = $('screenshotFile');
+            fileUploadEl.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', async function() {
+                const file = this.files[0];
+                if (!file) return;
+                if (file.size > 8 * 1024 * 1024) { toast(t('screenshotTooLarge'), 'error'); return; }
+                try {
+                    const dataUrl = await readFileAsDataURL(file);
+                    state.pendingScreenshotDataUrl = dataUrl;
+                    state.pendingScreenshotName = file.name;
+                    fileUploadEl.querySelector('.filename').textContent = t('screenshotAttached', { name: file.name });
+                } catch (e) { toast(t('screenshotReadError'), 'error'); }
+            });
+
+            // Payment form submit
+            $('paymentForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!state.user) { toast('Please login first.', 'error');
+                    navigate('register'); return; }
+                const txnId = $('txnId').value.trim();
+                if (!txnId) { toast(t('invalidTxn'), 'error'); return; }
+                showLoader();
+                try {
+                    const payment = {
+                        id: uid(),
+                        userId: state.user.id,
+                        email: state.user.email,
+                        method: state.paymentMethod,
+                        txnId: txnId,
+                        notes: $('paymentNotes').value.trim() || '',
+                        screenshot: state.pendingScreenshotDataUrl || '',
+                        status: 'pending',
+                        createdAt: Date.now()
+                    };
+                    DB._data.payments.push(payment);
+                    state.user.paymentStatus = 'pending';
+                    state.user.txnId = txnId;
+                    await DB.save();
+                    toast(t('paymentSubmitted'), 'success');
+                    $('paymentForm').reset();
+                    state.pendingScreenshotDataUrl = '';
+                    state.pendingScreenshotName = '';
+                    fileUploadEl.querySelector('.filename').textContent = '';
+                    navigate('gallery');
+                    renderVideoGrid();
+                    updateUserBadge();
+                } catch (err) { toast(t('paymentSubmitError'), 'error'); } finally { hideLoader(); }
+            });
+
+            // Admin tabs
+            document.querySelectorAll('#adminTabs button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#adminTabs button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const tab = this.dataset.tab;
+                    state.adminTab = tab;
+                    document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+                    const panel = $('panel-' + tab);
+                    if (panel) panel.classList.add('active');
+                    if (tab === 'videos') renderAdminVideos();
+                    if (tab === 'users') renderAdminUsers();
+                    if (tab === 'payments') renderAdminPayments();
+                });
+            });
+
+            // Show Add Video form
+            $('showAddVideoForm').addEventListener('click', () => {
+                $('addVideoFormWrap').classList.toggle('hidden');
+            });
+
+            // Add Video form
+            $('addVideoForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                showLoader();
+                try {
+                    const title = $('videoTitle').value.trim();
+                    if (!title) { toast(t('titleRequired'), 'error');
+                        hideLoader(); return; }
+                    const file = $('videoFile').files[0];
+                    const url = $('videoUrl').value.trim();
+                    if (!file && !url) { toast(t('provideFileOrUrl'), 'error');
+                        hideLoader(); return; }
+                    if (file && file.size > 1024 * 1024 * 1024) { toast(t('fileTooLarge'), 'error');
+                        hideLoader(); return; }
+
+                    let fileKey = null;
+                    let duration = '00:00';
+                    if (file) {
+                        fileKey = 'vf_' + uid();
+                        await DB.saveVideoFile(fileKey, file);
+                        const secs = await readVideoDuration(file);
+                        duration = formatDuration(secs);
+                    }
+
+                    const video = {
+                        id: 'v_' + uid(),
+                        title: title,
+                        description: $('videoDesc').value.trim() || '',
+                        category: $('videoCategory').value,
+                        url: url || '',
+                        thumbnail: $('videoThumb').value.trim() || '',
+                        isFree: $('videoIsFree').checked,
+                        likes: [],
+                        duration: duration,
+                        fileKey: fileKey,
+                        createdAt: Date.now()
+                    };
+                    DB._data.videos.push(video);
+                    await DB.save();
+                    toast(t('videoPublished', { title: video.title }), 'success');
+                    $('addVideoForm').reset();
+                    $('addVideoFormWrap').classList.add('hidden');
+                    renderAdminVideos();
+                    renderVideoGrid();
+                } catch (err) { toast(t('videoSaveError'), 'error'); } finally { hideLoader(); }
+            });
+
+            // Add User form
+            $('addUserForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = $('newUserEmail').value.trim();
+                const password = $('newUserPassword').value.trim();
+                if (!email || !password) { toast(t('fillAllFields'), 'error'); return; }
+                if (DB.getUser(email)) { toast(t('userExists'), 'error'); return; }
+                const user = { id: uid(), email, password, role: 'user', verifie

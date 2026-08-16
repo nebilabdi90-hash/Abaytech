@@ -1,3 +1,12 @@
+You found a critical bug! The issue is that I used id="openTermsLink" three times in the HTML (once for English, once for Amharic, and once for Arabic).
+
+In HTML, IDs must be unique. Because of this, JavaScript only found the first link and ignored the others. When you tapped on the translated versions (or if the layout shifted), the click event wasn't attaching, so the modal never opened.
+
+I have fixed this by changing the link to use a CSS Class (class="openTermsLink") instead, and updated the JavaScript to listen for clicks on all of them. The small checkbox is already correctly placed right next to the text.
+
+Here is your fully corrected index.html. Copy this entire block, save it, and deploy it.
+
+```html
 <!DOCTYPE html>
 <html lang="en" data-lang="en" dir="ltr">
 <head>
@@ -1860,7 +1869,11 @@
                         </div>
                         <div class="terms-wrapper">
                             <input type="checkbox" id="agreeTerms" required />
-                            <label for="agreeTerms"><span class="lang-en">I agree to the <a href="#" id="openTermsLink">Terms & Conditions</a></span><span class="lang-am">በ <a href="#" id="openTermsLink">ደንቦች እና ሁኔታዎች</a> ተስማምቻለሁ</span><span class="lang-ar">أوافق على <a href="#" id="openTermsLink">الشروط والأحكام</a></span></label>
+                            <label for="agreeTerms" style="margin:0; font-size:13px; cursor:pointer;">
+                                <span class="lang-en">I agree to the <a href="#" class="openTermsLink">Terms & Conditions</a></span>
+                                <span class="lang-am">በ <a href="#" class="openTermsLink">ደንቦች እና ሁኔታዎች</a> ተስማምቻለሁ</span>
+                                <span class="lang-ar">أوافق على <a href="#" class="openTermsLink">الشروط والأحكام</a></span>
+                            </label>
                         </div>
                         <div class="field-error" id="termsError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
                     </div>
@@ -2948,3 +2961,4 @@
     </script>
 </body>
 </html>
+```

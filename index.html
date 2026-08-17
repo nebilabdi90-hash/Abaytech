@@ -1,12 +1,4 @@
-You found a critical bug! The issue is that I used id="openTermsLink" three times in the HTML (once for English, once for Amharic, and once for Arabic).
-
-In HTML, IDs must be unique. Because of this, JavaScript only found the first link and ignored the others. When you tapped on the translated versions (or if the layout shifted), the click event wasn't attaching, so the modal never opened.
-
-I have fixed this by changing the link to use a CSS Class (class="openTermsLink") instead, and updated the JavaScript to listen for clicks on all of them. The small checkbox is already correctly placed right next to the text.
-
-Here is your fully corrected index.html. Copy this entire block, save it, and deploy it.
-
-```html
+ 
 <!DOCTYPE html>
 <html lang="en" data-lang="en" dir="ltr">
 <head>

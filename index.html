@@ -37,7 +37,7 @@
             --red: #b22222;
             --radius: 16px;
             --radius-sm: 10px;
-            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-fast: 0.15s ease;
             --font-base: 15px;
             --touch-target: 44px;
@@ -94,7 +94,7 @@
             overflow-x: hidden;
         }
 
-        /* ===== CANVAS BACKGROUND ===== */
+        /* ===== INTERACTIVE CANVAS BACKGROUND ===== */
         #bgCanvas {
             position: fixed;
             top: 0;
@@ -103,7 +103,7 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.12;
+            opacity: 0.15;
         }
 
         ::-webkit-scrollbar {
@@ -449,6 +449,12 @@
             border-radius: 50px;
             border: 1px solid var(--border-color);
             box-shadow: 0 0 30px var(--gold-glow);
+            animation: pulseGold 2s infinite ease-in-out;
+        }
+        @keyframes pulseGold {
+            0% { box-shadow: 0 0 10px var(--gold-glow); }
+            50% { box-shadow: 0 0 40px var(--gold-glow); }
+            100% { box-shadow: 0 0 10px var(--gold-glow); }
         }
         .hero-section h2 {
             font-size: 24px;
@@ -584,13 +590,21 @@
             letter-spacing: 0.3px;
         }
 
-        /* --- Ultra-tight gap (3px) between inputs --- */
+        /* --- Staggered Animations --- */
         .auth-card .input-wrapper {
             margin-bottom: 3px;
             position: relative;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
         }
+        .auth-card .input-wrapper:nth-child(1) { animation-delay: 0.05s; }
+        .auth-card .input-wrapper:nth-child(2) { animation-delay: 0.1s; }
+        .auth-card .input-wrapper:nth-child(3) { animation-delay: 0.15s; }
         .auth-card .input-wrapper:last-of-type {
             margin-bottom: 8px;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .auth-card .input-group {
@@ -617,6 +631,7 @@
         .auth-card .input-group:focus-within {
             border-color: var(--gold);
             box-shadow: 0 0 0 3px var(--gold-glow);
+            transform: scale(1.01);
         }
 
         .auth-card .input-group input {
@@ -646,6 +661,7 @@
         }
         .toggle-pwd:hover {
             color: var(--gold);
+            transform: scale(1.1);
         }
         .toggle-pwd:active {
             transform: scale(0.9);
@@ -770,6 +786,8 @@
             flex-direction: column;
             gap: 8px;
             margin-bottom: 16px;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            animation-delay: 0.2s;
         }
         .social-btn {
             display: flex;
@@ -811,6 +829,8 @@
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            animation-delay: 0.1s;
         }
         .social-divider::before,
         .social-divider::after {
@@ -856,7 +876,7 @@
             transition: var(--transition-fast);
         }
 
-        /* ===== TERMS CHECKBOX ===== */
+        /* ===== CUSTOM CHECKBOX (PREMIUM) ===== */
         .terms-wrapper {
             display: flex;
             align-items: flex-start;
@@ -866,15 +886,56 @@
             font-size: 13px;
             color: var(--text-muted);
             line-height: 1.4;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            animation-delay: 0.2s;
         }
-        .terms-wrapper input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--gold);
-            cursor: pointer;
-            margin-top: 2px;
+        .custom-checkbox {
+            position: relative;
+            width: 20px;
+            height: 20px;
             flex-shrink: 0;
-            border-radius: 4px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .custom-checkbox input:checked ~ .checkmark {
+            background: var(--gold);
+            border-color: var(--gold);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid #0a0f0e;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            transition: all 0.2s ease;
+        }
+        .custom-checkbox input:checked ~ .checkmark:after {
+            display: block;
         }
         .terms-wrapper a {
             color: var(--gold);
@@ -921,6 +982,7 @@
             padding: 30px 28px;
             border: 1px solid var(--border-color);
             overflow-y: auto;
+            animation: fadeUp 0.3s ease;
         }
         .terms-modal-content h2 {
             font-size: 22px;
@@ -1927,7 +1989,10 @@
                             <div class="field-error" id="authConfirmError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
                         </div>
                         <div class="terms-wrapper">
-                            <input type="checkbox" id="agreeTerms" required />
+                            <label class="custom-checkbox">
+                                <input type="checkbox" id="agreeTerms" required />
+                                <span class="checkmark"></span>
+                            </label>
                             <label for="agreeTerms" style="margin:0; font-size:13px; cursor:pointer;">
                                 <span class="lang-en">I agree to the <a href="#" class="openTermsLink">Terms & Conditions</a></span>
                                 <span class="lang-am">በ <a href="#" class="openTermsLink">ደንቦች እና ሁኔታዎች</a> ተስማምቻለሁ</span>
@@ -2095,11 +2160,12 @@
             const escapeHtml = (str) => String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
                 "'": '&#39;' } [c]));
 
-            // ===== CANVAS PARTICLES =====
+            // ===== INTERACTIVE CANVAS PARTICLES =====
             const canvas = document.getElementById('bgCanvas');
             const ctx = canvas.getContext('2d');
             let particles = [];
             let animId = null;
+            let mouse = { x: null, y: null };
 
             function resizeCanvas() {
                 canvas.width = window.innerWidth;
@@ -2107,6 +2173,12 @@
             }
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
+
+            document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+            document.addEventListener('touchmove', (e) => { 
+                const t = e.touches[0]; 
+                if(t) { mouse.x = t.clientX; mouse.y = t.clientY; } 
+            });
 
             class Particle {
                 constructor() { this.reset(); }
@@ -2119,6 +2191,15 @@
                     this.opacity = Math.random() * 0.5 + 0.2;
                 }
                 update() {
+                    // Mouse Interaction
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 200 && dist > 0) {
+                        const force = (200 - dist) / 200;
+                        this.x -= (dx / dist) * force * 2;
+                        this.y -= (dy / dist) * force * 2;
+                    }
                     this.x += this.speedX;
                     this.y += this.speedY;
                     if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
@@ -2183,7 +2264,7 @@
             // ===== CLOUDINARY CONFIGURATION =====
             const cloudinaryConfig = {
                 cloudName: 'qbisyz4q',
-                uploadPreset: 'Ethio hub videos'
+                uploadPreset: 'Ethio hub videos' // Exact name from your Cloudinary Dashboard
             };
 
             const currentLang = () => localStorage.getItem('lang') || 'en';
@@ -2820,7 +2901,7 @@
                 } catch (e) {
                     // === MOBILE FIX: If popup fails, automatically use Redirect ===
                     if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request' || e.code === 'auth/network-request-failed') {
-                        toast('Redirecting to Google...', 'info');
+                        toast('Redirecting to Google/Apple...', 'info');
                         await auth.signInWithRedirect(provider);
                     } else {
                         hideLoader();
@@ -2849,7 +2930,23 @@
                 }
             });
 
-            // ===== AUTH HANDLERS =====
+            const handleLogin = async (email, password) => {
+                showLoader();
+                try {
+                    const cred = await auth.signInWithEmailAndPassword(email, password);
+                    const doc = await db.collection('users').doc(cred.user.uid).get();
+                    if (doc.exists) { state.user = { id: doc.id, ...doc.data() }; }
+                    else { state.user = { id: cred.user.uid, email: cred.user.email, role: 'user', paymentStatus: 'pending' }; }
+                    updateUserBadge(); hideLoader(); toast(t('welcomeBack', { email: state.user.email }), 'success');
+                    navigate('gallery'); renderVideoGrid(); return true;
+                } catch (e) {
+                    hideLoader();
+                    if (e.code === 'auth/user-not-found') toast(t('accountNotFound'), 'error');
+                    else if (e.code === 'auth/wrong-password') toast(t('incorrectPassword'), 'error');
+                    else toast(e.message, 'error'); return false;
+                }
+            };
+
             const handleRegister = async (email, password, confirm) => {
                 if (password !== confirm) { toast(t('passwordsNoMatch'), 'error'); return false; }
                 if (password.length < 6) { toast(t('invalidEmailPass'), 'error'); return false; }
@@ -2867,23 +2964,6 @@
                 } catch (e) {
                     hideLoader();
                     if (e.code === 'auth/email-already-in-use') toast(t('emailRegistered'), 'error');
-                    else toast(e.message, 'error'); return false;
-                }
-            };
-
-            const handleLogin = async (email, password) => {
-                showLoader();
-                try {
-                    const cred = await auth.signInWithEmailAndPassword(email, password);
-                    const doc = await db.collection('users').doc(cred.user.uid).get();
-                    if (doc.exists) { state.user = { id: doc.id, ...doc.data() }; }
-                    else { state.user = { id: cred.user.uid, email: cred.user.email, role: 'user', paymentStatus: 'pending' }; }
-                    updateUserBadge(); hideLoader(); toast(t('welcomeBack', { email: state.user.email }), 'success');
-                    navigate('gallery'); renderVideoGrid(); return true;
-                } catch (e) {
-                    hideLoader();
-                    if (e.code === 'auth/user-not-found') toast(t('accountNotFound'), 'error');
-                    else if (e.code === 'auth/wrong-password') toast(t('incorrectPassword'), 'error');
                     else toast(e.message, 'error'); return false;
                 }
             };
@@ -3007,7 +3087,7 @@
 
             // ===== INITIAL LOAD =====
             if (!state.user) { navigate('register'); }
-            console.log('✅ Ethio Hub fixed: Social login & Terms modal working perfectly!');
+            console.log('✅ Ethio Hub fixed: Social login, Canvas, and Terms modal working perfectly!');
         })();
     </script>
 </body>

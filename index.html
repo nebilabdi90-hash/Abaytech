@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
     <title>Ethio Hub – Premium Content</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <!-- ============================================================
     FIREBASE SDKs (Compat version for module-free browser integration)
@@ -22,7 +23,7 @@
             --bg-app: #141e1b;
             --bg-card: #1b2a24;
             --bg-input: #22332c;
-            --bg-glass: rgba(28, 43, 38, 0.55);
+            --bg-glass: rgba(28, 43, 38, 0.45);
             --text-main: #e8edea;
             --text-muted: #8ea198;
             --text-error: #f28b82;
@@ -47,7 +48,7 @@
             --bg-app: #ffffff;
             --bg-card: #f8faf9;
             --bg-input: #f0f3f2;
-            --bg-glass: rgba(255, 255, 255, 0.70);
+            --bg-glass: rgba(255, 255, 255, 0.50);
             --text-main: #1a2522;
             --text-muted: #4d6b63;
             --text-error: #c0392b;
@@ -117,7 +118,7 @@
             border-radius: 20px;
         }
 
-        /* ===== HIGH QUALITY LOADER ===== */
+        /* ===== PROFESSIONAL SPARKLE LOADER ===== */
         .loader-overlay {
             position: fixed;
             inset: 0;
@@ -133,23 +134,109 @@
         .loader-overlay.active {
             display: flex;
         }
-        .loader-ring {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: 4px solid rgba(212, 160, 23, 0.15);
-            border-top-color: var(--gold);
-            animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            box-shadow: 0 0 40px var(--gold-glow);
+        .loader-sparkle {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: loaderFloat 1.8s ease-in-out infinite;
         }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
+        .loader-sparkle::before,
+        .loader-sparkle::after {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(212, 160, 23, 0.25);
+            border-radius: 50%;
+            animation: loaderPulse 1.8s ease-out infinite;
+        }
+        .loader-sparkle::after {
+            inset: 18px;
+            animation-delay: 0.6s;
+        }
+        .loader-sparkle .sparkle-core {
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+            clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+            filter: drop-shadow(0 0 8px var(--gold-glow)) drop-shadow(0 0 18px var(--gold-glow));
+            animation: loaderCore 1.15s ease-in-out infinite;
+        }
+        .loader-sparkle .sparkle-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 8px var(--gold-glow);
+            animation: loaderOrbit 1.8s linear infinite;
+        }
+        .loader-sparkle .dot-1 { animation-delay: 0s; }
+        .loader-sparkle .dot-2 { animation-delay: -0.6s; }
+        .loader-sparkle .dot-3 { animation-delay: -1.2s; }
+        @keyframes loaderFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-3px) scale(1.03); }
+        }
+        @keyframes loaderCore {
+            0%, 100% { transform: rotate(0deg) scale(0.82); opacity: 0.72; }
+            50% { transform: rotate(45deg) scale(1.18); opacity: 1; }
+        }
+        @keyframes loaderPulse {
+            0% { transform: scale(0.55); opacity: 0; }
+            25% { opacity: 0.8; }
+            100% { transform: scale(1.55); opacity: 0; }
+        }
+        @keyframes loaderOrbit {
+            0% { transform: rotate(0deg) translateX(27px) scale(0.7); opacity: 0.25; }
+            50% { opacity: 1; }
+            100% { transform: rotate(360deg) translateX(27px) scale(0.7); opacity: 0.25; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .loader-sparkle, .loader-sparkle::before, .loader-sparkle::after,
+            .loader-sparkle .sparkle-core, .loader-sparkle .sparkle-dot {
+                animation-duration: 2.5s;
             }
         }
+
+
+        /* ===== HERO FLOATING DISPLAY — PREMIUM REALISTIC MOTION ===== */
+        .hero-icon-switch{position:relative;width:126px;height:72px;margin:0 auto 8px;display:grid;place-items:center;perspective:900px;touch-action:pan-y;user-select:none;-webkit-user-select:none;isolation:isolate}
+        .hero-icon-switch::before{content:"";position:absolute;width:92px;height:22px;bottom:4px;border-radius:50%;background:rgba(212,175,55,.14);filter:blur(12px);animation:heroShadow 3.2s ease-in-out infinite;pointer-events:none}
+        .hero-icon-switch::after{content:"";position:absolute;inset:8px 10px;border:1px solid rgba(255,255,255,.09);border-radius:24px;box-shadow:inset 0 1px rgba(255,255,255,.08),0 12px 34px rgba(0,0,0,.18);pointer-events:none}
+        .hero-icon-card{position:relative;width:112px;height:58px;border:1px solid rgba(212,175,55,.24);border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.018));box-shadow:inset 0 1px rgba(255,255,255,.16),0 8px 28px rgba(0,0,0,.22),0 0 22px rgba(212,175,55,.08);display:flex;align-items:center;justify-content:center;overflow:hidden;transform-style:preserve-3d;cursor:pointer;will-change:transform;animation:heroFloat 4.4s ease-in-out infinite;outline:none}
+        .hero-icon-card::before{content:"";position:absolute;width:62px;height:120px;left:-38px;top:-30px;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.22) 50%,transparent 65%);transform:rotate(12deg);animation:heroSheen 3.8s ease-in-out infinite;pointer-events:none}
+        .hero-icon-card::after{content:"";position:absolute;inset:1px;border-radius:21px;background:radial-gradient(circle at 50% 0,rgba(255,255,255,.08),transparent 48%);pointer-events:none}
+        .hero-icon-card.flip-next{animation:heroSlideNext .72s cubic-bezier(.22,.8,.22,1)}
+        .hero-icon-card.flip-prev{animation:heroSlidePrev .72s cubic-bezier(.22,.8,.22,1)}
+        .hero-object{position:relative;z-index:2;width:48px;height:48px;transform-style:preserve-3d;animation:heroObjectFloat 3.1s ease-in-out infinite;filter:drop-shadow(0 7px 8px rgba(0,0,0,.22))}
+        .hero-object::before,.hero-object::after{content:"";position:absolute;pointer-events:none}
+        .hero-object.crystal{transform:rotate(-10deg) skewY(-4deg)}
+        .hero-object.crystal::before{inset:5px 11px 7px 9px;background:linear-gradient(135deg,#fff7bf 0%,#e8bd35 30%,#9b6810 58%,#f8dc6d 78%,#fff6b8 100%);clip-path:polygon(50% 0,90% 24%,76% 88%,50% 100%,18% 82%,7% 28%);box-shadow:inset 8px 0 8px rgba(255,255,255,.28)}
+        .hero-object.crystal::after{width:11px;height:34px;left:19px;top:7px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.68),transparent);transform:rotate(16deg);filter:blur(1px);animation:heroGlint 2.3s ease-in-out infinite}
+        .hero-object.star{transform:rotate(-8deg)}
+        .hero-object.star::before{inset:4px;background:linear-gradient(145deg,#fff8c8,#e3ad20 45%,#8d5c08 72%,#fff0a0);clip-path:polygon(50% 0,61% 36%,100% 38%,70% 60%,80% 100%,50% 76%,20% 100%,30% 60%,0 38%,39% 36%);filter:drop-shadow(0 0 8px rgba(255,218,78,.45));animation:heroStarSpin 7s linear infinite}
+        .hero-object.pearl::before{inset:7px;border-radius:50%;background:radial-gradient(circle at 34% 25%,#fff,rgba(255,255,255,.72) 20%,#d8b94e 55%,#8b6416 100%);box-shadow:inset -7px -7px 10px rgba(74,46,4,.24),inset 5px 5px 8px rgba(255,255,255,.34),0 0 14px rgba(212,175,55,.26)}
+        .hero-object.pearl::after{width:10px;height:6px;left:14px;top:13px;border-radius:50%;background:rgba(255,255,255,.8);filter:blur(2px);transform:rotate(-25deg)}
+        .hero-object.ember{transform:rotate(8deg)}
+        .hero-object.ember::before{inset:6px 10px;background:linear-gradient(150deg,#fff4ae,#ffc83d 35%,#e66b13 68%,#8d220d);clip-path:polygon(50% 0,73% 29%,100% 46%,72% 100%,47% 82%,23% 100%,0 53%,28% 34%);filter:drop-shadow(0 0 12px rgba(255,157,28,.5));animation:heroEmber 1.5s ease-in-out infinite}
+        .hero-object.ember::after{width:8px;height:25px;left:21px;top:7px;border-radius:50%;background:rgba(255,247,181,.7);filter:blur(2px);transform:rotate(12deg)}
+        .hero-object.ribbon{transform:rotate(-7deg)}
+        .hero-object.ribbon::before{inset:9px 3px;background:linear-gradient(180deg,#fff5bd,#d6a82a 35%,#7f560b 58%,#f3d35d);border-radius:7px;transform:skewY(-10deg);box-shadow:inset 0 2px rgba(255,255,255,.45),0 0 10px rgba(212,175,55,.25)}
+        .hero-object.ribbon::after{width:36px;height:5px;left:6px;top:22px;border-radius:4px;background:rgba(255,255,255,.34);filter:blur(1px);transform:rotate(-10deg)}
+        @keyframes heroSlideNext{0%{transform:translateX(0) scale(1);opacity:1}45%{transform:translateX(18px) scale(.9);opacity:.25}100%{transform:translateX(0) scale(1);opacity:1}}
+        @keyframes heroSlidePrev{0%{transform:translateX(0) scale(1);opacity:1}45%{transform:translateX(-18px) scale(.9);opacity:.25}100%{transform:translateX(0) scale(1);opacity:1}}
+        @keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+        @keyframes heroObjectFloat{0%,100%{transform:translateY(0) rotateZ(-2deg) scale(1)}50%{transform:translateY(-4px) rotateZ(2deg) scale(1.045)}}
+        @keyframes heroShadow{0%,100%{transform:scale(.78);opacity:.32}50%{transform:scale(1);opacity:.7}}
+        @keyframes heroSheen{0%,45%{transform:translateX(-18px) rotate(12deg);opacity:0}58%{opacity:.9}76%,100%{transform:translateX(170px) rotate(12deg);opacity:0}}
+        @keyframes heroGlint{0%,45%{transform:translateX(-7px) rotate(16deg);opacity:0}60%{opacity:1}85%,100%{transform:translateX(20px) rotate(16deg);opacity:0}}
+        @keyframes heroStarSpin{to{transform:rotate(360deg)}}
+        @keyframes heroEmber{0%,100%{transform:scale(.94) translateY(1px)}50%{transform:scale(1.08) translateY(-2px)}}
+        @media(max-width:600px){.hero-icon-switch{width:120px;height:68px}.hero-icon-card{width:108px;height:56px;border-radius:21px}.hero-object{width:46px;height:46px}}
+        @media(prefers-reduced-motion:reduce){.hero-icon-card,.hero-object,.hero-icon-card::before,.hero-object::after,.hero-object.star::before,.hero-object.ember::before,.hero-icon-switch::before{animation:none!important}}
 
         /* ===== APP SHELL ===== */
         #app {
@@ -167,36 +254,47 @@
             backdrop-filter: blur(2px);
         }
 
-        /* ===== HEADER ===== */
+        /* ============================================================
+           POLISHED CIRCULAR RECTANGULAR "DASH" HEADER (Tightened Gaps)
+           ============================================================ */
         .app-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 18px;
-            transition: border-color 0.4s ease;
+            flex-wrap: nowrap; /* Keep all elements in one horizontal line */
+            gap: 4px; /* Reduced from 8px for a tighter, more premium fit */
+            padding: 4px 4px 4px 12px; /* Reduced outer padding for a cleaner look */
+            overflow: hidden; /* Keeps the profile pill inside the rounded header */
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 999px; /* Fully rounded circular rectangle */
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-light);
+            margin-bottom: 24px;
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
         }
+        
         .header-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            flex-shrink: 1;
+            min-width: 0;
         }
         .back-btn {
             background: var(--bg-input);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            width: var(--touch-target);
-            height: var(--touch-target);
+            width: 38px; /* Perfect circle */
+            height: 38px;
             border-radius: 50%;
             display: none;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
-            font-size: 16px;
+            font-size: 15px;
             touch-action: manipulation;
             flex-shrink: 0;
         }
@@ -206,70 +304,91 @@
             color: #0a0f0e;
             transform: scale(1.05);
         }
-        .back-btn:active {
-            transform: scale(0.92);
-            transition: var(--transition-fast);
-        }
 
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            min-width: 0;
+            overflow: hidden;
         }
-        .logo-area i {
-            font-size: 24px;
+        .sparkle-logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             color: var(--gold);
+            width: 22px;
+            height: 22px;
+            animation: floatSparkle 3s ease-in-out infinite;
+            flex-shrink: 0;
         }
+        .sparkle-logo svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 12px var(--gold-glow));
+            animation: sparklePulse 2.5s ease-in-out infinite;
+        }
+        @keyframes floatSparkle {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes sparklePulse {
+            0%, 100% { opacity: 0.7; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
         .logo-area h1 {
-            font-size: 20px;
+            font-size: 17px;
             font-weight: 700;
             line-height: 1.2;
-        }
-        .logo-area span {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-left: 4px;
-            font-weight: 400;
-            -webkit-text-fill-color: var(--text-muted);
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         #siteTitleText {
-            font-size: 20px;
-            font-weight: 700;
-            margin-left: 0;
             background: linear-gradient(135deg, var(--gold-light), var(--gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+        #siteTaglineText {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-left: 2px;
+            font-weight: 400;
+            display: inline-block;
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
+            gap: 4px; /* Tighten internal gap of the toggles */
+            flex-shrink: 0;
+            min-width: 0;
         }
 
         .toggle-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             flex-shrink: 0;
             white-space: nowrap;
         }
 
+        /* Adjusted toggle sizes to match perfectly */
         .icon-btn {
             background: var(--bg-input);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            width: var(--touch-target);
-            height: var(--touch-target);
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
-            font-size: 17px;
+            font-size: 15px;
             touch-action: manipulation;
             flex-shrink: 0;
         }
@@ -289,14 +408,14 @@
             border: 1px solid var(--border-color);
             color: var(--text-main);
             padding: 0 12px;
-            height: var(--touch-target);
+            height: 38px;
             border-radius: 30px;
             display: flex;
             align-items: center;
             gap: 5px;
             cursor: pointer;
             transition: var(--transition);
-            font-size: 12px;
+            font-size: 10px;
             touch-action: manipulation;
             font-weight: 600;
             flex-shrink: 0;
@@ -309,86 +428,100 @@
             transform: scale(0.96);
             transition: var(--transition-fast);
         }
-        .lang-btn i {
-            font-size: 15px;
-            transition: var(--transition);
-        }
 
+        /* ============================================================
+           USER BADGE - PROFESSIONAL PROFILE PILL
+           ============================================================ */
         .user-badge {
-            display: flex;
+            display: none; /* Hidden until user logs in */
+            position: relative;
+            z-index: 2;
+            transform-origin: center;
+            will-change: transform;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             background: var(--bg-input);
-            padding: 4px 12px 4px 8px;
-            border-radius: 30px;
+            padding: 2px 8px 2px 2px;
+            border-radius: 999px;
             border: 1px solid var(--border-color);
-            transition: background 0.4s ease, border-color 0.4s ease;
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
             cursor: pointer;
             flex-shrink: 0;
-            min-height: var(--touch-target);
+            min-height: 38px;
+            flex-wrap: nowrap; /* Prevents pill from breaking */
+            max-width: 180px; /* Prevents taking up too much space */
         }
         .user-badge:hover {
             border-color: var(--gold);
+            box-shadow: 0 0 10px var(--gold-glow);
         }
         .user-badge:active {
             transform: scale(0.96);
             transition: var(--transition-fast);
         }
         .profile-icon-wrapper {
-            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--gold);
-            font-size: 15px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: #0a0f0e;
+            font-size: 12px;
+            position: relative;
+            flex-shrink: 0; /* Prevents icon from squishing */
         }
         .notification-dot {
             position: absolute;
             top: -2px;
             right: -2px;
-            width: 9px;
-            height: 9px;
+            width: 8px;
+            height: 8px;
             background-color: #e74c3c;
             border-radius: 50%;
             border: 2px solid var(--bg-input);
             display: none;
         }
         .user-badge .email {
-            font-size: 12px;
-            font-weight: 500;
-            max-width: 80px;
+            font-size: 11px;
+            font-weight: 600;
+            max-width: 70px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-        }
-        .user-badge .role {
-            font-size: 9px;
-            color: var(--text-muted);
-            background: var(--primary);
-            padding: 2px 10px;
-            border-radius: 30px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            font-weight: 600;
-            display: none;
+            flex-shrink: 1; /* Allows text to shrink gracefully */
+            min-width: 0;
         }
         .user-badge .logout-btn {
             background: none;
             border: none;
             color: var(--text-muted);
             cursor: pointer;
-            font-size: 15px;
+            font-size: 13px;
             transition: var(--transition);
             touch-action: manipulation;
-            padding: 4px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
         .user-badge .logout-btn:hover {
             color: var(--red);
             transform: rotate(6deg);
         }
-        .user-badge .logout-btn:active {
-            transform: scale(0.92);
-            transition: var(--transition-fast);
+
+        .site-footer {
+            text-align: center;
+            margin-top: 18px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 10px;
+            letter-spacing: 0.2px;
+            opacity: 0.85;
+            user-select: none;
         }
 
         .page {
@@ -432,34 +565,39 @@
             display: none;
         }
 
-        /* ===== AUTH – redesigned card ===== */
+        /* ===== HERO SECTION & SPARKLING STAR (Hero) ===== */
         .hero-section {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
             padding: 0 4px;
             position: relative;
         }
-        .hero-section .icon-wrap {
-            font-size: 36px;
-            color: var(--gold);
-            margin-bottom: 4px;
-            display: inline-block;
-            background: var(--bg-input);
-            padding: 8px 14px;
-            border-radius: 50px;
+        .sparkle-hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border: 1px solid var(--border-color);
-            box-shadow: 0 0 30px var(--gold-glow);
-            animation: pulseGold 2s infinite ease-in-out;
+            box-shadow: 0 0 40px var(--gold-glow);
+            margin: 0 auto 4px;
+            animation: floatSparkle 4s ease-in-out infinite;
         }
-        @keyframes pulseGold {
-            0% { box-shadow: 0 0 10px var(--gold-glow); }
-            50% { box-shadow: 0 0 40px var(--gold-glow); }
-            100% { box-shadow: 0 0 10px var(--gold-glow); }
+        .sparkle-hero svg {
+            width: 32px;
+            height: 32px;
+            color: var(--gold);
+            filter: drop-shadow(0 0 8px var(--gold-glow));
+            animation: sparklePulse 2.5s ease-in-out infinite 0.5s;
         }
         .hero-section h2 {
             font-size: 24px;
             font-weight: 700;
-            margin: 4px 0 2px;
+            margin: 2px 0 2px;
             background: linear-gradient(135deg, #fff, var(--gold-light));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -472,23 +610,12 @@
             line-height: 1.6;
             -webkit-text-fill-color: var(--text-muted);
         }
-        .hero-section .highlight {
-            color: var(--gold);
-            font-weight: 600;
-            -webkit-text-fill-color: var(--gold);
-        }
-
         .hero-subtext {
-            margin-top: 10px;
+            margin-top: 6px;
             font-size: 13px;
             line-height: 1.6;
             color: var(--text-muted);
             -webkit-text-fill-color: var(--text-muted);
-        }
-        .hero-subtext .highlight {
-            color: var(--gold);
-            font-weight: 600;
-            -webkit-text-fill-color: var(--gold);
         }
         .hero-subtext .legal-badge {
             display: inline-block;
@@ -502,105 +629,87 @@
             margin-top: 4px;
         }
 
+        /* ============================================================
+           AUTH CARD – EXTREMELY SHORT, FLOATING, CLEAN
+           ============================================================ */
         .auth-card {
             max-width: 440px;
             margin: 0 auto;
             background: var(--bg-glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 28px 24px 32px;
-            border-radius: var(--radius);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 10px 12px 8px; /* Very short */
+            border-radius: 24px;
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-heavy);
-            transition: background 0.4s ease, border-color 0.4s ease;
-            position: relative;
-            overflow: visible;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+            transition: background 0.4s ease, border-color 0.4s ease, transform 0.3s ease;
         }
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border-radius: var(--radius);
-            background: linear-gradient(135deg, var(--gold), transparent 40%, var(--gold-light));
-            opacity: 0.08;
-            z-index: -1;
-            pointer-events: none;
+        .auth-card:hover {
+            transform: translateY(-2px);
         }
-
+        
         .auth-card .auth-switch {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 18px;
+            gap: 4px;
+            margin-bottom: 4px;
+            background: var(--bg-input);
+            padding: 4px;
+            border-radius: 999px;
         }
         .auth-card .auth-switch button {
+            flex: 1;
             background: transparent;
             border: none;
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            padding: 6px 14px;
-            border-radius: 30px;
+            padding: 4px 8px;
+            border-radius: 999px;
             touch-action: manipulation;
-            position: relative;
         }
         .auth-card .auth-switch button.active {
-            color: var(--gold);
-            background: rgba(212, 160, 23, 0.08);
-            box-shadow: 0 0 0 1px var(--gold);
+            background: var(--gold);
+            color: #0a0f0e;
+            box-shadow: 0 4px 12px var(--gold-glow);
         }
-        .auth-card .auth-switch button:hover {
+        .auth-card .auth-switch button:hover:not(.active) {
             color: var(--text-main);
-        }
-        .auth-card .auth-switch button:active {
-            transform: scale(0.96);
-            transition: var(--transition-fast);
         }
 
         .auth-card .auth-title {
             text-align: center;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 2px;
+            margin-bottom: 0px;
         }
         .auth-card .auth-sub {
             text-align: center;
             color: var(--text-muted);
-            font-size: 13px;
-            margin-bottom: 20px;
-            line-height: 1.5;
+            font-size: 11px;
+            margin-bottom: 4px;
+            line-height: 1.3;
         }
-        .auth-card .auth-sub .highlight {
-            color: var(--gold);
-            font-weight: 500;
-            -webkit-text-fill-color: var(--gold);
-        }
-
         .auth-card label {
             display: block;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             color: var(--text-muted);
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
         }
 
-        /* --- Staggered Animations --- */
         .auth-card .input-wrapper {
-            margin-bottom: 3px;
-            position: relative;
+            margin-bottom: 4px;
             animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
         }
         .auth-card .input-wrapper:nth-child(1) { animation-delay: 0.05s; }
         .auth-card .input-wrapper:nth-child(2) { animation-delay: 0.1s; }
         .auth-card .input-wrapper:nth-child(3) { animation-delay: 0.15s; }
         .auth-card .input-wrapper:last-of-type {
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(8px); }
@@ -611,17 +720,17 @@
             display: flex;
             align-items: center;
             background: var(--bg-input);
-            border-radius: var(--radius-sm);
-            padding: 0 14px;
+            border-radius: 999px;
+            padding: 0 10px;
             border: 1px solid transparent;
             transition: var(--transition);
-            min-height: 48px;
+            min-height: 34px; /* Shorter inputs */
             position: relative;
         }
         .auth-card .input-group i {
             color: var(--text-muted);
-            font-size: 15px;
-            margin-right: 10px;
+            font-size: 13px;
+            margin-right: 8px;
             transition: var(--transition);
             flex-shrink: 0;
         }
@@ -631,16 +740,14 @@
         .auth-card .input-group:focus-within {
             border-color: var(--gold);
             box-shadow: 0 0 0 3px var(--gold-glow);
-            transform: scale(1.01);
         }
-
         .auth-card .input-group input {
             background: transparent;
             border: none;
-            padding: 12px 0;
+            padding: 6px 0;
             width: 100%;
             color: var(--text-main);
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             flex: 1;
         }
@@ -649,32 +756,28 @@
             opacity: 0.5;
         }
 
-        /* ===== PASSWORD TOGGLE EYE ICON ===== */
         .toggle-pwd {
             cursor: pointer;
             margin-left: auto;
-            padding-left: 10px;
+            padding-left: 6px;
             color: var(--text-muted);
-            font-size: 16px;
+            font-size: 15px;
             transition: var(--transition);
             flex-shrink: 0;
         }
         .toggle-pwd:hover {
             color: var(--gold);
-            transform: scale(1.1);
         }
         .toggle-pwd:active {
             transform: scale(0.9);
-            transition: var(--transition-fast);
         }
 
-        /* inline error message */
         .auth-card .field-error {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--text-error);
-            margin-top: 4px;
+            margin-top: 2px;
             padding-left: 4px;
-            min-height: 18px;
+            min-height: 14px;
             display: flex;
             align-items: center;
             gap: 4px;
@@ -686,34 +789,22 @@
             opacity: 1;
             transform: translateY(0);
         }
-        .auth-card .field-error i {
-            font-size: 12px;
-        }
 
-        .auth-card .input-group.error {
-            border-color: var(--text-error);
-            box-shadow: 0 0 0 3px rgba(242, 139, 130, 0.15);
-        }
-        .auth-card .input-group.error i {
-            color: var(--text-error);
-        }
-        .auth-card .input-group.success {
-            border-color: var(--text-success);
-            box-shadow: 0 0 0 3px rgba(111, 207, 151, 0.12);
-        }
-        .auth-card .input-group.success i {
-            color: var(--text-success);
-        }
-
-        .auth-options {
+        .social-buttons {
             display: flex;
-            gap: 8px;
-            margin: 2px 0 16px;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 4px;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            animation-delay: 0.2s;
         }
-        .auth-options button {
-            flex: 1;
-            padding: 10px;
-            border-radius: var(--radius-sm);
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 6px;
+            border-radius: 999px;
             border: 1px solid var(--border-color);
             background: var(--bg-input);
             color: var(--text-main);
@@ -721,50 +812,59 @@
             font-size: 12px;
             font-weight: 600;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
             touch-action: manipulation;
-            min-height: 44px;
+            min-height: 34px; /* Shorter buttons */
         }
-        .auth-options button:hover {
-            border-color: var(--gold);
+        .social-btn:hover {
             background: rgba(212, 160, 23, 0.06);
+            border-color: var(--gold);
             transform: translateY(-1px);
         }
-        .auth-options button:active {
+        .social-btn:active {
             transform: scale(0.96);
             transition: var(--transition-fast);
+        }
+        .social-btn i {
+            font-size: 16px;
+        }
+        .social-btn.google i { color: #ea4335; }
+        .social-btn.apple i { color: #a6a6a6; }
+        .social-divider {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 0 6px;
+            color: var(--text-muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            animation-delay: 0.1s;
+        }
+        .social-divider::before,
+        .social-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
         }
 
         .btn-primary {
             width: 100%;
-            padding: 14px;
+            padding: 8px;
             border: none;
-            border-radius: var(--radius-sm);
+            border-radius: 999px;
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
             color: #0a0f0e;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
             touch-action: manipulation;
-            min-height: 50px;
+            min-height: 36px; /* Shorter primary button */
             letter-spacing: 0.3px;
             position: relative;
             overflow: hidden;
-        }
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .btn-primary:hover::after {
-            opacity: 1;
         }
         .btn-primary:hover {
             transform: translateY(-2px);
@@ -780,70 +880,10 @@
             cursor: not-allowed;
         }
 
-        /* ===== SOCIAL LOGIN BUTTONS ===== */
-        .social-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 16px;
-            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-            animation-delay: 0.2s;
-        }
-        .social-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-main);
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: var(--transition);
-            touch-action: manipulation;
-            min-height: 44px;
-        }
-        .social-btn:hover {
-            background: rgba(212, 160, 23, 0.06);
-            border-color: var(--gold);
-            transform: translateY(-1px);
-        }
-        .social-btn:active {
-            transform: scale(0.96);
-            transition: var(--transition-fast);
-        }
-        .social-btn i {
-            font-size: 18px;
-        }
-        .social-btn.google i { color: #ea4335; }
-        .social-btn.apple i { color: #a6a6a6; }
-        .social-divider {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 12px 0 16px;
-            color: var(--text-muted);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-            animation-delay: 0.1s;
-        }
-        .social-divider::before,
-        .social-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border-color);
-        }
-
         .auth-footer {
             text-align: center;
-            margin-top: 16px;
-            font-size: 13px;
+            margin-top: 4px;
+            font-size: 12px;
             color: var(--text-muted);
         }
         .auth-footer a {
@@ -853,37 +893,19 @@
             cursor: pointer;
             transition: var(--transition);
             touch-action: manipulation;
-            position: relative;
-        }
-        .auth-footer a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--gold);
-            transition: width 0.3s ease;
-        }
-        .auth-footer a:hover::after {
-            width: 100%;
         }
         .auth-footer a:hover {
             color: var(--gold-light);
-        }
-        .auth-footer a:active {
-            transform: scale(0.96);
-            transition: var(--transition-fast);
+            text-decoration: underline;
         }
 
-        /* ===== CUSTOM CHECKBOX (PREMIUM) ===== */
         .terms-wrapper {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
-            margin-top: 2px;
-            margin-bottom: 10px;
-            font-size: 13px;
+            gap: 8px;
+            margin-top: 0px;
+            margin-bottom: 2px;
+            font-size: 12px;
             color: var(--text-muted);
             line-height: 1.4;
             animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
@@ -891,8 +913,8 @@
         }
         .custom-checkbox {
             position: relative;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             flex-shrink: 0;
             margin-top: 2px;
             cursor: pointer;
@@ -908,8 +930,8 @@
             position: absolute;
             top: 0;
             left: 0;
-            height: 20px;
-            width: 20px;
+            height: 18px;
+            width: 18px;
             background: var(--bg-input);
             border: 2px solid var(--border-color);
             border-radius: 6px;
@@ -925,10 +947,10 @@
             content: "";
             position: absolute;
             display: none;
-            left: 6px;
-            top: 2px;
-            width: 5px;
-            height: 10px;
+            left: 5px;
+            top: 1px;
+            width: 4px;
+            height: 9px;
             border: solid #0a0f0e;
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
@@ -937,25 +959,7 @@
         .custom-checkbox input:checked ~ .checkmark:after {
             display: block;
         }
-        .terms-wrapper a {
-            color: var(--gold);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-        }
-        .terms-wrapper a:hover {
-            text-decoration: underline;
-            color: var(--gold-light);
-        }
-        .terms-wrapper .field-error {
-            margin-top: 4px;
-            width: 100%;
-        }
 
-        /* ============================================================
-           PROFESSIONAL TERMS & CONDITIONS MODAL
-           ============================================================ */
         .terms-modal-overlay {
             display: none;
             position: fixed;
@@ -1001,7 +1005,6 @@
             color: var(--text-muted);
             margin-bottom: 10px;
         }
-        .terms-modal-content ul { list-style: none; padding: 0; margin-bottom: 16px; }
         .terms-modal-close {
             margin-top: 20px;
             padding: 10px 24px;
@@ -1015,32 +1018,35 @@
             touch-action: manipulation;
         }
 
+        /* ============================================================
+           PROFILE CARD – MADE SMALLER (COMPACTED)
+           ============================================================ */
         .profile-container {
             max-width: 420px;
             margin: 0 auto;
             background: var(--bg-glass);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            padding: 28px 24px;
+            padding: 20px 20px; /* Reduced from 28px 24px */
             border-radius: var(--radius);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-light);
         }
         .profile-container .profile-icon {
-            font-size: 48px;
+            font-size: 40px; /* Reduced from 48px */
             color: var(--gold);
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 4px; /* Reduced from 8px */
         }
         .profile-container h2 {
             text-align: center;
-            font-size: 20px;
-            margin-bottom: 16px;
+            font-size: 18px; /* Reduced from 20px */
+            margin-bottom: 12px; /* Reduced from 16px */
         }
         .profile-field {
-            margin-bottom: 12px;
+            margin-bottom: 8px; /* Reduced from 12px */
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            padding-bottom: 6px; /* Reduced from 10px */
         }
         .profile-field:last-child {
             border-bottom: none;
@@ -1058,10 +1064,13 @@
         }
         .profile-btn-inline {
             width: auto;
-            padding: 8px 16px;
-            font-size: 13px;
-            margin-top: 8px;
-            min-height: 42px;
+            padding: 6px 14px; /* Reduced from 8px 16px */
+            font-size: 12px; /* Reduced from 13px */
+            margin-top: 4px; /* Reduced from 8px */
+            min-height: 36px; /* Reduced from 42px */
+        }
+        #profileBackBtn {
+            margin-top: 10px; /* Reduced from 14px */
         }
 
         .payment-grid {
@@ -1295,6 +1304,12 @@
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 18px;
         }
+        @media (max-width: 700px) {
+            .video-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+        }
         .video-card {
             background: var(--bg-glass);
             backdrop-filter: blur(4px);
@@ -1416,9 +1431,6 @@
             font-size: 15px;
         }
 
-        /* ============================================================
-           VIDEO MODAL – professional & responsive (Protected from Screenshots)
-           ============================================================ */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1444,7 +1456,6 @@
             box-shadow: 0 24px 80px rgba(0, 0, 0, 0.9);
             padding: 16px 16px 20px;
             border: 1px solid var(--border-color);
-            /* Anti-Screen Capture CSS */
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -1494,9 +1505,8 @@
             border-radius: var(--radius-sm);
             border: none;
             display: block;
-            pointer-events: none; /* Prevents right-click on video */
+            pointer-events: none;
         }
-        /* Hide video when printing to prevent screenshots */
         @media print {
             .modal-content { display: none !important; }
             .modal-overlay.active { display: none !important; }
@@ -1771,32 +1781,40 @@
             font-weight: 500;
             line-height: 1.4;
         }
-        #toast.success i {
-            color: #6fcf97;
-        }
-        #toast.error i {
-            color: #f28b82;
-        }
-        #toast.info i {
-            color: var(--gold);
-        }
 
         @media (max-width: 600px) {
             #app { padding: 12px 14px 18px; }
-            .auth-card { padding: 22px 18px 26px; }
-            .profile-container { padding: 22px 18px; }
-            .logo-area h1 { font-size: 17px; }
-            #siteTitleText { font-size: 17px; }
+            .app-header { padding: 4px 4px 4px 12px; border-radius: 40px; gap: 4px; margin-bottom: 16px;}
+            .logo-area h1 { font-size: 15px; }
+            #siteTitleText { font-size: 15px; }
             #siteTaglineText { display: none; }
             .user-badge .email { max-width: 50px; font-size: 11px; }
-            .user-badge .role { display: none; }
+            .icon-btn, .lang-btn { width: 36px; height: 36px; font-size: 13px; padding: 0; }
+            .lang-btn { width: auto; padding: 0 8px; font-size: 10px; }
+            .user-badge { min-height: 36px; }
+            .profile-icon-wrapper { width: 24px; height: 24px; font-size: 11px; }
+            .toggle-group { gap: 4px; }
+            .auth-card { padding: 8px 10px 6px; }
+            .auth-card .auth-switch { margin-bottom: 2px; }
+            .auth-card .auth-sub { margin-bottom: 2px; font-size: 10px; }
+            .auth-card .input-group { min-height: 30px; }
+            .auth-card .input-group input { font-size: 12px; padding: 4px 0; }
+            .social-btn { min-height: 30px; font-size: 11px; padding: 4px 8px; }
+            .btn-primary { min-height: 32px; font-size: 12px; padding: 6px; }
+            
+            .profile-container { padding: 14px 14px; }
+            .profile-container .profile-icon { font-size: 32px; margin-bottom: 4px; }
+            .profile-container h2 { font-size: 16px; margin-bottom: 8px; }
+            .profile-field { margin-bottom: 6px; padding-bottom: 4px; }
+            .profile-btn-inline { min-height: 34px; padding: 4px 12px; font-size: 11px; }
+            #profileBackBtn { margin-top: 8px; }
+
             .admin-tabs button { font-size: 11px; padding: 6px 10px; min-width: 40px; }
             .video-grid { grid-template-columns: 1fr; }
             .payment-options, .payment-form { padding: 16px; }
-            .back-btn, .icon-btn, .lang-btn { width: 38px; height: 38px; font-size: 13px; padding: 0 8px; }
-            .lang-btn { width: auto; padding: 0 10px; font-size: 11px; }
-            .header-actions { justify-content: flex-end; gap: 6px; flex-wrap: nowrap !important; }
-            .toggle-group { gap: 6px; }
+            .back-btn, .icon-btn, .lang-btn { width: 36px; height: 36px; font-size: 13px; padding: 0 8px; }
+            .lang-btn { width: auto; padding: 0 8px; font-size: 10px; }
+            .header-actions { gap: 4px; }
             .modal-content { padding: 12px 12px 16px; }
             #modalVideoContainer iframe, #modalVideoContainer video { max-height: 50vh; }
             .modal-close { top: 6px; right: 10px; width: 34px; height: 34px; font-size: 24px; }
@@ -1814,13 +1832,32 @@
         .text-muted { color: var(--text-muted); }
         .hidden { display: none !important; }
     </style>
+
+    <style id="performance-smoothing">
+        /* Performance-only safeguards: preserve the existing visual design. */
+        html { text-rendering: optimizeLegibility; }
+        button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+        .app-header, .modal-overlay, .terms-modal-overlay, .loader-overlay { contain: layout style; }
+        #bgCanvas { contain: strict; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+        }
+    </style>
+
 </head>
 <body>
 
     <!-- ===== CANVAS BACKGROUND ===== -->
     <canvas id="bgCanvas"></canvas>
 
-    <div class="loader-overlay" id="globalLoader"><div class="loader-ring"></div></div>
+    <div class="loader-overlay" id="globalLoader">
+        <div class="loader-sparkle" aria-label="Loading" role="status">
+            <span class="sparkle-core"></span>
+            <span class="sparkle-dot dot-1"></span>
+            <span class="sparkle-dot dot-2"></span>
+            <span class="sparkle-dot dot-3"></span>
+        </div>
+    </div>
     <div id="toast"><i class="fas fa-info-circle"></i><span class="msg">Message</span></div>
 
     <!-- ===== VIDEO MODAL ===== -->
@@ -1910,11 +1947,12 @@
     </div>
 
     <div id="app">
-        <!-- ===== HEADER ===== -->
+        <!-- ===== CIRCULAR RECTANGULAR HEADER "DASH" ===== -->
         <header class="app-header">
             <div class="header-left">
                 <button class="back-btn" id="backBtn" title="Go back"><i class="fas fa-arrow-left"></i></button>
-                <div class="logo-area"><i class="fas fa-video"></i>
+                <div class="logo-area">
+                    <i data-lucide="sparkles" class="sparkle-logo"></i>
                     <h1><span id="siteTitleText">Ethio Hub</span> <span id="siteTaglineText">| premium</span></h1>
                 </div>
             </div>
@@ -1928,9 +1966,11 @@
                         <span class="lang-ar">عربي</span>
                     </button>
                 </div>
+                
+                <!-- ===== PROFILE ICON + EMAIL BADGE ===== -->
                 <div class="user-badge" id="userBadge" title="View Profile">
-                    <div class="profile-icon-wrapper"><i class="fas fa-user-circle"></i><span class="notification-dot" id="notificationDot"></span></div>
-                    <span class="email" id="userEmail">Guest</span><span class="role" id="userRole">user</span>
+                    <div class="profile-icon-wrapper"><i class="fas fa-user"></i><span class="notification-dot" id="notificationDot"></span></div>
+                    <span class="email" id="userEmail">Guest</span>
                     <button class="logout-btn" id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
@@ -1938,8 +1978,13 @@
 
         <!-- ===== REGISTER PAGE ===== -->
         <div class="page active" id="page-register">
+
             <div class="hero-section">
-                <div class="icon-wrap"><i class="fas fa-video"></i></div>
+                <div class="hero-icon-switch" id="heroIconSwitch" aria-label="Premium floating display. Swipe left or right to change." title="Swipe left or right">
+                    <div class="hero-icon-card" id="heroIconCard" tabindex="0" role="button" aria-label="Golden Crystal">
+                        <div class="hero-object crystal" id="heroIcon" aria-hidden="true"></div>
+                    </div>
+                </div>
                 <h2>Ethio Hub</h2>
                 <p>
                     <span class="lang-en">Discover <span class="highlight">premium</span>, exclusive video content. Join our community and <span class="highlight">unlock full access</span> today.</span>
@@ -1952,6 +1997,7 @@
                     <span class="lang-ar">كن جزءًا من <span class="highlight">مجتمعنا الحصري</span>.<br>فيديوهات <strong>لا يمكنك رؤيتها في أي مكان آخر</strong>.<br><span class="legal-badge"><i class="fas fa-triangle-exclamation"></i> 18+ فقط</span></span>
                 </p>
             </div>
+            
             <div class="auth-card">
                 <div class="auth-switch">
                     <button class="active" data-mode="register"><span class="lang-en">Register</span><span class="lang-am">ይመዝገቡ</span><span class="lang-ar">تسجيل</span></button>
@@ -2137,9 +2183,21 @@
                 </div>
             </div>
         </div>
+
+        <!-- ===== COPYRIGHT ===== -->
+        <div class="site-footer" aria-label="Copyright">
+            <span>© 2026 Ethio Hub. All rights reserved.</span>
+        </div>
     </div>
 
     <script>
+        // ============================================================
+        // Lucide Icon initialisation
+        // ============================================================
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+
         (function() {
             'use strict';
             const uid = () => Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
@@ -2167,42 +2225,70 @@
             let animId = null;
             let mouse = { x: null, y: null };
 
+            let canvasDpr = 1;
+            let canvasVisible = true;
+            let canvasAnimating = false;
+            let lastParticleFrame = 0;
+            let particleFrameSkip = 0;
+
             function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+                const width = Math.max(1, window.innerWidth || 1);
+                const height = Math.max(1, window.innerHeight || 1);
+                canvasDpr = Math.min(window.devicePixelRatio || 1, 1.5);
+                canvas.width = Math.floor(width * canvasDpr);
+                canvas.height = Math.floor(height * canvasDpr);
+                canvas.style.width = width + 'px';
+                canvas.style.height = height + 'px';
+                ctx.setTransform(canvasDpr, 0, 0, canvasDpr, 0, 0);
+                canvas._logicalWidth = width;
+                canvas._logicalHeight = height;
             }
-            window.addEventListener('resize', resizeCanvas);
+            let resizeTimer = null;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(resizeCanvas, 120);
+            }, { passive: true });
             resizeCanvas();
 
-            document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
-            document.addEventListener('touchmove', (e) => { 
-                const t = e.touches[0]; 
-                if(t) { mouse.x = t.clientX; mouse.y = t.clientY; } 
-            });
+            document.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            }, { passive: true });
+            document.addEventListener('touchmove', (e) => {
+                const touch = e.touches && e.touches[0];
+                if (touch) {
+                    mouse.x = touch.clientX;
+                    mouse.y = touch.clientY;
+                }
+            }, { passive: true });
 
             class Particle {
                 constructor() { this.reset(); }
                 reset() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
+                    const width = canvas._logicalWidth || window.innerWidth;
+                    const height = canvas._logicalHeight || window.innerHeight;
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
                     this.size = Math.random() * 2 + 0.5;
                     this.speedX = (Math.random() - 0.5) * 0.4;
                     this.speedY = (Math.random() - 0.5) * 0.4;
                     this.opacity = Math.random() * 0.5 + 0.2;
                 }
                 update() {
-                    // Mouse Interaction
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 200 && dist > 0) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distSq = dx * dx + dy * dy;
+                    if (distSq < 40000 && distSq > 1) {
+                        const dist = Math.sqrt(distSq);
                         const force = (200 - dist) / 200;
                         this.x -= (dx / dist) * force * 2;
                         this.y -= (dy / dist) * force * 2;
                     }
                     this.x += this.speedX;
                     this.y += this.speedY;
-                    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+                    const width = canvas._logicalWidth || window.innerWidth;
+                    const height = canvas._logicalHeight || window.innerHeight;
+                    if (this.x < -4 || this.x > width + 4 || this.y < -4 || this.y > height + 4) this.reset();
                 }
                 draw() {
                     ctx.beginPath();
@@ -2211,35 +2297,93 @@
                     ctx.fill();
                 }
             }
-            function initParticles(count) { particles = []; for (let i = 0; i < count; i++) particles.push(new Particle()); }
-            initParticles(60);
-            function animateParticles() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => { p.update(); p.draw(); });
+
+            const particleCount = () => {
+                const area = (canvas._logicalWidth || window.innerWidth) * (canvas._logicalHeight || window.innerHeight);
+                const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (reduced) return 20;
+                if (area < 350000) return 36;
+                if (area < 800000) return 48;
+                return 60;
+            };
+
+            function initParticles(count) {
+                particles = [];
+                for (let i = 0; i < count; i++) particles.push(new Particle());
+            }
+            initParticles(particleCount());
+
+            function drawParticleLinks() {
+                const linkDistance = 150;
+                const linkDistanceSq = linkDistance * linkDistance;
                 for (let i = 0; i < particles.length; i++) {
                     for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 150) {
-                            const opacity = (1 - dist / 150) * 0.15;
+                        const a = particles[i];
+                        const b = particles[j];
+                        const dx = a.x - b.x;
+                        const dy = a.y - b.y;
+                        const distSq = dx * dx + dy * dy;
+                        if (distSq < linkDistanceSq) {
+                            const dist = Math.sqrt(distSq);
+                            const opacity = (1 - dist / linkDistance) * 0.15;
                             ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
                             ctx.strokeStyle = `rgba(212, 160, 23, ${opacity})`;
                             ctx.lineWidth = 0.6;
                             ctx.stroke();
                         }
                     }
                 }
-                animId = requestAnimationFrame(animateParticles);
             }
-            animateParticles();
+
+            function animateParticles(timestamp = 0) {
+                if (!canvasVisible) {
+                    canvasAnimating = false;
+                    return;
+                }
+                // Cap background work to a stable ~45 FPS. UI animations remain CSS-driven.
+                if (timestamp - lastParticleFrame < 22) {
+                    animId = requestAnimationFrame(animateParticles);
+                    return;
+                }
+                lastParticleFrame = timestamp;
+                ctx.clearRect(0, 0, canvas._logicalWidth || window.innerWidth, canvas._logicalHeight || window.innerHeight);
+                particles.forEach(p => { p.update(); p.draw(); });
+                drawParticleLinks();
+                animId = requestAnimationFrame(animateParticles);
+                canvasAnimating = true;
+            }
+
+            const startParticleAnimation = () => {
+                if (!canvasAnimating) {
+                    cancelAnimationFrame(animId);
+                    animId = requestAnimationFrame(animateParticles);
+                }
+            };
+            const stopParticleAnimation = () => {
+                canvasAnimating = false;
+                cancelAnimationFrame(animId);
+                animId = null;
+            };
+
+            const canvasObserver = new IntersectionObserver(entries => {
+                canvasVisible = entries.some(entry => entry.isIntersecting);
+                if (canvasVisible) startParticleAnimation();
+                else stopParticleAnimation();
+            }, { threshold: 0 });
+            canvasObserver.observe(canvas);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) stopParticleAnimation();
+                else startParticleAnimation();
+            }, { passive: true });
+
+            startParticleAnimation();
 
             // ===== ANTI-SCREENSHOT & SCREEN RECORDING PROTECTION =====
             document.addEventListener('contextmenu', e => e.preventDefault());
             document.addEventListener('keydown', function(e) {
-                // Block PrintScreen, F12, Ctrl+Shift+I, Ctrl+S, Ctrl+Shift+S
                 if (e.key === 'PrintScreen' || e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 's')) {
                     toast('Screen capture or developer tools are disabled for security.', 'error');
                     e.preventDefault();
@@ -2264,7 +2408,7 @@
             // ===== CLOUDINARY CONFIGURATION =====
             const cloudinaryConfig = {
                 cloudName: 'qbisyz4q',
-                uploadPreset: 'Ethio hub videos' // Exact name from your Cloudinary Dashboard
+                uploadPreset: 'ethio_hub_videos'
             };
 
             const currentLang = () => localStorage.getItem('lang') || 'en';
@@ -2466,7 +2610,7 @@
                     userCreated: 'ተጠቃሚ {email} በተሳካ ሁኔታ ተፈጥሯል።',
                     settingsSaved: 'ቅንብሮች ተቀምጠዋል!',
                     approvedExclaim: 'ጸድቋል!',
-                    stillPending: 'አሁንም በመጠባበቅ ላይ ነው። እባክዎ ይጠብቁ።',
+                    stillPending: 'አሁንም በመጠባበቅ ላይ ነውᢉ እባክዎ ይጠብቁ።',
                     paymentPendingReview: 'ክፍያዎ {txnId} በግምገማ ውስጥ ነው።',
                     downloadPurchase: 'ማውረድ ግዛ ({price} ETB)',
                     downloadNow: 'አውርድ',
@@ -2559,197 +2703,407 @@
                 }
             };
 
-            let state = { user: null, currentPage: 'register', selectedCategory: 'all', adminTab: 'videos', paymentMethod: 'telebirr', isLoginMode: false, pendingScreenshotDataUrl: '', pendingScreenshotName: '' };
+            let state = { user: null, currentPage: 'register', selectedCategory: 'all', adminTab: 'videos', paymentMethod: 'telebirr', isLoginMode: false, pendingScreenshotFile: null };
             const pages = { register: $('page-register'), profile: $('page-profile'), payment: $('page-payment'), gallery: $('page-gallery'), admin: $('page-admin') };
             const navigate = (page) => {
                 Object.keys(pages).forEach(k => pages[k].classList.toggle('active', k === page));
                 state.currentPage = page;
                 $('userBadge').style.display = (page === 'register') ? 'none' : 'flex';
                 $('backBtn').style.display = (page === 'register' || page === 'gallery') ? 'none' : 'flex';
+                updateUserBadge();
             };
             const updateUserBadge = () => {
                 const dot = $('notificationDot');
                 if (state.user) {
                     $('userEmail').textContent = state.user.email;
-                    $('userRole').textContent = state.user.role;
                     $('userBadge').style.display = 'flex';
                     dot.style.display = state.user.paymentStatus !== 'approved' ? 'block' : 'none';
                 } else { $('userBadge').style.display = 'none'; dot.style.display = 'none'; }
             };
 
-            async function openVideoModal(videoId) {
-                const snapshot = await db.collection('videos').doc(videoId).get();
-                if (!snapshot.exists) { toast(t('videoNotFound'), 'error'); return; }
-                const video = { id: snapshot.id, ...snapshot.data() };
-                const modal = $('videoModal');
-                const container = $('modalVideoContainer');
-                const downloadContainer = $('downloadActionContainer');
-                container.innerHTML = '';
-                downloadContainer.innerHTML = '';
+            // ===== THEME =====
+            const applyTheme = (light) => {
+                document.documentElement.classList.toggle('light-theme', !!light);
+                localStorage.setItem('theme', light ? 'light' : 'dark');
+                $('themeToggle').innerHTML = `<i class="fas ${light?'fa-sun':'fa-moon'}"></i>`;
+            };
+            applyTheme(localStorage.getItem('theme') === 'light');
+            $('themeToggle').addEventListener('click', () => applyTheme(!document.documentElement.classList.contains('light-theme')));
 
-                if (video.url) {
-                    let embedUrl = video.url;
-                    if (embedUrl.includes('watch?v=')) {
-                        const vidId = embedUrl.split('v=')[1]?.split('&')[0];
-                        if (vidId) embedUrl = `https://www.youtube.com/embed/${vidId}`;
-                    } else if (embedUrl.includes('youtu.be/')) {
-                        const vidId = embedUrl.split('youtu.be/')[1]?.split('?')[0];
-                        if (vidId) embedUrl = `https://www.youtube.com/embed/${vidId}`;
-                    } else {
-                        // Direct URL video
-                        const videoEl = document.createElement('video');
-                        videoEl.src = video.url;
-                        videoEl.controls = true; videoEl.autoplay = true;
-                        videoEl.playsInline = true; videoEl.webkitPlaysInline = true; // iOS fix
-                        videoEl.style.width = '100%'; videoEl.style.aspectRatio = '16/9'; videoEl.style.objectFit = 'contain';
-                        container.appendChild(videoEl);
-                        modal.classList.add('active');
-                        // Handle download action
-                        handleDownloadAction(video, downloadContainer);
-                        return;
-                    }
-                    const iframe = document.createElement('iframe');
-                    iframe.src = embedUrl;
-                    iframe.allowFullscreen = true;
-                    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-                    iframe.style.width = '100%'; iframe.style.aspectRatio = '16/9'; iframe.style.objectFit = 'contain'; iframe.style.border = 'none';
-                    container.appendChild(iframe);
+            // ===== LANGUAGE =====
+            const applyLanguage = (lang) => {
+                if (!['en','am','ar'].includes(lang)) lang = 'en';
+                document.documentElement.dataset.lang = lang;
+                document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+                localStorage.setItem('lang', lang);
+            };
+            applyLanguage(currentLang());
+            $('langToggle').addEventListener('click', () => {
+                const l = currentLang();
+                applyLanguage(l === 'en' ? 'am' : l === 'am' ? 'ar' : 'en');
+            });
+
+            // ===== AUTH =====
+            const setAuthMode = (login) => {
+                state.isLoginMode = login;
+                $('registerFields').classList.toggle('hidden', login);
+                $('loginFields').classList.toggle('hidden', !login);
+                document.querySelectorAll('.auth-switch button').forEach(b => b.classList.toggle('active', b.dataset.mode === (login ? 'login' : 'register')));
+                $('authTitle').innerHTML = login ? '<i class="fas fa-right-to-bracket text-gold"></i> Welcome back' : '<i class="fas fa-sparkles text-gold"></i> Join Ethio Hub';
+                $('authSub').innerHTML = login ? 'Sign in and continue watching.' : 'Create your account in seconds. Payment unlocks premium content.';
+                $('authBtn').innerHTML = login ? '<i class="fas fa-arrow-right"></i> Login' : '<i class="fas fa-play"></i> Register & Start Watching';
+                document.getElementById('authFooterRegister').classList.toggle('hidden', login);
+                document.getElementById('authFooterLogin').classList.toggle('hidden', !login);
+                applyLanguage(currentLang());
+            };
+            document.querySelectorAll('.auth-switch button').forEach(b => b.addEventListener('click', () => setAuthMode(b.dataset.mode === 'login')));
+            $('switchToLogin').addEventListener('click', e => { e.preventDefault(); setAuthMode(true); });
+            $('switchToRegister').addEventListener('click', e => { e.preventDefault(); setAuthMode(false); });
+
+            document.querySelectorAll('.toggle-pwd').forEach(i => i.addEventListener('click', () => {
+                const el = $(i.dataset.target);
+                el.type = el.type === 'password' ? 'text' : 'password';
+                i.classList.toggle('fa-eye'); i.classList.toggle('fa-eye-slash');
+            }));
+
+            document.querySelectorAll('.openTermsLink').forEach(a => a.addEventListener('click', e => { e.preventDefault(); $('termsModal').classList.add('active'); }));
+            $('termsModalClose').addEventListener('click', () => $('termsModal').classList.remove('active'));
+            $('termsModal').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('active'); });
+
+            const clearFieldErrors = () => document.querySelectorAll('.field-error').forEach(e => { e.classList.remove('visible'); e.querySelector('span').textContent = ''; });
+            const showFieldError = (id, msg) => { const e = $(id); if(!e) return; e.querySelector('span').textContent = msg; e.classList.add('visible'); };
+
+            $('authForm').addEventListener('submit', async e => {
+                e.preventDefault(); clearFieldErrors();
+                let ok = true;
+                if (state.isLoginMode) {
+                    const email = $('loginEmail').value.trim();
+                    const pass = $('loginPassword').value;
+                    if (!email || !email.includes('@')) { showFieldError('loginEmailError', 'Enter a valid email.'); ok = false; }
+                    if (pass.length < 6) { showFieldError('loginPasswordError', 'Password must be at least 6 characters.'); ok = false; }
+                    if (!ok) return;
+                    showLoader();
+                    try {
+                        const cred = await auth.signInWithEmailAndPassword(email, pass);
+                        await loadUser(cred.user);
+                    } catch (err) { toast(err.code === 'auth/user-not-found' ? t('accountNotFound') : t('incorrectPassword'), 'error'); }
+                    hideLoader();
                 } else {
-                    toast(t('noVideoSource'), 'error');
-                    return;
+                    const email = $('authEmail').value.trim();
+                    const pass = $('authPassword').value;
+                    const conf = $('authConfirmPassword').value;
+                    if (!email || !email.includes('@')) { showFieldError('authEmailError', 'Enter a valid email.'); ok = false; }
+                    if (pass.length < 6) { showFieldError('authPasswordError', 'Use at least 6 characters.'); ok = false; }
+                    if (pass !== conf) { showFieldError('authConfirmError', 'Passwords do not match.'); ok = false; }
+                    if (!$('agreeTerms').checked) { showFieldError('termsError', 'Please accept the Terms & Conditions.'); ok = false; }
+                    if (!ok) return;
+                    showLoader();
+                    try {
+                        const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                        await db.collection('users').doc(cred.user.uid).set({
+                            email, role: 'user', paymentStatus: 'pending', approved: false,
+                            createdAt: Date.now(), downloadedVideos: []
+                        });
+                        await loadUser(cred.user);
+                        toast(t('accountRegistered'), 'success');
+                        navigate('gallery');
+                    } catch (err) {
+                        toast(err.code === 'auth/email-already-in-use' ? t('emailRegistered') : (err.message || t('invalidEmailPass')), 'error');
+                    }
+                    hideLoader();
                 }
-                modal.classList.add('active');
-                handleDownloadAction(video, downloadContainer);
+            });
+
+            async function loadUser(fu) {
+                const snap = await db.collection('users').doc(fu.uid).get();
+                state.user = { id: fu.uid, ...snap.data(), email: fu.email || snap.data()?.email };
+                updateUserBadge();
+                if (state.user.role === 'admin') navigate('admin');
+                else navigate('gallery');
+            }
+
+            async function handleLogout() {
+                try { await auth.signOut(); } catch(e) { toast(e.message, 'error'); }
+                state.user = null;
+                updateUserBadge();
+                setAuthMode(false);
+                navigate('register');
+                toast(t('loggedOut'), 'success');
+            }
+            $('logoutBtn').addEventListener('click', handleLogout);
+            $('userBadge').addEventListener('click', e => {
+                if (!e.target.closest('.logout-btn') && state.user) navigate('profile');
+            });
+
+            // ===== PAYMENT =====
+            document.querySelectorAll('.payment-method').forEach(m => m.addEventListener('click', () => {
+                document.querySelectorAll('.payment-method').forEach(x => x.classList.remove('selected'));
+                m.classList.add('selected');
+                state.paymentMethod = m.dataset.method;
+            }));
+            $('fileUpload').addEventListener('click', () => $('screenshotFile').click());
+            $('screenshotFile').addEventListener('change', async e => {
+                const f = e.target.files?.[0];
+                if (!f) return;
+                if (f.size > 8 * 1024 * 1024) { toast(t('screenshotTooLarge'), 'error'); e.target.value = ''; return; }
+                state.pendingScreenshotFile = f;
+                $('fileUpload').querySelector('.filename').textContent = f.name;
+                toast(t('screenshotAttached', { name: f.name }), 'success');
+            });
+
+            async function compressImage(file, maxSizeKB = 200) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            let w = img.width, h = img.height;
+                            let quality = 0.8;
+                            let dataUrl;
+                            do {
+                                canvas.width = w; canvas.height = h;
+                                ctx.drawImage(img, 0, 0, w, h);
+                                dataUrl = canvas.toDataURL('image/jpeg', quality);
+                                quality -= 0.1;
+                            } while (dataUrl.length > maxSizeKB * 1024 && quality > 0.2);
+                            resolve(dataUrl);
+                        };
+                        img.onerror = reject;
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            async function uploadImageToCloudinary(file) {
+                const compressedDataUrl = await compressImage(file, 200);
+                const fd = new FormData();
+                const res = await fetch(compressedDataUrl);
+                const blob = await res.blob();
+                fd.append('file', blob, file.name);
+                fd.append('upload_preset', cloudinaryConfig.uploadPreset);
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
+                    method: 'POST', body: fd
+                });
+                if (!response.ok) throw new Error('Screenshot upload failed');
+                const data = await response.json();
+                return data.secure_url;
+            }
+
+            $('paymentForm').addEventListener('submit', async e => {
+                e.preventDefault();
+                if (!state.user) { toast(t('accountNotFound'), 'error'); return; }
+                const txn = $('txnId').value.trim();
+                if (!txn) { toast(t('invalidTxn'), 'error'); return; }
+                showLoader();
+                try {
+                    let screenshotUrl = '';
+                    if (state.pendingScreenshotFile) {
+                        screenshotUrl = await uploadImageToCloudinary(state.pendingScreenshotFile);
+                    }
+                    await db.collection('payments').add({
+                        userId: state.user.id, email: state.user.email, method: state.paymentMethod,
+                        txnId: txn, notes: $('paymentNotes').value.trim(), screenshotUrl: screenshotUrl,
+                        status: 'pending', type: 'subscription', createdAt: Date.now()
+                    });
+                    toast(t('paymentSubmitted'), 'success');
+                    await loadUser(state.user);
+                    $('paymentForm').reset();
+                    state.pendingScreenshotFile = null;
+                    $('fileUpload').querySelector('.filename').textContent = '';
+                } catch (err) { toast(t('paymentSubmitError'), 'error'); }
+                hideLoader();
+            });
+
+            $('profilePayBtn').addEventListener('click', () => navigate('payment'));
+            $('profileBackBtn').addEventListener('click', () => navigate('gallery'));
+            
+            // ============================================================
+            // FIXED BACK ARROW - Simply always go back to Gallery
+            // ============================================================
+            $('backBtn').addEventListener('click', () => {
+                navigate('gallery');
+            });
+
+            // ===== VIDEO MODAL =====
+            async function openVideoModal(videoId) {
+                try {
+                    const snapshot = await db.collection('videos').doc(videoId).get();
+                    if (!snapshot.exists) { toast(t('videoNotFound'), 'error'); return; }
+                    const video = { id: snapshot.id, ...snapshot.data() };
+                    const modal = $('videoModal');
+                    const container = $('modalVideoContainer');
+                    const downloadContainer = $('downloadActionContainer');
+                    container.innerHTML = '';
+                    downloadContainer.innerHTML = '';
+                    if (!video.url) { toast(t('noVideoSource'), 'error'); return; }
+
+                    let u = video.url;
+                    if (u.includes('watch?v=')) {
+                        const id = u.split('v=')[1]?.split('&')[0];
+                        if (id) u = `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`;
+                    } else if (u.includes('youtu.be/')) {
+                        const id = u.split('youtu.be/')[1]?.split('?')[0];
+                        if (id) u = `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`;
+                    }
+                    if (u.includes('youtube.com/embed/')) {
+                        const iframe = document.createElement('iframe');
+                        iframe.src = u;
+                        iframe.allowFullscreen = true;
+                        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                        iframe.style.width = '100%';
+                        iframe.style.aspectRatio = '16/9';
+                        iframe.style.border = 'none';
+                        container.appendChild(iframe);
+                    } else {
+                        const v = document.createElement('video');
+                        v.src = u;
+                        v.controls = true;
+                        v.autoplay = true;
+                        v.playsInline = true;
+                        v.webkitPlaysInline = true;
+                        v.style.width = '100%';
+                        v.style.aspectRatio = '16/9';
+                        v.style.objectFit = 'contain';
+                        container.appendChild(v);
+                    }
+                    modal.classList.add('active');
+                    handleDownloadAction(video, downloadContainer);
+                } catch (e) { toast(t('failedLoadVideo'), 'error'); }
             }
 
             async function handleDownloadAction(video, container) {
                 if (!video.downloadPrice || video.downloadPrice === 0) return;
                 if (!state.user) {
-                    container.innerHTML = `<button class="btn-primary" style="width:auto;padding:10px 24px;" onclick="toast('Please login to download.', 'error')"><i class="fas fa-lock"></i> ${t('downloadPurchase', {price: video.downloadPrice})}</button>`;
+                    container.innerHTML = `<button class="btn-primary" style="width:auto;padding:10px 24px" id="buyDownload"><i class="fas fa-lock"></i> ${t('downloadPurchase',{price:video.downloadPrice})}</button>`;
                     return;
                 }
-                const hasDownloaded = state.user.downloadedVideos && state.user.downloadedVideos.includes(video.id);
-                if (hasDownloaded) {
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-primary';
-                    btn.style.width = 'auto'; btn.style.padding = '10px 24px';
+                const has = state.user.downloadedVideos?.includes(video.id);
+                const btn = document.createElement('button');
+                btn.className = 'btn-primary';
+                btn.style.width = 'auto';
+                btn.style.padding = '10px 24px';
+                if (has) {
                     btn.innerHTML = `<i class="fas fa-download"></i> ${t('downloadNow')}`;
                     btn.onclick = () => {
                         const a = document.createElement('a');
                         a.href = video.url;
-                        a.download = video.title + '.mp4';
-                        document.body.appendChild(a);
+                        a.download = (video.title || 'video') + '.mp4';
                         a.click();
-                        document.body.removeChild(a);
                     };
-                    container.appendChild(btn);
                 } else {
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-primary';
-                    btn.style.width = 'auto'; btn.style.padding = '10px 24px';
-                    btn.innerHTML = `<i class="fas fa-lock"></i> ${t('downloadPurchase', {price: video.downloadPrice})}`;
+                    btn.innerHTML = `<i class="fas fa-lock"></i> ${t('downloadPurchase',{price:video.downloadPrice})}`;
                     btn.onclick = async () => {
                         try {
                             await db.collection('payments').add({
                                 userId: state.user.id, email: state.user.email, method: 'download',
                                 txnId: 'DOWNLOAD_' + uid(), notes: `Download video: ${video.title}`,
-                                status: 'pending', type: 'download', videoId: video.id, price: video.downloadPrice,
-                                createdAt: Date.now()
+                                status: 'pending', type: 'download', videoId: video.id,
+                                price: video.downloadPrice, createdAt: Date.now()
                             });
                             toast(t('downloadPurchased'), 'success');
-                        } catch(err) { toast(t('paymentSubmitError'), 'error'); }
+                        } catch (e) { toast(t('paymentSubmitError'), 'error'); }
                     };
-                    container.appendChild(btn);
                 }
+                container.appendChild(btn);
             }
 
-            $('modalClose').addEventListener('click', () => {
+            const closeModal = () => {
                 $('modalVideoContainer').innerHTML = '';
                 $('downloadActionContainer').innerHTML = '';
                 $('videoModal').classList.remove('active');
-            });
-            $('videoModal').addEventListener('click', (e) => {
-                if (e.target === e.currentTarget) {
-                    $('modalVideoContainer').innerHTML = '';
-                    $('downloadActionContainer').innerHTML = '';
-                    $('videoModal').classList.remove('active');
-                }
-            });
+            };
+            $('modalClose').addEventListener('click', closeModal);
+            $('videoModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
 
+            // ===== GALLERY =====
             const renderVideoGrid = async (category = state.selectedCategory) => {
-                const container = $('videoGrid');
-                let query = db.collection('videos').orderBy('createdAt', 'desc');
-                if (category !== 'all') query = query.where('category', '==', category);
-                const snap = await query.get();
-                let videos = []; snap.forEach(doc => videos.push({ id: doc.id, ...doc.data() }));
-
-                if (!videos.length) {
-                    container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-film"></i><h3>${t('noContentTitle')}</h3><p>${t('noContentDesc')}</p></div>`;
-                    return;
-                }
-                const isLocked = !state.user || state.user.paymentStatus !== 'approved';
-                const lockedClass = isLocked ? 'locked' : '';
-                container.innerHTML = videos.map(v => {
-                    const thumb = v.thumbnail || `https://via.placeholder.com/320x180/0f3b2e/d4a017?text=${encodeURIComponent(v.title)}`;
-                    const catLabel = v.category === 'exclusive' ? t('catExclusive') : t('catTraining');
-                    const freeBadge = v.isFree ? `<span style="background:var(--gold);color:#0a0f0e;padding:2px 10px;border-radius:30px;font-size:10px;font-weight:600;"><i class="fas fa-unlock" style="font-size:10px;"></i> ${t('free')}</span>` : '';
-                    const liked = state.user && v.likes && v.likes.includes(state.user.id);
-                    const likeIcon = liked ? 'fa-solid fa-thumbs-up' : 'fa-regular fa-thumbs-up';
-                    return `<div class="video-card" data-id="${v.id}"><div class="thumb ${lockedClass}" style="background-image:url('${thumb}');background-size:cover;background-position:center;"><div class="play-overlay"><i class="fas fa-circle-play"></i></div></div><div class="body"><div class="title">${escapeHtml(v.title)}</div><div class="desc">${escapeHtml(v.description) || t('noDescription')}</div><div class="meta"><span class="cat">${catLabel}</span><div style="display:flex;align-items:center;gap:8px;">${freeBadge}<div class="like-container" data-id="${v.id}"><i class="${likeIcon}" style="${liked ? 'color:var(--gold);' : ''}"></i><span>${v.likes ? v.likes.length : 0}</span></div><span style="font-size:11px;color:var(--text-muted);"><i class="far fa-clock"></i> ${v.duration || '00:00'}</span></div></div></div></div>`;
-                }).join('');
-                container.querySelectorAll('.video-card').forEach(el => {
-                    el.addEventListener('click', function(e) {
+                const c = $('videoGrid');
+                try {
+                    let q = db.collection('videos').orderBy('createdAt', 'desc');
+                    if (category !== 'all') q = q.where('category', '==', category);
+                    const snap = await q.get();
+                    const videos = [];
+                    snap.forEach(d => videos.push({ id: d.id, ...d.data() }));
+                    if (!videos.length) {
+                        c.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-film"></i><h3>${t('noContentTitle')}</h3><p>${t('noContentDesc')}</p></div>`;
+                        return;
+                    }
+                    const locked = !state.user || state.user.paymentStatus !== 'approved';
+                    c.innerHTML = videos.map(v => {
+                        const thumb = v.thumbnail || `https://via.placeholder.com/640x360/0f3b2e/d4a017?text=${encodeURIComponent(v.title||'Ethio+Hub')}`;
+                        const cat = v.category === 'exclusive' ? t('catExclusive') : t('catTraining');
+                        const liked = state.user && v.likes?.includes(state.user.id);
+                        return `<article class="video-card" data-id="${v.id}"><div class="thumb ${locked&&!v.isFree?'locked':''}" style="background-image:url('${escapeHtml(thumb)}')"><div class="play-overlay"><i class="fas fa-circle-play"></i></div></div><div class="body"><div class="title">${escapeHtml(v.title)}</div><div class="desc">${escapeHtml(v.description||t('noDescription'))}</div><div class="meta"><span class="cat">${cat}</span><div class="like-container" data-id="${v.id}"><i class="${liked?'fa-solid':'fa-regular'} fa-heart" style="${liked?'color:var(--gold)':''}"></i> ${v.likes?.length||0}</div></div></div></article>`;
+                    }).join('');
+                    c.querySelectorAll('.video-card').forEach(card => card.addEventListener('click', e => {
                         if (e.target.closest('.like-container')) return;
-                        const id = this.dataset.id;
-                        const video = videos.find(v => v.id === id);
-                        if (!video.isFree && (!state.user || state.user.paymentStatus !== 'approved')) {
-                            toast(t('completePayment'), 'error');
-                            navigate('payment'); return;
+                        const v = videos.find(x => x.id === card.dataset.id);
+                        if (!v.isFree && (!state.user || state.user.paymentStatus !== 'approved')) {
+                            toast(t('completePayment'), 'error'); navigate('payment'); return;
                         }
-                        openVideoModal(id);
-                    });
-                });
-                container.querySelectorAll('.like-container').forEach(btn => {
-                    btn.addEventListener('click', async function(e) {
+                        openVideoModal(v.id);
+                    }));
+                    c.querySelectorAll('.like-container').forEach(btn => btn.addEventListener('click', async e => {
                         e.stopPropagation();
                         if (!state.user) { toast(t('loginToLike'), 'error'); return; }
-                        const videoRef = db.collection('videos').doc(this.dataset.id);
-                        const videoSnap = await videoRef.get();
-                        if (!videoSnap.exists) return;
-                        const videoData = videoSnap.data();
-                        let likes = videoData.likes || [];
-                        const idx = likes.indexOf(state.user.id);
-                        idx > -1 ? likes.splice(idx, 1) : likes.push(state.user.id);
-                        await videoRef.update({ likes: likes });
-                        renderVideoGrid(state.selectedCategory);
-                    });
-                });
+                        const ref = db.collection('videos').doc(btn.dataset.id);
+                        const snap = await ref.get();
+                        if (!snap.exists) return;
+                        let likes = snap.data().likes || [];
+                        const i = likes.indexOf(state.user.id);
+                        i >= 0 ? likes.splice(i, 1) : likes.push(state.user.id);
+                        await ref.update({ likes });
+                        renderVideoGrid();
+                    }));
+                } catch (e) {
+                    c.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-triangle-exclamation"></i><h3>Unable to load videos</h3><p>Check your connection and try again.</p></div>`;
+                }
             };
 
-            // ===== ADMIN RENDER =====
+            document.querySelectorAll('#categoryTabs button').forEach(b => b.addEventListener('click', () => {
+                document.querySelectorAll('#categoryTabs button').forEach(x => x.classList.remove('active'));
+                b.classList.add('active');
+                state.selectedCategory = b.dataset.cat;
+                renderVideoGrid();
+            }));
+
+            // ===== ADMIN =====
+            const uploadVideoToCloudinary = async (file) => {
+                if (!file) return null;
+                if (file.size > 1024 * 1024 * 1024) throw new Error(t('fileTooLarge'));
+                const fd = new FormData();
+                fd.append('file', file);
+                fd.append('upload_preset', cloudinaryConfig.uploadPreset);
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/video/upload`, { method: 'POST', body: fd });
+                if (!res.ok) throw new Error('Video upload failed');
+                const data = await res.json();
+                return data.secure_url;
+            };
+
             const renderAdminVideos = async () => {
                 const c = $('adminVideoList');
                 const snap = await db.collection('videos').orderBy('createdAt', 'desc').get();
-                let vids = []; snap.forEach(doc => vids.push({ id: doc.id, ...doc.data() }));
+                const vids = [];
+                snap.forEach(d => vids.push({ id: d.id, ...d.data() }));
                 if (!vids.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-video"></i><h3>${t('noVideos')}</h3></div>`; return; }
-                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thTitle')}</th><th>${t('thCategory')}</th><th>${t('thType')}</th><th>${t('thDuration')}</th><th>${t('thActions')}</th></tr></thead><tbody>
-                    ${vids.map(v => `<tr><td><strong>${escapeHtml(v.title)}</strong></td><td><span class="status approved">${v.category === 'exclusive' ? t('catExclusive') : t('catTraining')}</span></td><td>${v.isFree ? `<span style="color:var(--text-success);font-weight:600;"><i class="fas fa-circle-check" style="font-size:16px;"></i> ${t('free')}</span>` : `<span style="color:var(--text-muted);">${t('premium')}</span>`}</td><td>${v.duration || '00:00'}</td><td class="actions"><button class="approve edit-video" data-id="${v.id}"><i class="fas fa-edit"></i></button><button class="del delete-video" data-id="${v.id}"><i class="fas fa-trash"></i></button></td></tr>`).join('')}
-                </tbody></table>`;
-                c.querySelectorAll('.delete-video').forEach(b => b.addEventListener('click', async function() {
+                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thTitle')}</th><th>${t('thCategory')}</th><th>${t('thType')}</th><th>${t('thDuration')}</th><th>${t('thActions')}</th></tr></thead><tbody>${vids.map(v=>`<tr><td><strong>${escapeHtml(v.title)}</strong></td><td><span class="status approved">${v.category==='exclusive'?t('catExclusive'):t('catTraining')}</span></td><td>${v.isFree?t('free'):t('premium')}</td><td>${v.duration||'00:00'}</td><td class="actions"><button class="approve edit-video" data-id="${v.id}"><i class="fas fa-edit"></i></button><button class="del delete-video" data-id="${v.id}"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>`;
+                c.querySelectorAll('.delete-video').forEach(b => b.addEventListener('click', async () => {
                     if (confirm(t('confirmDeleteVideo'))) {
-                        await db.collection('videos').doc(this.dataset.id).delete();
+                        await db.collection('videos').doc(b.dataset.id).delete();
                         renderAdminVideos(); renderVideoGrid(); toast(t('videoDeleted'), 'success');
                     }
                 }));
-                c.querySelectorAll('.edit-video').forEach(b => b.addEventListener('click', async function() {
-                    const v = vids.find(v => v.id === this.dataset.id);
+                c.querySelectorAll('.edit-video').forEach(b => b.addEventListener('click', async () => {
+                    const v = vids.find(x => x.id === b.dataset.id);
                     if (!v) return;
-                    const newTitle = prompt(t('promptEditTitle'), v.title);
-                    if (newTitle !== null && newTitle.trim()) { await db.collection('videos').doc(v.id).update({ title: newTitle.trim() }); }
-                    const newDesc = prompt(t('promptEditDesc'), v.description || '');
-                    if (newDesc !== null) { await db.collection('videos').doc(v.id).update({ description: newDesc.trim() }); }
-                    const isFree = confirm(t('confirmMarkFree'));
-                    await db.collection('videos').doc(v.id).update({ isFree: isFree });
+                    const title = prompt(t('promptEditTitle'), v.title);
+                    if (title?.trim()) await db.collection('videos').doc(v.id).update({ title: title.trim() });
+                    const desc = prompt(t('promptEditDesc'), v.description || '');
+                    if (desc !== null) await db.collection('videos').doc(v.id).update({ description: desc.trim() });
                     renderAdminVideos(); renderVideoGrid(); toast(t('videoUpdated'), 'success');
                 }));
             };
@@ -2757,338 +3111,206 @@
             const renderAdminUsers = async () => {
                 const c = $('adminUserList');
                 const snap = await db.collection('users').get();
-                let users = []; snap.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
+                const users = [];
+                snap.forEach(d => users.push({ id: d.id, ...d.data() }));
                 if (!users.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><h3>${t('noUsers')}</h3></div>`; return; }
-                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thEmail')}</th><th>${t('thRole')}</th><th>${t('thPayment')}</th><th>${t('thActions')}</th></tr></thead><tbody>
-                    ${users.map(u => `<tr><td>${escapeHtml(u.email)}</td><td><span class="status ${u.role==='admin'?'approved':'pending'}">${u.role}</span></td><td><span class="status ${u.paymentStatus}">${u.paymentStatus}</span></td><td class="actions">${u.role !== 'admin' ? `<button class="approve approve-user" data-id="${u.id}"><i class="fas fa-check"></i></button><button class="reject reject-user" data-id="${u.id}"><i class="fas fa-times"></i></button><button class="del kick-user" data-id="${u.id}"><i class="fas fa-user-slash"></i> ${t('kick')}</button>` : `<span style="font-size:11px;color:var(--text-muted);">${t('systemAdmin')}</span>`}</td></tr>`).join('')}
-                </tbody></table>`;
-                c.querySelectorAll('.approve-user').forEach(b => b.addEventListener('click', async function() {
-                    const u = users.find(u => u.id === this.dataset.id);
-                    if (u) { await db.collection('users').doc(u.id).update({ paymentStatus: 'approved', approved: true }); renderAdminUsers(); renderAdminPayments(); toast(t('userApproved', { email: u.email }), 'success'); }
-                }));
-                c.querySelectorAll('.reject-user').forEach(b => b.addEventListener('click', async function() {
-                    const u = users.find(u => u.id === this.dataset.id);
-                    if (u) { await db.collection('users').doc(u.id).update({ paymentStatus: 'rejected', approved: false }); renderAdminUsers(); renderAdminPayments(); toast(t('userRejected', { email: u.email }), 'error'); }
-                }));
-                c.querySelectorAll('.kick-user').forEach(b => b.addEventListener('click', async function() {
-                    const id = this.dataset.id;
+                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thEmail')}</th><th>${t('thRole')}</th><th>${t('thPayment')}</th><th>${t('thActions')}</th></tr></thead><tbody>${users.map(u=>`<tr><td>${escapeHtml(u.email)}</td><td>${u.role}</td><td><span class="status ${u.paymentStatus||'pending'}">${u.paymentStatus||'pending'}</span></td><td class="actions">${u.role==='admin'?t('systemAdmin'):`<button class="approve approve-user" data-id="${u.id}"><i class="fas fa-check"></i></button><button class="reject reject-user" data-id="${u.id}"><i class="fas fa-times"></i></button><button class="del kick-user" data-id="${u.id}"><i class="fas fa-user-slash"></i></button>`}</td></tr>`).join('')}</tbody></table>`;
+                c.querySelectorAll('.approve-user').forEach(b => b.onclick = async () => {
+                    const u = users.find(x => x.id === b.dataset.id);
+                    if (u) { await db.collection('users').doc(u.id).update({ paymentStatus: 'approved', approved: true });
+                        renderAdminUsers(); toast(t('userApproved', { email: u.email }), 'success'); }
+                });
+                c.querySelectorAll('.reject-user').forEach(b => b.onclick = async () => {
+                    const u = users.find(x => x.id === b.dataset.id);
+                    if (u) { await db.collection('users').doc(u.id).update({ paymentStatus: 'rejected', approved: false });
+                        renderAdminUsers(); toast(t('userRejected', { email: u.email }), 'error'); }
+                });
+                c.querySelectorAll('.kick-user').forEach(b => b.onclick = async () => {
                     if (!confirm(t('confirmKick'))) return;
-                    const u = users.find(u => u.id === id);
-                    if (!u) return;
-                    await db.collection('users').doc(id).delete();
-                    if (state.user && state.user.id === id) { toast(t('accountRemoved'), 'error'); handleLogout(); }
-                    else { toast(t('userKicked', { email: u.email }), 'info'); }
-                    renderAdminUsers(); renderAdminPayments();
-                }));
+                    await db.collection('users').doc(b.dataset.id).delete();
+                    renderAdminUsers(); toast('User removed', 'info');
+                });
             };
 
             const renderAdminPayments = async () => {
                 const c = $('adminPaymentList');
                 const snap = await db.collection('payments').orderBy('createdAt', 'desc').get();
-                let pays = []; snap.forEach(doc => pays.push({ id: doc.id, ...doc.data() }));
+                const pays = [];
+                snap.forEach(d => pays.push({ id: d.id, ...d.data() }));
                 if (!pays.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-credit-card"></i><h3>${t('noPendingPayments')}</h3></div>`; return; }
-                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thUser')}</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thNotes')}</th><th>${t('thScreenshot')}</th><th>${t('thActions')}</th></tr></thead><tbody>
-                    ${pays.map(p => `<tr><td>${escapeHtml(p.email)}</td><td>${escapeHtml(p.method)}</td><td>${escapeHtml(p.txnId) || '—'}</td><td style="font-size:12px;color:var(--text-muted)">${escapeHtml(p.notes) || '—'}</td><td>${p.screenshot ? `<a href="#" class="view-link view-screenshot" data-id="${p.id}"><i class="fas fa-image"></i> ${t('view')}</a>` : `<span style="font-size:12px;color:var(--text-muted);">${t('none')}</span>`}</td><td class="actions"><button class="approve approve-payment" data-id="${p.id}"><i class="fas fa-check"></i></button><button class="reject reject-payment" data-id="${p.id}"><i class="fas fa-times"></i></button></td></tr>`).join('')}
-                </tbody></table>`;
-                c.querySelectorAll('.approve-payment').forEach(b => b.addEventListener('click', async function() {
-                    const pay = pays.find(p => p.id === this.dataset.id);
-                    if (pay) {
-                        await db.collection('payments').doc(pay.id).update({ status: 'approved' });
-                        const u = users.find(u => u.id === pay.userId);
-                        if (u) {
-                            if (pay.type === 'download') {
-                                // Add video download permission to user
-                                const userRef = db.collection('users').doc(u.id);
-                                await userRef.update({
-                                    downloadedVideos: firebase.firestore.FieldValue.arrayUnion(pay.videoId)
-                                });
-                                toast('Download access granted to user!', 'success');
-                            } else {
-                                await db.collection('users').doc(u.id).update({ paymentStatus: 'approved', approved: true });
-                                toast(t('paymentApproved'), 'success');
-                            }
-                        }
-                        renderAdminPayments(); renderAdminUsers();
-                    }
-                }));
-                c.querySelectorAll('.reject-payment').forEach(b => b.addEventListener('click', async function() {
-                    const pay = pays.find(p => p.id === this.dataset.id);
-                    if (pay) { await db.collection('payments').doc(pay.id).update({ status: 'rejected' }); renderAdminPayments(); toast(t('paymentRejected'), 'error'); }
-                }));
-                c.querySelectorAll('.view-screenshot').forEach(b => b.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const pay = pays.find(p => p.id === this.dataset.id);
-                    if (!pay || !pay.screenshot) return;
-                    const w = window.open('');
-                    if (w) { w.document.write(`<title>Payment Screenshot</title><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${pay.screenshot}" style="max-width:100%;max-height:100vh;" /></body>`); }
-                }));
-            };
-            const renderAllAdmin = () => { renderAdminVideos(); renderAdminUsers(); renderAdminPayments(); };
-
-            const applyTheme = (theme) => {
-                const html = document.documentElement; const icon = $('themeToggle').querySelector('i');
-                if (theme === 'light') { html.classList.add('light-theme'); icon.className = 'fas fa-sun'; } 
-                else { html.classList.remove('light-theme'); icon.className = 'fas fa-moon'; }
-                localStorage.setItem('theme', theme);
-            };
-            const toggleTheme = () => { applyTheme(localStorage.getItem('theme') === 'dark' ? 'light' : 'dark'); };
-
-            const applyLanguage = (lang) => {
-                document.documentElement.setAttribute('data-lang', lang);
-                document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-                localStorage.setItem('lang', lang);
-                refreshDynamicUI();
-            };
-            const toggleLanguage = () => {
-                const current = currentLang(); const next = current === 'en' ? 'am' : current === 'am' ? 'ar' : 'en';
-                applyLanguage(next);
-            };
-            const refreshDynamicUI = () => {
-                if (!state) return;
-                if (state.currentPage === 'gallery') renderVideoGrid(state.selectedCategory);
-                if (state.currentPage === 'admin') renderAllAdmin();
-                if (state.currentPage === 'profile') renderProfile();
-            };
-
-            const renderProfile = () => {
-                if (!state.user) { navigate('register'); return; }
-                $('profileEmail').textContent = state.user.email;
-                const payStatusEl = $('profilePaymentStatus'); const userStatus = state.user.paymentStatus;
-                payStatusEl.innerHTML = userStatus === 'approved' ? '<span class="status approved">Approved ✅</span>' : userStatus === 'rejected' ? '<span class="status rejected">Rejected ❌</span>' : '<span class="status pending">Pending ⏳</span>';
-
-                const accStatusEl = $('profileAccountStatus'); const descEl = $('profileDescription'); const btnEl = $('profilePayBtn');
-                const hasPaymentHistory = false; // Simplified check
-
-                if (userStatus === 'pending' && !hasPaymentHistory) {
-                    accStatusEl.innerHTML = `<span style="color:#f39c12; font-weight:600;"><i class="fas fa-exclamation-triangle"></i> <span class="lang-en">Pay to Verify</span><span class="lang-am">ለማረጋገጥ ይክፈሉ</span><span class="lang-ar">ادفع للتحقق</span></span>`;
-                    descEl.innerHTML = `<span class="lang-en">Submit your first payment to unlock all premium videos.</span><span class="lang-am">ሁሉንም ቪዲዮዎች ለመክፈት የመጀመሪያ ክፍያዎን ያስገቡ።</span><span class="lang-ar">قم بتقديم دفعتك الأولى لفتح جميع مقاطع الفيديو المتميزة.</span>`;
-                    btnEl.style.display = 'block'; btnEl.innerHTML = `<i class="fas fa-credit-card"></i> <span class="lang-en">Go to Payment</span><span class="lang-am">ወደ ክፍያ ይሂዱ</span><span class="lang-ar">اذهب إلى الدفع</span>`;
-                } else if (userStatus === 'pending') {
-                    accStatusEl.innerHTML = `<span class="status pending">Waiting for Approval ⏳</span>`;
-                    descEl.innerHTML = `<span class="lang-en">Your payment is currently under review by the admin.</span><span class="lang-am">ክፍያዎ በአስተዳዳሪ ግምገማ ላይ ነው።</span><span class="lang-ar">دفعتك قيد المراجعة من قبل المسؤول.</span>`;
-                    btnEl.style.display = 'none';
-                } else if (userStatus === 'approved') {
-                    accStatusEl.innerHTML = `<span class="status approved">Verified ✓</span>`;
-                    descEl.innerHTML = `<span class="lang-en">You have full access to all premium content.</span><span class="lang-am">ሁሉንም ከፍተኛ ይዘት ሙሉ መዳረሻ አለዎት።</span><span class="lang-ar">لديك وصول كامل إلى جميع المحتويات المتميزة.</span>`;
-                    btnEl.style.display = 'none';
-                } else if (userStatus === 'rejected') {
-                    accStatusEl.innerHTML = `<span class="status rejected">Verification Failed ❌</span>`;
-                    descEl.innerHTML = `<span class="lang-en">Your payment was rejected. Please submit a new payment with correct details.</span><span class="lang-am">ክፍያዎ ውድቅ ተደርጓል። እባክዎ ትክክለኛ መረጃ ይዘው አዲስ ክፍያ ያስገቡ።</span><span class="lang-ar">تم رفض دفعتك. يرجى تقديم دفعة جديدة بالتفاصيل الصحيحة.</span>`;
-                    btnEl.style.display = 'block'; btnEl.innerHTML = `<i class="fas fa-credit-card"></i> <span class="lang-en">Submit New Payment</span><span class="lang-am">አዲስ ክፍያ ያስገቡ</span><span class="lang-ar">تقديم دفعة جديدة</span>`;
-                }
-            };
-
-            // ============================================================
-            // FIXED SOCIAL AUTH WITH MOBILE FALLBACK (Redirect Flow)
-            // ============================================================
-            async function handleSocialLogin(provider) {
-                showLoader();
-                try {
-                    // Try Popup first (works on Desktop)
-                    const result = await auth.signInWithPopup(provider);
-                    const user = result.user;
-                    const doc = await db.collection('users').doc(user.uid).get();
-                    if (!doc.exists) {
-                        await db.collection('users').doc(user.uid).set({
-                            email: user.email, role: 'user', paymentStatus: 'pending', approved: false, createdAt: Date.now()
-                        });
-                        state.user = { id: user.uid, email: user.email, role: 'user', paymentStatus: 'pending' };
+                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thUser')}</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thScreenshot')}</th><th>${t('thActions')}</th></tr></thead><tbody>${pays.map(p=>`<tr><td>${escapeHtml(p.email)}</td><td>${escapeHtml(p.method)}</td><td>${escapeHtml(p.txnId)}</td><td>${p.screenshotUrl?`<button class="view-link view-screenshot" data-id="${p.id}">${t('view')}</button>`:t('none')}</td><td class="actions"><button class="approve approve-payment" data-id="${p.id}"><i class="fas fa-check"></i></button><button class="reject reject-payment" data-id="${p.id}"><i class="fas fa-times"></i></button></td></tr>`).join('')}</tbody></table>`;
+                c.querySelectorAll('.approve-payment').forEach(b => b.onclick = async () => {
+                    const p = pays.find(x => x.id === b.dataset.id);
+                    if (!p) return;
+                    await db.collection('payments').doc(p.id).update({ status: 'approved' });
+                    if (p.type === 'download') {
+                        await db.collection('users').doc(p.userId).update({ downloadedVideos: firebase.firestore.FieldValue.arrayUnion(p.videoId) });
                     } else {
-                        state.user = { id: doc.id, ...doc.data() };
+                        await db.collection('users').doc(p.userId).update({ paymentStatus: 'approved', approved: true });
                     }
-                    updateUserBadge(); hideLoader(); toast(t('welcomeBack', { email: state.user.email }), 'success');
-                    navigate('gallery'); renderVideoGrid();
-                } catch (e) {
-                    // === MOBILE FIX: If popup fails, automatically use Redirect ===
-                    if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request' || e.code === 'auth/network-request-failed') {
-                        toast('Redirecting to Google/Apple...', 'info');
-                        await auth.signInWithRedirect(provider);
-                    } else {
-                        hideLoader();
-                        toast(e.message, 'error');
-                    }
-                }
-            }
+                    renderAdminPayments(); renderAdminUsers(); toast(t('paymentApproved'), 'success');
+                });
+                c.querySelectorAll('.reject-payment').forEach(b => b.onclick = async () => {
+                    await db.collection('payments').doc(b.dataset.id).update({ status: 'rejected' });
+                    renderAdminPayments(); toast(t('paymentRejected'), 'error');
+                });
+                c.querySelectorAll('.view-screenshot').forEach(b => b.onclick = () => {
+                    const p = pays.find(x => x.id === b.dataset.id);
+                    if (p?.screenshotUrl) window.open(p.screenshotUrl, '_blank', 'noopener,noreferrer');
+                });
+            };
 
-            // ===== HANDLE REDIRECT RESULT (When user comes back from Google/Apple) =====
-            auth.getRedirectResult().then((result) => {
-                if (result.user) {
-                    const user = result.user;
-                    db.collection('users').doc(user.uid).get().then(doc => {
-                        if (doc.exists) {
-                            state.user = { id: doc.id, ...doc.data() };
-                        } else {
-                            state.user = { id: user.uid, email: user.email, role: 'user', paymentStatus: 'pending' };
-                        }
-                        updateUserBadge(); navigate('gallery'); renderVideoGrid(); hideLoader();
-                        toast(t('welcomeBack', { email: state.user.email }), 'success');
-                    });
-                }
-            }).catch((e) => {
-                if (e.code !== 'auth/credential-already-in-use') {
-                    hideLoader(); toast(e.message, 'error');
-                }
-            });
+            $('showAddVideoForm').addEventListener('click', () => $('addVideoFormWrap').classList.toggle('hidden'));
 
-            const handleLogin = async (email, password) => {
+            $('addVideoForm').addEventListener('submit', async e => {
+                e.preventDefault();
+                if (!state.user || state.user.role !== 'admin') { toast('Admin access required', 'error'); return; }
+                const title = $('videoTitle').value.trim();
+                const file = $('videoFile').files?.[0];
+                const url = $('videoUrl').value.trim();
+                if (!title) { toast(t('titleRequired'), 'error'); return; }
+                if (!file && !url) { toast(t('provideFileOrUrl'), 'error'); return; }
                 showLoader();
                 try {
-                    const cred = await auth.signInWithEmailAndPassword(email, password);
-                    const doc = await db.collection('users').doc(cred.user.uid).get();
-                    if (doc.exists) { state.user = { id: doc.id, ...doc.data() }; }
-                    else { state.user = { id: cred.user.uid, email: cred.user.email, role: 'user', paymentStatus: 'pending' }; }
-                    updateUserBadge(); hideLoader(); toast(t('welcomeBack', { email: state.user.email }), 'success');
-                    navigate('gallery'); renderVideoGrid(); return true;
-                } catch (e) {
-                    hideLoader();
-                    if (e.code === 'auth/user-not-found') toast(t('accountNotFound'), 'error');
-                    else if (e.code === 'auth/wrong-password') toast(t('incorrectPassword'), 'error');
-                    else toast(e.message, 'error'); return false;
-                }
-            };
-
-            const handleRegister = async (email, password, confirm) => {
-                if (password !== confirm) { toast(t('passwordsNoMatch'), 'error'); return false; }
-                if (password.length < 6) { toast(t('invalidEmailPass'), 'error'); return false; }
-                if (!$('agreeTerms').checked) {
-                    const errEl = $('termsError'); errEl.querySelector('span').textContent = t('fillAllFields');
-                    errEl.classList.add('visible'); return false;
-                }
-                showLoader();
-                try {
-                    const cred = await auth.createUserWithEmailAndPassword(email, password);
-                    await db.collection('users').doc(cred.user.uid).set({
-                        email: email, role: 'user', paymentStatus: 'pending', approved: false, createdAt: Date.now()
+                    let videoUrl = url;
+                    if (file) videoUrl = await uploadVideoToCloudinary(file);
+                    let duration = '00:00';
+                    if (file) { const sec = await readVideoDuration(file); duration = formatDuration(sec); }
+                    await db.collection('videos').add({
+                        title, description: $('videoDesc').value.trim(), category: $('videoCategory').value,
+                        isFree: $('videoIsFree').checked, downloadPrice: Number($('downloadPrice').value) || 0,
+                        url: videoUrl, thumbnail: $('videoThumb').value.trim(), duration, likes: [], createdAt: Date.now()
                     });
-                    hideLoader(); toast(t('accountRegistered'), 'success'); navigate('payment'); return true;
-                } catch (e) {
-                    hideLoader();
-                    if (e.code === 'auth/email-already-in-use') toast(t('emailRegistered'), 'error');
-                    else toast(e.message, 'error'); return false;
-                }
-            };
-
-            const handleLogout = async () => {
-                try { await auth.signOut(); } catch (e) {}
-                state.user = null; updateUserBadge(); navigate('register'); toast(t('loggedOut'), 'info');
-            };
-
-            // ===== AUTH STATE OBSERVER =====
-            auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    const doc = await db.collection('users').doc(user.uid).get();
-                    if (doc.exists) { state.user = { id: doc.id, ...doc.data() }; }
-                    else { state.user = { id: user.uid, email: user.email, role: 'user', paymentStatus: 'pending' }; }
-                    updateUserBadge();
-                    if (state.currentPage === 'register') { navigate('gallery'); renderVideoGrid(); }
-                    else if (state.currentPage === 'gallery') { renderVideoGrid(); }
-                    else if (state.currentPage === 'profile') { renderProfile(); }
-                } else {
-                    state.user = null; updateUserBadge();
-                    if (state.currentPage !== 'register') { navigate('register'); }
-                }
+                    toast(t('videoPublished', { title }), 'success');
+                    $('addVideoForm').reset();
+                    $('addVideoFormWrap').classList.add('hidden');
+                    renderAdminVideos(); renderVideoGrid();
+                } catch (err) { toast(t('videoSaveError'), 'error'); }
                 hideLoader();
             });
 
-            // ===== UI EVENT BINDINGS =====
-            const savedTheme = localStorage.getItem('theme') || 'dark'; applyTheme(savedTheme); $('themeToggle').addEventListener('click', toggleTheme);
-            const savedLang = localStorage.getItem('lang') || 'en'; applyLanguage(savedLang); $('langToggle').addEventListener('click', toggleLanguage);
-
-            const switchToLogin = () => {
-                state.isLoginMode = true; $('registerFields').classList.add('hidden'); $('loginFields').classList.remove('hidden'); $('authFooterRegister').classList.add('hidden'); $('authFooterLogin').classList.remove('hidden'); $('authTitle').innerHTML = `<i class="fas fa-lock text-gold"></i> <span class="lang-en">Welcome Back</span><span class="lang-am">እንኳን ተመልሰው</span><span class="lang-ar">مرحباً بعودتك</span>`; $('authSub').innerHTML = `<span class="lang-en">Log in to access your <span class="highlight">premium</span> content.</span><span class="lang-am">ወደ እርስዎ ለመግባት <span class="highlight">ከፍተኛ</span> ይዘት.</span><span class="lang-ar">سجل الدخول للوصول إلى المحتوى <span class="highlight">المميز</span> الخاص بك.</span>`; $('authBtn').innerHTML = `<i class="fas fa-chevron-right"></i> <span class="lang-en">Login</span><span class="lang-am">ግባ</span><span class="lang-ar">دخول</span>`; document.querySelectorAll('.auth-switch button').forEach(b => b.classList.toggle('active', b.dataset.mode === 'login'));
+            const refreshAdmin = async () => {
+                if (!state.user || state.user.role !== 'admin') { navigate('gallery'); return; }
+                await loadSettings();
+                await Promise.allSettled([renderAdminVideos(), renderAdminUsers(), renderAdminPayments()]);
             };
-            const switchToRegister = () => {
-                state.isLoginMode = false; $('registerFields').classList.remove('hidden'); $('loginFields').classList.add('hidden'); $('authFooterRegister').classList.remove('hidden'); $('authFooterLogin').classList.add('hidden'); $('authTitle').innerHTML = `<i class="fas fa-lock text-gold"></i> <span class="lang-en">Welcome</span><span class="lang-am">እንኳን ደህና መጡ</span><span class="lang-ar">مرحباً</span>`; $('authSub').innerHTML = `<span class="lang-en">Sign up to access <span class="highlight">premium</span> content. Already have an account? Login below.</span><span class="lang-am">ለመግባት ይመዝገቡ <span class="highlight">ከፍተኛ</span> ይዘት. መለያ አለዎት? ከታች ይግቡ.</span><span class="lang-ar">سجل للوصول إلى المحتوى <span class="highlight">المميز</span>. لديك حساب بالفعل؟ سجل الدخول أدناه.</span>`; $('authBtn').innerHTML = `<i class="fas fa-chevron-right"></i> <span class="lang-en">Register & Start Watching</span><span class="lang-am">ይመዝገቡ እና መመልከት ይጀምሩ</span><span class="lang-ar">سجل وابدأ المشاهدة</span>`; document.querySelectorAll('.auth-switch button').forEach(b => b.classList.toggle('active', b.dataset.mode === 'register'));
+
+            document.querySelectorAll('#adminTabs button').forEach(b => b.addEventListener('click', () => {
+                document.querySelectorAll('#adminTabs button').forEach(x => x.classList.remove('active'));
+                b.classList.add('active');
+                state.adminTab = b.dataset.tab;
+                document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+                $('panel-' + b.dataset.tab)?.classList.add('active');
+                if (b.dataset.tab === 'videos') renderAdminVideos();
+                if (b.dataset.tab === 'users') renderAdminUsers();
+                if (b.dataset.tab === 'payments') renderAdminPayments();
+            }));
+
+            async function loadSettings() {
+                try {
+                    const snap = await db.collection('settings').doc('general').get();
+                    if (snap.exists) {
+                        const data = snap.data();
+                        if (data.siteTitle) { $('siteTitle').value = data.siteTitle; $('siteTitleText').textContent = data.siteTitle; }
+                        if (data.paymentAmount) { $('paymentAmount').value = data.paymentAmount; $('paymentAmountDisplay').textContent = data.paymentAmount; }
+                    }
+                } catch (e) { toast('Could not load saved settings', 'error'); }
+            }
+
+            $('settingsForm').addEventListener('submit', async e => {
+                e.preventDefault();
+                if (!state.user || state.user.role !== 'admin') return;
+                try {
+                    const siteTitle = $('siteTitle').value.trim() || 'Ethio Hub';
+                    const paymentAmount = Number($('paymentAmount').value) || 500;
+                    await db.collection('settings').doc('general').set({ siteTitle, paymentAmount }, { merge: true });
+                    $('siteTitleText').textContent = siteTitle;
+                    $('paymentAmountDisplay').textContent = paymentAmount;
+                    toast(t('settingsSaved'), 'success');
+                } catch (err) { toast('Could not save settings', 'error'); }
+            });
+
+
+            // ===== HERO SWIPE / FLOATING OBJECT DISPLAY =====
+            const heroIconSwitch = $('heroIconSwitch');
+            const heroIconCard = $('heroIconCard');
+            const heroIcon = $('heroIcon');
+            const heroIconItems = [
+                { cls: 'crystal', label: 'Golden Crystal' },
+                { cls: 'star', label: 'Golden Star' },
+                { cls: 'pearl', label: 'Golden Pearl' },
+                { cls: 'ember', label: 'Warm Golden Ember' },
+                { cls: 'ribbon', label: 'Golden Ribbon' }
+            ];
+            let heroIconIndex = 0;
+            let heroStartX = 0;
+            let heroStartY = 0;
+
+            const renderHeroIcon = (direction = 1) => {
+                heroIconIndex = (heroIconIndex + direction + heroIconItems.length) % heroIconItems.length;
+                const item = heroIconItems[heroIconIndex];
+                heroIconCard.classList.remove('flip-next', 'flip-prev');
+                void heroIconCard.offsetWidth;
+                heroIconCard.classList.add(direction >= 0 ? 'flip-next' : 'flip-prev');
+                heroIcon.className = `hero-object ${item.cls}`;
+                heroIconCard.setAttribute('aria-label', item.label);
+                heroIconSwitch.setAttribute('aria-label', `${item.label}. Swipe left or right to change.`);
             };
-            document.querySelectorAll('.auth-switch button').forEach(btn => { btn.addEventListener('click', function() { if (this.dataset.mode === 'login') switchToLogin(); else switchToRegister(); }); });
-            $('switchToLogin').addEventListener('click', switchToLogin); $('switchToRegister').addEventListener('click', switchToRegister);
 
-            $('authForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                document.querySelectorAll('.field-error').forEach(el => el.classList.remove('visible'));
-                document.querySelectorAll('.input-group').forEach(el => el.classList.remove('error', 'success'));
-
-                if (state.isLoginMode) {
-                    const email = $('loginEmail').value.trim(); const pass = $('loginPassword').value;
-                    if (!email || !pass) { toast(t('fillAllFields'), 'error'); return; }
-                    await handleLogin(email, pass);
-                } else {
-                    const email = $('authEmail').value.trim(); const pass = $('authPassword').value; const confirm = $('authConfirmPassword').value;
-                    if (!email || !pass || !confirm) { toast(t('fillAllFields'), 'error'); return; }
-                    if (pass !== confirm) { toast(t('passwordsNoMatch'), 'error'); return; }
-                    await handleRegister(email, pass, confirm);
+            heroIconCard.addEventListener('animationend', e => {
+                if (e.animationName === 'heroSlideNext' || e.animationName === 'heroSlidePrev') {
+                    heroIconCard.classList.remove('flip-next', 'flip-prev');
                 }
             });
-
-            $('googleSignIn').addEventListener('click', () => { handleSocialLogin(new firebase.auth.GoogleAuthProvider()); });
-            $('appleSignIn').addEventListener('click', () => { handleSocialLogin(new firebase.auth.OAuthProvider('apple')); });
-            $('logoutBtn').addEventListener('click', handleLogout);
-            $('backBtn').addEventListener('click', () => { if (state.currentPage === 'profile' || state.currentPage === 'payment' || state.currentPage === 'admin') { navigate('gallery'); renderVideoGrid(); } else if (state.currentPage === 'gallery') { navigate('register'); } else { navigate('gallery'); } });
-            $('userBadge').addEventListener('click', () => { if (state.user) { navigate('profile'); renderProfile(); } });
-            $('profileBackBtn').addEventListener('click', () => { navigate('gallery'); renderVideoGrid(); });
-            $('profilePayBtn').addEventListener('click', () => { navigate('payment'); });
-
-            document.querySelectorAll('.payment-method').forEach(el => { el.addEventListener('click', function() { document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected')); this.classList.add('selected'); state.paymentMethod = this.dataset.method; }); });
-            $('paymentForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const txnId = $('txnId').value.trim();
-                if (!txnId) { toast(t('fillAllFields'), 'error'); return; }
-                if (!state.user) { toast('Please login first.', 'error'); return; }
-                let screenshot = null;
-                const fileInput = $('screenshotFile');
-                if (fileInput.files && fileInput.files[0]) {
-                    const file = fileInput.files[0];
-                    if (file.size > 8 * 1024 * 1024) { toast(t('screenshotTooLarge'), 'error'); return; }
-                    try { screenshot = await readFileAsDataURL(file); } catch (e) { toast(t('screenshotReadError'), 'error'); return; }
-                }
-                try { await db.collection('payments').add({ userId: state.user.id, email: state.user.email, method: state.paymentMethod, txnId: txnId, notes: $('paymentNotes').value.trim(), screenshot: screenshot, status: 'pending', createdAt: Date.now() }); toast(t('paymentSubmitted'), 'success'); $('paymentForm').reset(); $('fileUpload').querySelector('.filename').textContent = ''; navigate('profile'); renderProfile(); } catch (err) { toast(t('paymentSubmitError'), 'error'); }
+            heroIconCard.addEventListener('pointerdown', e => {
+                heroStartX = e.clientX;
+                heroStartY = e.clientY;
+                heroIconCard.setPointerCapture?.(e.pointerId);
             });
-            $('fileUpload').addEventListener('click', () => $('screenshotFile').click());
-            $('screenshotFile').addEventListener('change', function() { const name = this.files && this.files[0] ? this.files[0].name : ''; $('fileUpload').querySelector('.filename').textContent = name ? `📎 ${name}` : ''; });
-            document.querySelectorAll('.toggle-pwd').forEach(el => { el.addEventListener('click', function() { const target = document.getElementById(this.dataset.target); if (target) { target.type = target.type === 'password' ? 'text' : 'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash'); } }); });
-
-            document.querySelectorAll('.admin-tabs button').forEach(btn => { btn.addEventListener('click', function() { document.querySelectorAll('.admin-tabs button').forEach(b => b.classList.remove('active')); document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active')); this.classList.add('active'); document.getElementById('panel-' + this.dataset.tab).classList.add('active'); state.adminTab = this.dataset.tab; if (this.dataset.tab === 'videos') renderAdminVideos(); if (this.dataset.tab === 'users') renderAdminUsers(); if (this.dataset.tab === 'payments') renderAdminPayments(); }); });
-            $('showAddVideoForm').addEventListener('click', () => { const wrap = $('addVideoFormWrap'); wrap.classList.toggle('hidden'); if (!wrap.classList.contains('hidden')) { wrap.scrollIntoView({ behavior: 'smooth' }); } });
-            $('addVideoForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const title = $('videoTitle').value.trim(); if (!title) { toast(t('titleRequired'), 'error'); return; }
-                const fileInput = $('videoFile'); let url = $('videoUrl').value.trim(); let uploadedUrl = null; let duration = 0;
-                if (fileInput.files && fileInput.files[0]) { const file = fileInput.files[0]; if (file.size > 1024 * 1024 * 1024) { toast(t('fileTooLarge'), 'error'); return; } try { uploadedUrl = await readFileAsDataURL(file); duration = await readVideoDuration(file); } catch (err) { toast('Failed to read file.', 'error'); return; } } else if (url) { try { new URL(url); } catch (_) { toast('Invalid URL.', 'error'); return; } } else { toast(t('provideFileOrUrl'), 'error'); return; }
-                const videoData = { title: title, description: $('videoDesc').value.trim(), category: $('videoCategory').value, downloadPrice: parseInt($('downloadPrice').value) || 0, url: uploadedUrl || url, thumbnail: $('videoThumb').value.trim() || '', isFree: $('videoIsFree').checked, duration: formatDuration(duration), createdAt: Date.now(), likes: [] };
-                showLoader();
-                try { const docRef = await db.collection('videos').add(videoData); hideLoader(); toast(t('videoPublished', { title: title }), 'success'); $('addVideoForm').reset(); $('addVideoFormWrap').classList.add('hidden'); renderAdminVideos(); renderVideoGrid(); } catch (err) { hideLoader(); toast(t('videoSaveError'), 'error'); }
-            });
-            document.querySelectorAll('.category-tabs button').forEach(btn => { btn.addEventListener('click', function() { document.querySelectorAll('.category-tabs button').forEach(b => b.classList.remove('active')); this.classList.add('active'); state.selectedCategory = this.dataset.cat; renderVideoGrid(state.selectedCategory); }); });
-
-            // ===== TERMS MODAL FIX (Ensuring it opens/closes smoothly) =====
-            document.querySelectorAll('.openTermsLink').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.getElementById('termsModal').classList.add('active');
-                });
-            });
-            document.getElementById('termsModalClose').addEventListener('click', function() {
-                document.getElementById('termsModal').classList.remove('active');
-            });
-            document.getElementById('termsModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('active');
+            heroIconCard.addEventListener('pointerup', e => {
+                const dx = e.clientX - heroStartX;
+                const dy = e.clientY - heroStartY;
+                if (Math.abs(dx) > 20 && Math.abs(dx) > Math.abs(dy)) {
+                    renderHeroIcon(dx < 0 ? 1 : -1);
+                } else if (Math.abs(dx) < 8 && Math.abs(dy) < 8) {
+                    renderHeroIcon(1);
                 }
             });
+            heroIconCard.addEventListener('keydown', e => {
+                if (e.key === 'ArrowLeft') { e.preventDefault(); renderHeroIcon(-1); }
+                if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); renderHeroIcon(1); }
+            });
+            let heroAutoCycle = setInterval(() => renderHeroIcon(1), 4200);
+            heroIconCard.addEventListener('pointerdown', () => {
+                clearInterval(heroAutoCycle);
+                heroAutoCycle = setInterval(() => renderHeroIcon(1), 4200);
+            }, { passive: true });
 
-            // ===== ADMIN SETTINGS FORM =====
-            $('settingsForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const title = $('siteTitle').value.trim(); const amount = parseInt($('paymentAmount').value);
-                if (title) document.getElementById('siteTitleText').textContent = title;
-                if (amount) document.getElementById('paymentAmountDisplay').textContent = amount;
-                toast(t('settingsSaved'), 'success');
+            // ===== AUTH STATE =====
+            auth.onAuthStateChanged(async fu => {
+                if (!fu) { state.user = null; updateUserBadge(); setAuthMode(false); navigate('register'); return; }
+                try { await loadUser(fu); } catch (e) { toast('Could not restore your session.', 'error'); }
             });
 
-            // ===== INITIAL LOAD =====
-            if (!state.user) { navigate('register'); }
-            console.log('✅ Ethio Hub fixed: Social login, Canvas, and Terms modal working perfectly!');
+            // ===== INIT =====
+            // Copyright text is intentionally fixed to 2026.
         })();
     </script>
+
+<script id="runtime-safety">
+(function () {
+    'use strict';
+    // Prevent a failed optional animation from breaking unrelated UI controls.
+    window.addEventListener('unhandledrejection', function (event) {
+        if (event && event.promise) event.preventDefault();
+    });
+    // Keep accidental non-fatal resource failures from becoming uncaught UI failures.
+    window.addEventListener('error', function (event) {
+        if (event && event.target && event.target !== window) return;
+        return true;
+    }, true);
+})();
+</script>
+
 </body>
 </html>

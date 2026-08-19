@@ -87,7 +87,7 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             padding: 12px;
             transition: background 0.4s ease, color 0.4s ease;
             -webkit-font-smoothing: antialiased;
@@ -247,8 +247,11 @@
             box-shadow: var(--shadow-heavy);
             padding: 18px 20px 24px;
             position: relative;
-            min-height: 90vh;
+            min-height: calc(100vh - 24px);
+            min-height: calc(100dvh - 24px);
             border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
             transition: background 0.4s ease, border-color 0.4s ease;
             z-index: 1;
             backdrop-filter: blur(2px);
@@ -514,7 +517,7 @@
 
         .site-footer {
             text-align: center;
-            margin-top: 18px;
+            margin-top: auto;
             padding-top: 10px;
             border-top: 1px solid var(--border-color);
             color: var(--text-muted);
@@ -1831,7 +1834,126 @@
         .text-gold { color: var(--gold); }
         .text-muted { color: var(--text-muted); }
         .hidden { display: none !important; }
-    </style>
+    
+/* Premium floating depth enhancement — visual only */
+header, .header, .site-header, nav {
+  position: relative;
+  z-index: 50;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.18),
+    0 2px 8px rgba(0,0,0,.10);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.registration-card, .register-card, .auth-card, #registerCard,
+.login-card, .signup-card {
+  position: relative;
+  z-index: 20;
+  box-shadow:
+    0 24px 55px rgba(0,0,0,.22),
+    0 8px 22px rgba(0,0,0,.12);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  header, .header, .site-header, nav,
+  .registration-card, .register-card, .auth-card, #registerCard,
+  .login-card, .signup-card {
+    transition:
+      box-shadow .35s ease,
+      transform .35s ease,
+      background-color .35s ease,
+      border-color .35s ease;
+  }
+
+  header:hover, .header:hover, .site-header:hover, nav:hover {
+    box-shadow:
+      0 14px 38px rgba(0,0,0,.21),
+      0 3px 10px rgba(0,0,0,.12);
+  }
+
+  .registration-card:hover, .register-card:hover, .auth-card:hover,
+  #registerCard:hover, .login-card:hover, .signup-card:hover {
+    transform: translateY(-2px) translateZ(0);
+    box-shadow:
+      0 28px 65px rgba(0,0,0,.24),
+      0 10px 26px rgba(0,0,0,.13);
+  }
+}
+
+
+/* Profile panel — premium floating card enhancement */
+.profile-container {
+  position: relative;
+  z-index: 25;
+  box-shadow:
+    0 26px 65px rgba(0,0,0,.24),
+    0 10px 26px rgba(0,0,0,.13),
+    0 0 0 1px rgba(255,255,255,.025);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.profile-email-input {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+  color: var(--text-main, inherit);
+  background: rgba(255,255,255,.035);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  outline: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.profile-email-input:focus {
+  border-color: var(--gold);
+  box-shadow:
+    0 0 0 3px rgba(212,175,55,.10),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .profile-container {
+    transition: transform .35s ease, box-shadow .35s ease;
+  }
+
+  .profile-container:hover {
+    transform: translateY(-2px) translateZ(0);
+    box-shadow:
+      0 30px 72px rgba(0,0,0,.26),
+      0 12px 30px rgba(0,0,0,.14),
+      0 0 0 1px rgba(255,255,255,.03);
+  }
+
+  .profile-email-input {
+    transition: border-color .25s ease, box-shadow .25s ease, background-color .25s ease;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .profile-email-input {
+    min-height: 38px;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+
+        @media (max-width: 600px) {
+            body { padding: 8px; }
+            #app {
+                min-height: calc(100vh - 16px);
+                min-height: calc(100dvh - 16px);
+            }
+        }
+
+</style>
 
     <style id="performance-smoothing">
         /* Performance-only safeguards: preserve the existing visual design. */
@@ -2062,7 +2184,7 @@
             <div class="profile-container">
                 <div class="profile-icon"><i class="fas fa-user-circle"></i></div>
                 <h2><span class="lang-en">My Profile</span><span class="lang-am">የእኔ መገለጫ</span><span class="lang-ar">ملفي الشخصي</span></h2>
-                <div class="profile-field"><label><span class="lang-en">Email Address</span><span class="lang-am">ኢሜይል አድራሻ</span><span class="lang-ar">البريد الإلكتروني</span></label><div class="value" id="profileEmail">-</div></div>
+                <div class="profile-field"><label><span class="lang-en">Email Address</span><span class="lang-am">ኢሜይል አድራሻ</span><span class="lang-ar">البريد الإلكتروني</span></label><input class="value profile-email-input" id="profileEmail" type="email" inputmode="email" autocomplete="email" placeholder="Email address" readonly></div>
                 <div class="profile-field"><label><span class="lang-en">Payment Status</span><span class="lang-am">የክፍያ ሁኔታ</span><span class="lang-ar">حالة الدفع</span></label><div class="value" id="profilePaymentStatus"><span class="status pending">Pending</span></div></div>
                 <div class="profile-field">
                     <label><span class="lang-en">Account Status</span><span class="lang-am">የመለያ ሁኔታ</span><span class="lang-ar">حالة الحساب</span></label>
@@ -2229,7 +2351,9 @@
             let canvasVisible = true;
             let canvasAnimating = false;
             let lastParticleFrame = 0;
+            let particleLastTime = 0;
             let particleFrameSkip = 0;
+            let particleCountCache = 0;
 
             function resizeCanvas() {
                 const width = Math.max(1, window.innerWidth || 1);
@@ -2246,7 +2370,14 @@
             let resizeTimer = null;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(resizeCanvas, 120);
+                resizeTimer = setTimeout(() => {
+                    resizeCanvas();
+                    const nextCount = particleCount();
+                    if (nextCount !== particleCountCache) {
+                        initParticles(nextCount);
+                        particleCountCache = nextCount;
+                    }
+                }, 120);
             }, { passive: true });
             resizeCanvas();
 
@@ -2284,8 +2415,6 @@
                         this.x -= (dx / dist) * force * 2;
                         this.y -= (dy / dist) * force * 2;
                     }
-                    this.x += this.speedX;
-                    this.y += this.speedY;
                     const width = canvas._logicalWidth || window.innerWidth;
                     const height = canvas._logicalHeight || window.innerHeight;
                     if (this.x < -4 || this.x > width + 4 || this.y < -4 || this.y > height + 4) this.reset();
@@ -2311,7 +2440,8 @@
                 particles = [];
                 for (let i = 0; i < count; i++) particles.push(new Particle());
             }
-            initParticles(particleCount());
+            particleCountCache = particleCount();
+            initParticles(particleCountCache);
 
             function drawParticleLinks() {
                 const linkDistance = 150;
@@ -2342,14 +2472,22 @@
                     canvasAnimating = false;
                     return;
                 }
-                // Cap background work to a stable ~45 FPS. UI animations remain CSS-driven.
-                if (timestamp - lastParticleFrame < 22) {
+                // Keep the background animation synchronized to the display refresh rate.
+                // Motion uses a small time step so it remains smooth and consistent across devices.
+                if (timestamp - lastParticleFrame < 16) {
                     animId = requestAnimationFrame(animateParticles);
                     return;
                 }
+                const delta = Math.min(32, Math.max(8, timestamp - (particleLastTime || timestamp)));
+                particleLastTime = timestamp;
                 lastParticleFrame = timestamp;
                 ctx.clearRect(0, 0, canvas._logicalWidth || window.innerWidth, canvas._logicalHeight || window.innerHeight);
-                particles.forEach(p => { p.update(); p.draw(); });
+                particles.forEach(p => {
+                    p.x += p.speedX * (delta / 16.67);
+                    p.y += p.speedY * (delta / 16.67);
+                    p.update();
+                    p.draw();
+                });
                 drawParticleLinks();
                 animId = requestAnimationFrame(animateParticles);
                 canvasAnimating = true;
@@ -2358,6 +2496,8 @@
             const startParticleAnimation = () => {
                 if (!canvasAnimating) {
                     cancelAnimationFrame(animId);
+                    particleLastTime = 0;
+                    lastParticleFrame = 0;
                     animId = requestAnimationFrame(animateParticles);
                 }
             };
@@ -2714,11 +2854,18 @@
             };
             const updateUserBadge = () => {
                 const dot = $('notificationDot');
+                const profileEmail = $('profileEmail');
                 if (state.user) {
-                    $('userEmail').textContent = state.user.email;
+                    const email = state.user.email || '';
+                    $('userEmail').textContent = email;
+                    if (profileEmail) profileEmail.value = email;
                     $('userBadge').style.display = 'flex';
                     dot.style.display = state.user.paymentStatus !== 'approved' ? 'block' : 'none';
-                } else { $('userBadge').style.display = 'none'; dot.style.display = 'none'; }
+                } else {
+                    if (profileEmail) profileEmail.value = '';
+                    $('userBadge').style.display = 'none';
+                    dot.style.display = 'none';
+                }
             };
 
             // ===== THEME =====
@@ -2814,10 +2961,105 @@
                 }
             });
 
+            // ===== GOOGLE & APPLE SIGN-IN =====
+            // Added only to connect the existing Google/Apple buttons to Firebase Authentication.
+            const ensureSocialUser = async (fu) => {
+                const ref = db.collection('users').doc(fu.uid);
+                const snap = await ref.get();
+                if (!snap.exists) {
+                    await ref.set({
+                        email: fu.email || '',
+                        role: 'user',
+                        paymentStatus: 'pending',
+                        approved: false,
+                        createdAt: Date.now(),
+                        downloadedVideos: []
+                    });
+                }
+            };
+
+            const finishSocialSignIn = async (result) => {
+                if (!result || !result.user) return;
+                await ensureSocialUser(result.user);
+                await loadUser(result.user);
+            };
+
+            const signInWithGoogle = async () => {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                showLoader();
+                try {
+                    const result = await auth.signInWithPopup(provider);
+                    await finishSocialSignIn(result);
+                } catch (err) {
+                    if (err && err.code === 'auth/popup-blocked') {
+                        try {
+                            await auth.signInWithRedirect(provider);
+                            return;
+                        } catch (redirectErr) {
+                            toast(redirectErr.message || 'Google sign-in could not be started.', 'error');
+                        }
+                    } else if (err && err.code === 'auth/popup-closed-by-user') {
+                        // User closed the provider window; no error message is needed.
+                    } else {
+                        toast(err && err.message ? err.message : 'Google sign-in failed.', 'error');
+                    }
+                } finally {
+                    hideLoader();
+                }
+            };
+
+            const signInWithApple = async () => {
+                const provider = new firebase.auth.OAuthProvider('apple.com');
+                provider.addScope('email');
+                provider.addScope('name');
+                showLoader();
+                try {
+                    const result = await auth.signInWithPopup(provider);
+                    await finishSocialSignIn(result);
+                } catch (err) {
+                    if (err && err.code === 'auth/popup-blocked') {
+                        try {
+                            await auth.signInWithRedirect(provider);
+                            return;
+                        } catch (redirectErr) {
+                            toast(redirectErr.message || 'Apple sign-in could not be started.', 'error');
+                        }
+                    } else if (err && err.code === 'auth/popup-closed-by-user') {
+                        // User closed the provider window; no error message is needed.
+                    } else {
+                        toast(err && err.message ? err.message : 'Apple sign-in failed.', 'error');
+                    }
+                } finally {
+                    hideLoader();
+                }
+            };
+
+            $('googleSignIn').addEventListener('click', signInWithGoogle);
+            $('appleSignIn').addEventListener('click', signInWithApple);
+
+            auth.getRedirectResult().then(async result => {
+                if (result && result.user) {
+                    showLoader();
+                    try {
+                        await finishSocialSignIn(result);
+                    } catch (err) {
+                        toast(err && err.message ? err.message : 'Sign-in could not be completed.', 'error');
+                    } finally {
+                        hideLoader();
+                    }
+                }
+            }).catch(err => {
+                if (err && err.code !== 'auth/no-auth-event') {
+                    toast(err.message || 'Sign-in could not be completed.', 'error');
+                }
+            });
+
             async function loadUser(fu) {
                 const snap = await db.collection('users').doc(fu.uid).get();
                 state.user = { id: fu.uid, ...snap.data(), email: fu.email || snap.data()?.email };
                 updateUserBadge();
+                if ($('profileEmail')) $('profileEmail').value = state.user.email || '';
                 if (state.user.role === 'admin') navigate('admin');
                 else navigate('gallery');
             }

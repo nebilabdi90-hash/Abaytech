@@ -1449,6 +1449,10 @@
         .modal-overlay.active {
             display: flex;
         }
+        body:has(.modal-overlay.active),
+        body:has(.terms-modal-overlay.active) {
+            overflow: hidden;
+        }
         .modal-content {
             position: relative;
             width: 100%;
@@ -2401,9 +2405,6 @@ header, .header, .site-header, nav {
                             <label><span class="lang-en">Description</span><span class="lang-am">መግለጫ</span><span class="lang-ar">الوصف</span></label><textarea id="videoDesc" placeholder="Describe this content..."></textarea>
                             <label><span class="lang-en">Category</span><span class="lang-am">ምድብ</span><span class="lang-ar">الفئة</span></label><select id="videoCategory"><option value="exclusive">Exclusive Hub</option><option value="training">Training</option></select>
                             
-                            <label><span class="lang-en">Download Price (ETB)</span><span class="lang-am">የማውረድ ዋጋ (ETB)</span><span class="lang-ar">سعر التحميل (ETB)</span></label>
-                            <div class="input-group"><i class="fas fa-download"></i><input type="number" id="downloadPrice" value="50" min="0" /></div>
-
                             <div class="file-input-group">
                                 <label><i class="fas fa-upload"></i> <span class="lang-en">Upload Video File (Up to 1GB):</span><span class="lang-am">የቪዲዮ ፋይል ስቀል (እስከ 1 ጂቢ):</span><span class="lang-ar">رفع ملف الفيديو (حتى 1 جيجابايت):</span></label>
                                 <input type="file" id="videoFile" accept="video/*" />
@@ -2819,9 +2820,7 @@ header, .header, .site-header, nav {
                     approvedExclaim: 'Approved!',
                     stillPending: 'Still pending. Please wait.',
                     paymentPendingReview: 'Your payment {txnId} is under review.',
-                    downloadPurchase: 'Buy Download ({price} ETB)',
                     downloadNow: 'Download',
-                    downloadPurchased: 'Download purchase submitted!'
                 },
                 am: {
                     processing: 'በሂደት ላይ',
@@ -2904,9 +2903,7 @@ header, .header, .site-header, nav {
                     approvedExclaim: 'ጸድቋል!',
                     stillPending: 'አሁንም በመጠባበቅ ላይ ነውᢉ እባክዎ ይጠብቁ።',
                     paymentPendingReview: 'ክፍያዎ {txnId} በግምገማ ውስጥ ነው።',
-                    downloadPurchase: 'ማውረድ ግዛ ({price} ETB)',
                     downloadNow: 'አውርድ',
-                    downloadPurchased: 'የማውረድ ግዢ ገብቷል!'
                 },
                 ar: {
                     processing: 'جاري المعالجة',
@@ -2989,15 +2986,13 @@ header, .header, .site-header, nav {
                     approvedExclaim: 'تمت الموافقة!',
                     stillPending: 'لا يزال معلقًا. يرجى الانتظار.',
                     paymentPendingReview: 'دفعتك {txnId} قيد المراجعة.',
-                    downloadPurchase: 'شراء التحميل ({price} ETB)',
                     downloadNow: 'تحميل',
-                    downloadPurchased: 'تم تقديم شراء التحميل!'
                 }
             };
 
             let state = { user: null, currentPage: 'register', selectedCategory: 'all', adminTab: 'videos', paymentMethod: 'telebirr', isLoginMode: false, pendingScreenshotFile: null, selectedPlan: 'basic', paymentStartTime: null, paymentTimerInterval: null };
             const pages = { register: $('page-register'), profile: $('page-profile'), payment: $('page-payment'), gallery: $('page-gallery'), admin: $('page-admin') };
-            const navigate = (page) => {
+            let navigate = (page) => {
                 Object.keys(pages).forEach(k => pages[k].classList.toggle('active', k === page));
                 state.currentPage = page;
                 $('userBadge').style.display = (page === 'register') ? 'none' : 'flex';
@@ -3482,65 +3477,44 @@ header, .header, .site-header, nav {
             }
 
             async function handleDownloadAction(video, container) {
-                if (!video.downloadPrice || video.downloadPrice === 0) return;
-                
-                // Admins can download directly without payment restrictions
-                if (state.user && state.user.role === 'admin') {
+                if (!video || !video.url || !container) return;
+
+                // Admins and Full Access users can download directly.
+                const isAdmin = state.user?.role === 'admin';
+                const hasFullAccess = state.user?.plan === 'premium' &&
+                    state.user?.paymentStatus === 'approved' &&
+                    state.user?.permissions?.canDownload === true;
+
+                if (isAdmin || hasFullAccess) {
                     const btn = document.createElement('button');
                     btn.className = 'btn-primary';
                     btn.style.width = 'auto';
                     btn.style.padding = '10px 24px';
                     btn.innerHTML = `<i class="fas fa-download"></i> ${t('downloadNow')}`;
                     btn.onclick = () => {
-                        const a = document.createElement('a');
-                        a.href = video.url;
-                        a.download = (video.title || 'video') + '.mp4';
-                        a.click();
+                        try {
+                            const a = document.createElement('a');
+                            a.href = video.url;
+                            a.download = (video.title || 'video') + '.mp4';
+                            a.rel = 'noopener';
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                        } catch (e) {
+                            toast('Download could not be started.', 'error');
+                        }
                     };
                     container.appendChild(btn);
                     return;
                 }
 
-                // Check if user has download permission (for normal users)
-                if (!state.user || !state.user.permissions.canDownload) {
-                    container.innerHTML = `
-                        <div style="padding:12px; background:var(--bg-input); border-radius:8px; text-align:center; border:1px solid var(--border-color);">
-                            <p style="color:var(--text-muted); font-size:13px; margin-bottom:4px;">📥 Download requires <strong style="color:var(--gold);">Full Access</strong> plan.</p>
-                            <button class="btn-primary" style="width:auto; padding:6px 16px; font-size:12px;" onclick="navigate('payment')">Upgrade Now</button>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Existing download logic for Premium users
-                const has = state.user.downloadedVideos?.includes(video.id);
-                const btn = document.createElement('button');
-                btn.className = 'btn-primary';
-                btn.style.width = 'auto';
-                btn.style.padding = '10px 24px';
-                if (has) {
-                    btn.innerHTML = `<i class="fas fa-download"></i> ${t('downloadNow')}`;
-                    btn.onclick = () => {
-                        const a = document.createElement('a');
-                        a.href = video.url;
-                        a.download = (video.title || 'video') + '.mp4';
-                        a.click();
-                    };
-                } else {
-                    btn.innerHTML = `<i class="fas fa-lock"></i> ${t('downloadPurchase',{price:video.downloadPrice})}`;
-                    btn.onclick = async () => {
-                        try {
-                            await db.collection('payments').add({
-                                userId: state.user.id, email: state.user.email, method: 'download',
-                                txnId: 'DOWNLOAD_' + uid(), notes: `Download video: ${video.title}`,
-                                status: 'pending', type: 'download', videoId: video.id,
-                                price: video.downloadPrice, createdAt: Date.now()
-                            });
-                            toast(t('downloadPurchased'), 'success');
-                        } catch (e) { toast(t('paymentSubmitError'), 'error'); }
-                    };
-                }
-                container.appendChild(btn);
+                // Basic/unapproved users get the existing upgrade path.
+                container.innerHTML = `
+                    <div style="padding:12px; background:var(--bg-input); border-radius:8px; text-align:center; border:1px solid var(--border-color);">
+                        <p style="color:var(--text-muted); font-size:13px; margin-bottom:4px;">📥 Download is included with <strong style="color:var(--gold);">Full Access</strong>.</p>
+                        <button class="btn-primary" style="width:auto; padding:6px 16px; font-size:12px;" onclick="navigate('payment')">Upgrade Now</button>
+                    </div>
+                `;
             }
 
             const closeModal = () => {
@@ -3619,92 +3593,278 @@ header, .header, .site-header, nav {
 
             const renderAdminVideos = async () => {
                 const c = $('adminVideoList');
-                const snap = await db.collection('videos').orderBy('createdAt', 'desc').get();
-                const vids = [];
-                snap.forEach(d => vids.push({ id: d.id, ...d.data() }));
-                if (!vids.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-video"></i><h3>${t('noVideos')}</h3></div>`; return; }
-                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thTitle')}</th><th>${t('thCategory')}</th><th>${t('thType')}</th><th>${t('thDuration')}</th><th>${t('thActions')}</th></tr></thead><tbody>${vids.map(v=>`<tr><td><strong>${escapeHtml(v.title)}</strong></td><td><span class="status approved">${v.category==='exclusive'?t('catExclusive'):t('catTraining')}</span></td><td>${v.isFree?t('free'):t('premium')}</td><td>${v.duration||'00:00'}</td><td class="actions"><button class="approve edit-video" data-id="${v.id}"><i class="fas fa-edit"></i></button><button class="del delete-video" data-id="${v.id}"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>`;
-                c.querySelectorAll('.delete-video').forEach(b => b.addEventListener('click', async () => {
-                    if (confirm(t('confirmDeleteVideo'))) {
-                        await db.collection('videos').doc(b.dataset.id).delete();
-                        renderAdminVideos(); renderVideoGrid(); toast(t('videoDeleted'), 'success');
+                if (!c) return;
+                try {
+                    const snap = await db.collection('videos').orderBy('createdAt', 'desc').get();
+                    const vids = [];
+                    snap.forEach(d => vids.push({ id: d.id, ...d.data() }));
+
+                    if (!vids.length) {
+                        c.innerHTML = `<div class="empty-state"><i class="fas fa-video"></i><h3>${t('noVideos')}</h3></div>`;
+                        return;
                     }
-                }));
-                c.querySelectorAll('.edit-video').forEach(b => b.addEventListener('click', async () => {
-                    const v = vids.find(x => x.id === b.dataset.id);
-                    if (!v) return;
-                    const title = prompt(t('promptEditTitle'), v.title);
-                    if (title?.trim()) await db.collection('videos').doc(v.id).update({ title: title.trim() });
-                    const desc = prompt(t('promptEditDesc'), v.description || '');
-                    if (desc !== null) await db.collection('videos').doc(v.id).update({ description: desc.trim() });
-                    renderAdminVideos(); renderVideoGrid(); toast(t('videoUpdated'), 'success');
-                }));
+
+                    c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thTitle')}</th><th>${t('thCategory')}</th><th>${t('thType')}</th><th>${t('thDuration')}</th><th>${t('thActions')}</th></tr></thead><tbody>${vids.map(v => `
+                        <tr>
+                            <td><strong>${escapeHtml(v.title)}</strong></td>
+                            <td><span class="status approved">${v.category === 'exclusive' ? t('catExclusive') : t('catTraining')}</span></td>
+                            <td>${v.isFree ? t('free') : t('premium')}</td>
+                            <td>${escapeHtml(v.duration || '00:00')}</td>
+                            <td class="actions">
+                                <button class="approve edit-video" data-id="${v.id}" title="Edit video" aria-label="Edit video"><i class="fas fa-edit"></i></button>
+                                <button class="del delete-video" data-id="${v.id}" title="Delete video" aria-label="Delete video"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>`).join('')}</tbody></table>`;
+
+                    c.querySelectorAll('.delete-video').forEach(b => b.addEventListener('click', async () => {
+                        if (!confirm(t('confirmDeleteVideo'))) return;
+                        showLoader();
+                        try {
+                            await db.collection('videos').doc(b.dataset.id).delete();
+                            await Promise.allSettled([renderAdminVideos(), renderVideoGrid()]);
+                            toast(t('videoDeleted'), 'success');
+                        } catch (e) {
+                            toast('Could not delete the video.', 'error');
+                        } finally {
+                            hideLoader();
+                        }
+                    }));
+
+                    c.querySelectorAll('.edit-video').forEach(b => b.addEventListener('click', async () => {
+                        const v = vids.find(x => x.id === b.dataset.id);
+                        if (!v) return;
+
+                        // Keep the existing compact admin design while making editing complete.
+                        const title = prompt(t('promptEditTitle'), v.title || '');
+                        if (title === null) return;
+
+                        const desc = prompt(t('promptEditDesc'), v.description || '');
+                        if (desc === null) return;
+
+                        const category = prompt('Category (exclusive/training):', v.category || 'exclusive');
+                        if (category === null) return;
+                        const normalizedCategory = category.trim().toLowerCase();
+                        if (!['exclusive', 'training'].includes(normalizedCategory)) {
+                            toast('Category must be exclusive or training.', 'error');
+                            return;
+                        }
+
+                        const freeAnswer = prompt('Free to watch? (yes/no):', v.isFree ? 'yes' : 'no');
+                        if (freeAnswer === null) return;
+                        const isFree = ['yes', 'y', 'true', '1'].includes(freeAnswer.trim().toLowerCase());
+
+                        const url = prompt('Video URL (leave unchanged if you do not want to replace it):', v.url || '');
+                        if (url === null) return;
+
+                        const thumbnail = prompt('Thumbnail URL (leave unchanged if you do not want to replace it):', v.thumbnail || '');
+                        if (thumbnail === null) return;
+
+                        showLoader();
+                        try {
+                            await db.collection('videos').doc(v.id).update({
+                                title: title.trim(),
+                                description: desc.trim(),
+                                category: normalizedCategory,
+                                isFree,
+                                url: url.trim(),
+                                thumbnail: thumbnail.trim(),
+                                updatedAt: Date.now()
+                            });
+                            await Promise.allSettled([renderAdminVideos(), renderVideoGrid()]);
+                            toast(t('videoUpdated'), 'success');
+                        } catch (e) {
+                            toast('Could not update the video.', 'error');
+                        } finally {
+                            hideLoader();
+                        }
+                    }));
+                } catch (e) {
+                    c.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Unable to load videos</h3><p>Check your connection and try again.</p></div>`;
+                }
+            };
+
+            const permissionsForPlan = (plan) => {
+                if (plan === 'premium') {
+                    return { canDownload: true, canScreenshot: true, canUpload: true, limit: 9999 };
+                }
+                return { canDownload: false, canScreenshot: false, canUpload: false, limit: 5 };
             };
 
             const renderAdminUsers = async () => {
                 const c = $('adminUserList');
-                const snap = await db.collection('users').get();
-                const users = [];
-                snap.forEach(d => users.push({ id: d.id, ...d.data() }));
-                if (!users.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><h3>${t('noUsers')}</h3></div>`; return; }
-                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thEmail')}</th><th>${t('thRole')}</th><th>${t('thPayment')}</th><th>${t('thActions')}</th></tr></thead><tbody>${users.map(u=>`<tr><td>${escapeHtml(u.email)}</td><td>${u.role}</td><td><span class="status ${u.paymentStatus||'pending'}">${u.paymentStatus||'pending'}</span></td><td class="actions">${u.role==='admin'?t('systemAdmin'):`<button class="approve approve-user" data-id="${u.id}"><i class="fas fa-check"></i></button><button class="reject reject-user" data-id="${u.id}"><i class="fas fa-times"></i></button><button class="del kick-user" data-id="${u.id}"><i class="fas fa-user-slash"></i></button>`}</td></tr>`).join('')}</tbody></table>`;
-                c.querySelectorAll('.approve-user').forEach(b => b.onclick = async () => {
-                    const u = users.find(x => x.id === b.dataset.id);
-                    if (u) { await db.collection('users').doc(u.id).update({ paymentStatus: 'approved', approved: true });
-                        renderAdminUsers(); toast(t('userApproved', { email: u.email }), 'success'); }
-                });
-                c.querySelectorAll('.reject-user').forEach(b => b.onclick = async () => {
-                    const u = users.find(x => x.id === b.dataset.id);
-                    if (u) { await db.collection('users').doc(u.id).update({ paymentStatus: 'rejected', approved: false });
-                        renderAdminUsers(); toast(t('userRejected', { email: u.email }), 'error'); }
-                });
-                c.querySelectorAll('.kick-user').forEach(b => b.onclick = async () => {
-                    if (!confirm(t('confirmKick'))) return;
-                    await db.collection('users').doc(b.dataset.id).delete();
-                    renderAdminUsers(); toast('User removed', 'info');
-                });
+                if (!c) return;
+                try {
+                    const snap = await db.collection('users').get();
+                    const users = [];
+                    snap.forEach(d => users.push({ id: d.id, ...d.data() }));
+
+                    if (!users.length) {
+                        c.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><h3>${t('noUsers')}</h3></div>`;
+                        return;
+                    }
+
+                    c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thEmail')}</th><th>${t('thRole')}</th><th>${t('thPayment')}</th><th>${t('thActions')}</th></tr></thead><tbody>${users.map(u => `
+                        <tr>
+                            <td>${escapeHtml(u.email || '')}</td>
+                            <td>${escapeHtml(u.role || 'user')}</td>
+                            <td><span class="status ${u.paymentStatus || 'pending'}">${escapeHtml(u.paymentStatus || 'pending')}</span></td>
+                            <td class="actions">${u.role === 'admin'
+                                ? t('systemAdmin')
+                                : `<button class="approve approve-user" data-id="${u.id}" title="Approve" aria-label="Approve"><i class="fas fa-check"></i></button>
+                                   <button class="reject reject-user" data-id="${u.id}" title="Reject" aria-label="Reject"><i class="fas fa-times"></i></button>
+                                   <button class="del kick-user" data-id="${u.id}" title="Remove" aria-label="Remove"><i class="fas fa-user-slash"></i></button>`}
+                            </td>
+                        </tr>`).join('')}</tbody></table>`;
+
+                    c.querySelectorAll('.approve-user').forEach(b => b.onclick = async () => {
+                        const u = users.find(x => x.id === b.dataset.id);
+                        if (!u) return;
+                        showLoader();
+                        try {
+                            const plan = u.plan === 'premium' ? 'premium' : 'basic';
+                            await db.collection('users').doc(u.id).update({
+                                paymentStatus: 'approved',
+                                approved: true,
+                                plan,
+                                permissions: permissionsForPlan(plan)
+                            });
+                            await renderAdminUsers();
+                            toast(t('userApproved', { email: u.email }), 'success');
+                        } catch (e) {
+                            toast('Could not approve the user.', 'error');
+                        } finally {
+                            hideLoader();
+                        }
+                    });
+
+                    c.querySelectorAll('.reject-user').forEach(b => b.onclick = async () => {
+                        const u = users.find(x => x.id === b.dataset.id);
+                        if (!u) return;
+                        showLoader();
+                        try {
+                            await db.collection('users').doc(u.id).update({
+                                paymentStatus: 'rejected',
+                                approved: false,
+                                permissions: permissionsForPlan('basic')
+                            });
+                            await renderAdminUsers();
+                            toast(t('userRejected', { email: u.email }), 'error');
+                        } catch (e) {
+                            toast('Could not reject the user.', 'error');
+                        } finally {
+                            hideLoader();
+                        }
+                    });
+
+                    c.querySelectorAll('.kick-user').forEach(b => b.onclick = async () => {
+                        if (!confirm(t('confirmKick'))) return;
+                        showLoader();
+                        try {
+                            // Removes the Firestore profile. Firebase Auth accounts require a
+                            // privileged backend/Cloud Function and cannot be safely deleted here.
+                            await db.collection('users').doc(b.dataset.id).delete();
+                            await renderAdminUsers();
+                            toast('User profile removed.', 'info');
+                        } catch (e) {
+                            toast('Could not remove the user profile.', 'error');
+                        } finally {
+                            hideLoader();
+                        }
+                    });
+                } catch (e) {
+                    c.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Unable to load users</h3></div>`;
+                }
             };
 
             const renderAdminPayments = async () => {
                 const c = $('adminPaymentList');
-                const snap = await db.collection('payments').orderBy('createdAt', 'desc').get();
-                const pays = [];
-                snap.forEach(d => pays.push({ id: d.id, ...d.data() }));
-                if (!pays.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-credit-card"></i><h3>${t('noPendingPayments')}</h3></div>`; return; }
-                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thUser')}</th><th>Plan</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thScreenshot')}</th><th>${t('thActions')}</th></tr></thead><tbody>${pays.map(p=>`<tr><td>${escapeHtml(p.email)}</td><td>${p.plan === 'premium' ? '<span class="status approved">Premium</span>' : '<span class="status pending">Basic</span>'}</td><td>${escapeHtml(p.method)}</td><td>${escapeHtml(p.txnId)}</td><td>${p.screenshotUrl?`<button class="view-link view-screenshot" data-id="${p.id}">${t('view')}</button>`:t('none')}</td><td class="actions"><button class="approve approve-payment" data-id="${p.id}"><i class="fas fa-check"></i></button><button class="reject reject-payment" data-id="${p.id}"><i class="fas fa-times"></i></button></td></tr>`).join('')}</tbody></table>`;
-                c.querySelectorAll('.approve-payment').forEach(b => b.onclick = async () => {
-                    const p = pays.find(x => x.id === b.dataset.id);
-                    if (!p) return;
-                    await db.collection('payments').doc(p.id).update({ status: 'approved' });
-                    
-                    // Define permissions based on the plan
-                    let permissions = { canDownload: false, canScreenshot: false, canUpload: false, limit: 0 };
-                    if (p.plan === 'premium') {
-                        permissions = { canDownload: true, canScreenshot: true, canUpload: true, limit: 9999 };
-                    } else if (p.plan === 'basic') {
-                        permissions = { canDownload: false, canScreenshot: false, canUpload: false, limit: 5 };
+                if (!c) return;
+                try {
+                    const snap = await db.collection('payments').orderBy('createdAt', 'desc').get();
+                    const pays = [];
+                    snap.forEach(d => pays.push({ id: d.id, ...d.data() }));
+
+                    if (!pays.length) {
+                        c.innerHTML = `<div class="empty-state"><i class="fas fa-credit-card"></i><h3>${t('noPendingPayments')}</h3></div>`;
+                        return;
                     }
-                    
-                    if (p.type === 'download') {
-                        await db.collection('users').doc(p.userId).update({ downloadedVideos: firebase.firestore.FieldValue.arrayUnion(p.videoId) });
-                    } else {
-                        await db.collection('users').doc(p.userId).update({ 
-                            paymentStatus: 'approved', 
-                            approved: true, 
-                            plan: p.plan, 
-                            permissions: permissions 
-                        });
-                    }
-                    renderAdminPayments(); renderAdminUsers(); toast(t('paymentApproved'), 'success');
-                });
-                c.querySelectorAll('.reject-payment').forEach(b => b.onclick = async () => {
-                    await db.collection('payments').doc(b.dataset.id).update({ status: 'rejected' });
-                    renderAdminPayments(); toast(t('paymentRejected'), 'error');
-                });
-                c.querySelectorAll('.view-screenshot').forEach(b => b.onclick = () => {
-                    const p = pays.find(x => x.id === b.dataset.id);
-                    if (p?.screenshotUrl) window.open(p.screenshotUrl, '_blank', 'noopener,noreferrer');
-                });
+
+                    c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thUser')}</th><th>Plan</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thScreenshot')}</th><th>Status</th><th>${t('thActions')}</th></tr></thead><tbody>${pays.map(p => `
+                        <tr>
+                            <td>${escapeHtml(p.email || '')}</td>
+                            <td>${p.plan === 'premium' ? '<span class="status approved">Premium</span>' : '<span class="status pending">Basic</span>'}</td>
+                            <td>${escapeHtml(p.method || '')}</td>
+                            <td>${escapeHtml(p.txnId || '')}</td>
+                            <td>${p.screenshotUrl ? `<button class="view-link view-screenshot" data-id="${p.id}">${t('view')}</button>` : t('none')}</td>
+                            <td><span class="status ${p.status || 'pending'}">${escapeHtml(p.status || 'pending')}</span></td>
+                            <td class="actions">${p.status === 'pending'
+                                ? `<button class="approve approve-payment" data-id="${p.id}" title="Approve" aria-label="Approve"><i class="fas fa-check"></i></button>
+                                   <button class="reject reject-payment" data-id="${p.id}" title="Reject" aria-label="Reject"><i class="fas fa-times"></i></button>`
+                                : '—'}</td>
+                        </tr>`).join('')}</tbody></table>`;
+
+                    c.querySelectorAll('.approve-payment').forEach(b => b.onclick = async () => {
+                        const p = pays.find(x => x.id === b.dataset.id);
+                        if (!p || p.status !== 'pending') return;
+
+                        showLoader();
+                        try {
+                            await db.collection('payments').doc(p.id).update({ status: 'approved', reviewedAt: Date.now() });
+
+                            if (p.userId) {
+                                if (p.type === 'download') {
+                                    // Legacy download purchases are no longer created by the UI.
+                                    // Keep old records safe: approval simply grants that legacy
+                                    // download without creating another payment.
+                                    await db.collection('users').doc(p.userId).update({
+                                        downloadedVideos: firebase.firestore.FieldValue.arrayUnion(p.videoId)
+                                    });
+                                } else {
+                                    const plan = p.plan === 'premium' ? 'premium' : 'basic';
+                                    await db.collection('users').doc(p.userId).update({
+                                        paymentStatus: 'approved',
+                                        approved: true,
+                                        plan,
+                                        permissions: permissionsForPlan(plan)
+                                    });
+                                }
+                            }
+
+                            await Promise.allSettled([renderAdminPayments(), renderAdminUsers()]);
+                            toast(t('paymentApproved'), 'success');
+                        } catch (e) {
+                            toast('Could not approve the payment.', 'error');
+                        } finally {
+                            hideLoader();
+                        }
+                    });
+
+                    c.querySelectorAll('.reject-payment').forEach(b => b.onclick = async () => {
+                        const p = pays.find(x => x.id === b.dataset.id);
+                        if (!p || p.status !== 'pending') return;
+
+                        showLoader();
+                        try {
+                            await db.collection('payments').doc(p.id).update({ status: 'rejected', reviewedAt: Date.now() });
+                            await renderAdminPayments();
+                            toast(t('paymentRejected'), 'error');
+                        } catch (e) {
+                            toast('Could not reject the payment.', 'error');
+                        } finally {
+                            hideLoader();
+                        }
+                    });
+
+                    c.querySelectorAll('.view-screenshot').forEach(b => b.onclick = () => {
+                        const p = pays.find(x => x.id === b.dataset.id);
+                        if (p?.screenshotUrl) {
+                            const win = window.open(p.screenshotUrl, '_blank', 'noopener,noreferrer');
+                            if (!win) toast(t('allowPopups'), 'error');
+                        }
+                    });
+                } catch (e) {
+                    c.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Unable to load payments</h3></div>`;
+                }
             };
 
             $('showAddVideoForm').addEventListener('click', () => $('addVideoFormWrap').classList.toggle('hidden'));
@@ -3724,9 +3884,16 @@ header, .header, .site-header, nav {
                     let duration = '00:00';
                     if (file) { const sec = await readVideoDuration(file); duration = formatDuration(sec); }
                     await db.collection('videos').add({
-                        title, description: $('videoDesc').value.trim(), category: $('videoCategory').value,
-                        isFree: $('videoIsFree').checked, downloadPrice: Number($('downloadPrice').value) || 0,
-                        url: videoUrl, thumbnail: $('videoThumb').value.trim(), duration, likes: [], createdAt: Date.now()
+                        title,
+                        description: $('videoDesc').value.trim(),
+                        category: $('videoCategory').value,
+                        isFree: $('videoIsFree').checked,
+                        url: videoUrl,
+                        thumbnail: $('videoThumb').value.trim(),
+                        duration,
+                        likes: [],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
                     });
                     toast(t('videoPublished', { title }), 'success');
                     $('addVideoForm').reset();
@@ -3745,24 +3912,24 @@ header, .header, .site-header, nav {
             // ===== ADMIN TAB FILTERING (UPDATED FOR CREATORS) =====
             const filterAdminTabs = () => {
                 const isAdmin = state.user?.role === 'admin';
-                const canUpload = state.user?.permissions?.canUpload || false;
-                document.querySelectorAll('#adminTabs button').forEach(btn => {
+                const canUpload = state.user?.permissions?.canUpload === true;
+                const buttons = Array.from(document.querySelectorAll('#adminTabs button'));
+
+                buttons.forEach(btn => {
                     const tab = btn.dataset.tab;
-                    if (tab === 'users' || tab === 'payments' || tab === 'settings') {
-                        btn.style.display = isAdmin ? 'flex' : 'none';
-                    }
-                    if (tab === 'videos') {
-                        btn.style.display = (isAdmin || canUpload) ? 'flex' : 'none';
-                    }
+                    const visible = tab === 'videos' ? (isAdmin || canUpload) : isAdmin;
+                    btn.style.display = visible ? 'flex' : 'none';
                 });
-                // Auto-select videos panel if it's the only one they can see
-                const visibleBtns = document.querySelectorAll('#adminTabs button[style*="flex"]');
-                if (visibleBtns.length === 1 && visibleBtns[0].dataset.tab === 'videos') {
-                    visibleBtns[0].click();
+
+                const visibleButtons = buttons.filter(btn => btn.style.display !== 'none');
+                const selected = visibleButtons.find(btn => btn.dataset.tab === state.adminTab) || visibleButtons[0];
+
+                if (selected) {
+                    selected.click();
                 }
             };
 
-            // Override navigate to apply tab filtering when entering admin
+            // Override navigate to apply tab filtering when entering admin.
             const originalNavigate = navigate;
             navigate = function(page) {
                 originalNavigate(page);
@@ -3789,8 +3956,8 @@ header, .header, .site-header, nav {
                     if (snap.exists) {
                         const data = snap.data();
                         if (data.siteTitle) { $('siteTitle').value = data.siteTitle; $('siteTitleText').textContent = data.siteTitle; }
-                        if (data.basicPrice) { $('basicPrice').value = data.basicPrice; $('basicPriceDisplay').textContent = data.basicPrice; }
-                        if (data.premiumPrice) { $('premiumPrice').value = data.premiumPrice; $('premiumPriceDisplay').textContent = data.premiumPrice; }
+                        if (data.basicPrice !== undefined) { $('basicPrice').value = data.basicPrice; $('basicPriceDisplay').textContent = data.basicPrice; }
+                        if (data.premiumPrice !== undefined) { $('premiumPrice').value = data.premiumPrice; $('premiumPriceDisplay').textContent = data.premiumPrice; }
                     }
                 } catch (e) { 
                     // Silent fail to prevent admin dashboard breakage

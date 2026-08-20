@@ -1953,6 +1953,49 @@ header, .header, .site-header, nav {
             }
         }
 
+/* ------------------------------------------------------------- */
+/* ADDED: TIER SELECTION CARDS STYLES (Basic & Premium)           */
+/* ------------------------------------------------------------- */
+.tier-card {
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--bg-glass);
+    backdrop-filter: blur(4px);
+    user-select: none;
+}
+.tier-card:hover {
+    border-color: var(--text-main);
+}
+.tier-card.selected {
+    border-color: var(--gold) !important;
+    background: rgba(212, 160, 23, 0.06) !important;
+    box-shadow: 0 0 20px var(--gold-glow);
+    transform: scale(1.01);
+}
+.tier-card .badge {
+    display: inline-block;
+    background: var(--gold);
+    color: #0a0f0e;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-top: 4px;
+}
+.tier-card .feature-list {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-top: 6px;
+}
+.tier-card .feature-list i {
+    width: 16px;
+    color: var(--gold);
+}
+/* ------------------------------------------------------------- */
 </style>
 
     <style id="performance-smoothing">
@@ -2025,7 +2068,7 @@ header, .header, .site-header, nav {
             <h3><span class="lang-en">3. Intellectual Property</span><span class="lang-am">3. የአእምሯዊ ንብረት መብቶች</span><span class="lang-ar">3. الملكية الفكرية</span></h3>
             <p>
                 <span class="lang-en">All content provided on Ethio Hub, including videos, text, images, and graphics, is the exclusive property of Ethio Hub or its content creators. Unauthorized reproduction, distribution, or modification is strictly prohibited.</span>
-                <span class="lang-am">በ Ethio Hub ላይ የቀረበው ሁሉም ይዘት፣ ቪዲዮ፣ ጽሑፍ፣ ምስሎች እና ግራፊክስን ጨምሮ፣ የ Ethio Hub ወይም የይዘት ፈጣሪዎቹ ብቸኛ ንብረት ነው።</span>
+                <span class="lang-am">በ Ethio Hub ላይ የቀረበው ሁሉም ይዘት፣ ቪዲዮ፣ ጽሑፍ፣ ምስሎች እና ግራፊክስን ጨምሮ፣ የ Ethio Hub ወይም የይዘት ፈጣሪዎቹ ብቸኛ ንብረት ነውᢍ</span>
                 <span class="lang-ar">جميع المحتويات المقدمة على Ethio Hub، بما في ذلك مقاطع الفيديو والنصوص والصور والرسومات، هي ملكية حصرية لـ Ethio Hub أو منشئي محتواها.</span>
             </p>
 
@@ -2196,32 +2239,128 @@ header, .header, .site-header, nav {
             </div>
         </div>
 
-        <!-- ===== PAYMENT PAGE ===== -->
+        <!-- ===== PAYMENT PAGE (UPDATED 2-STEP FLOW WITH TIMER) ===== -->
         <div class="page" id="page-payment">
             <div class="payment-grid">
                 <div class="payment-options">
-                    <h3><i class="fas fa-credit-card"></i> <span class="lang-en">Choose Payment Method</span><span class="lang-am">የክፍያ ዘዴ ይምረጡ</span><span class="lang-ar">اختر طريقة الدفع</span></h3>
-                    <div class="payment-info-box">
-                        <p><i class="fas fa-info-circle"></i> <span class="lang-en">Send payment to the following accounts:</span><span class="lang-am">ክፍያ ወደ ተጠቀሱት ሂሳቦች ይላኩ፡</span><span class="lang-ar">أرسل الدفع إلى الحسابات التالية:</span></p>
-                        <p><i class="fas fa-mobile-screen-button"></i> Telebirr / eBirr: <strong>0986318990</strong></p>
-                        <p><i class="fas fa-building-columns"></i> CBE: <strong>1000392469657</strong></p>
-                        <p class="amount"><i class="fas fa-coins"></i> <span class="lang-en">Amount:</span><span class="lang-am">መጠን:</span><span class="lang-ar">المبلغ:</span> <strong><span id="paymentAmountDisplay">500</span> ETB</strong> (<span class="lang-en">Lifetime Access</span><span class="lang-am">የህይወት ተደራሽነት</span><span class="lang-ar">وصول مدى الحياة</span>)</p>
+                    <h3><i class="fas fa-credit-card"></i> <span class="lang-en">Choose Your Plan</span><span class="lang-am">የክፍያ ዘዴ ይምረጡ</span><span class="lang-ar">اختر طريقة الدفع</span></h3>
+                    
+                    <!-- ===== STEP 1: PLAN SELECTION ===== -->
+                    <div id="paymentStep1">
+                        <div id="tierSelection" style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
+                            <!-- BASIC TIER -->
+                            <div class="tier-card selected" data-plan="basic">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <h4 style="font-size:15px; font-weight:700;">Watch & Interact</h4>
+                                            <span class="badge">Basic</span>
+                                        </div>
+                                        <div class="feature-list">
+                                            <div><i class="fas fa-check"></i> Watch premium videos</div>
+                                            <div><i class="fas fa-check"></i> Like & interact</div>
+                                            <div><i class="fas fa-exclamation-triangle" style="color:#f39c12;"></i> View limit: 5 videos/day</div>
+                                            <div><i class="fas fa-times" style="color:#e74c3c;"></i> No download / No screenshot</div>
+                                        </div>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <div style="font-size:20px; font-weight:700; color:var(--gold);"><span id="basicPriceDisplay">205</span> ETB</div>
+                                        <div style="font-size:10px; color:var(--text-muted);">Monthly</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PREMIUM TIER -->
+                            <div class="tier-card" data-plan="premium">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <h4 style="font-size:15px; font-weight:700;">Full Access</h4>
+                                            <span class="badge" style="background:#e67e22;">Premium</span>
+                                        </div>
+                                        <div class="feature-list">
+                                            <div><i class="fas fa-check"></i> All Basic features</div>
+                                            <div><i class="fas fa-check"></i> Unlimited watch (no limit)</div>
+                                            <div><i class="fas fa-check"></i> Download videos</div>
+                                            <div><i class="fas fa-check"></i> Screenshot allowed</div>
+                                            <div><i class="fas fa-check"></i> Upload new videos (Creator)</div>
+                                        </div>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <div style="font-size:20px; font-weight:700; color:var(--gold);"><span id="premiumPriceDisplay">320</span> ETB</div>
+                                        <div style="font-size:10px; color:var(--text-muted);">Monthly</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="proceedToPayBtn" class="btn-primary" style="width:auto; margin-top:14px; padding:10px 28px; display:block; margin-left:auto; margin-right:auto;">
+                            <i class="fas fa-arrow-right"></i> Proceed to Pay
+                        </button>
                     </div>
-                    <div id="paymentMethods">
-                        <div class="payment-method selected" data-method="telebirr"><div class="icon"><i class="fas fa-mobile-screen-button"></i></div><div class="info"><div class="name">Telebirr</div></div><div class="check"><i class="fas fa-check-circle"></i></div></div>
-                        <div class="payment-method" data-method="cbe"><div class="icon"><i class="fas fa-building-columns"></i></div><div class="info"><div class="name">CBE</div></div><div class="check"><i class="fas fa-check-circle"></i></div></div>
-                        <div class="payment-method" data-method="ebirr"><div class="icon"><i class="fas fa-wallet"></i></div><div class="info"><div class="name">eBirr</div></div><div class="check"><i class="fas fa-check-circle"></i></div></div>
+
+                    <!-- ===== STEP 2: PAYMENT SUBMISSION ===== -->
+                    <div id="paymentStep2" style="display:none;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+                            <div>
+                                <h4 style="font-size:16px; margin:0;">Submit Payment</h4>
+                                <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">
+                                    Selected Plan: <strong id="selectedPlanDisplay" style="color:var(--gold);">Basic</strong>
+                                </div>
+                            </div>
+                            <div style="text-align:center; background:var(--bg-input); padding:8px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                                <div style="font-size:10px; color:var(--text-muted);">Time Remaining</div>
+                                <div id="countdownTimer" style="font-size:20px; font-weight:700; color:var(--gold); min-width:80px;">60:00</div>
+                            </div>
+                        </div>
+
+                        <!-- Account details -->
+                        <div class="payment-info-box" style="border-left:none; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-input); padding:12px; margin-bottom:14px;">
+                            <p><i class="fas fa-info-circle"></i> Send payment to the following accounts:</p>
+                            <p><i class="fas fa-mobile-screen-button"></i> Telebirr / eBirr: <strong>0986318990</strong></p>
+                            <p><i class="fas fa-building-columns"></i> CBE: <strong>1000392469657</strong></p>
+                        </div>
+
+                        <!-- Payment Method Selection (Step 2 version) -->
+                        <div style="margin-bottom:12px;">
+                            <p style="font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">Choose your payment method:</p>
+                            <div id="paymentMethods" style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <div class="payment-method selected" data-method="telebirr" style="flex:1; min-width:80px; padding:8px 12px; margin:0;">
+                                    <div class="icon" style="font-size:18px; width:24px;"><i class="fas fa-mobile-screen-button"></i></div>
+                                    <div class="info"><div class="name" style="font-size:12px;">Telebirr</div></div>
+                                    <div class="check"><i class="fas fa-check-circle"></i></div>
+                                </div>
+                                <div class="payment-method" data-method="cbe" style="flex:1; min-width:80px; padding:8px 12px; margin:0;">
+                                    <div class="icon" style="font-size:18px; width:24px;"><i class="fas fa-building-columns"></i></div>
+                                    <div class="info"><div class="name" style="font-size:12px;">CBE</div></div>
+                                    <div class="check"><i class="fas fa-check-circle"></i></div>
+                                </div>
+                                <div class="payment-method" data-method="ebirr" style="flex:1; min-width:80px; padding:8px 12px; margin:0;">
+                                    <div class="icon" style="font-size:18px; width:24px;"><i class="fas fa-wallet"></i></div>
+                                    <div class="info"><div class="name" style="font-size:12px;">eBirr</div></div>
+                                    <div class="check"><i class="fas fa-check-circle"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form -->
+                        <div class="payment-form" style="padding:0; background:transparent; border:none; box-shadow:none; backdrop-filter:none;">
+                            <form id="paymentForm">
+                                <label><span class="lang-en">Transaction ID / Reference</span><span class="lang-am">የግብይት መታወቂያ</span><span class="lang-ar">معرف المعاملة</span></label>
+                                <input type="text" id="txnId" placeholder="e.g. TXN-2026-123456" required style="margin-bottom:10px;" />
+                                <label><span class="lang-en">Upload Screenshot (optional)</span><span class="lang-am">ስክሪን ሾት ያስገቡ (አማራጭ)</span><span class="lang-ar">رفع لقطة شاشة (اختياري)</span></label>
+                                <div class="file-upload" id="fileUpload"><i class="fas fa-cloud-upload-alt"></i><p>Click to upload a screenshot</p><div class="filename"></div><input type="file" accept="image/*" id="screenshotFile" /></div>
+                                <label><span class="lang-en">Additional Notes</span><span class="lang-am">ተጨማሪ ማስታወሻ</span><span class="lang-ar">ملاحظات إضافية</span></label>
+                                <textarea id="paymentNotes" placeholder="Any extra info for admin..." style="margin-bottom:10px;"></textarea>
+                                <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> <span class="lang-en">Submit for Approval</span><span class="lang-am">ለጥቅም ያስገቡ</span><span class="lang-ar">إرسال للموافقة</span></button>
+                            </form>
+                        </div>
+                        <button id="backToPlanBtn" class="btn-primary" style="width:auto; background:transparent; border:1px solid var(--border-color); color:var(--text-muted); padding:6px 16px; margin-top:10px; display:block; margin-left:auto;">
+                            <i class="fas fa-arrow-left"></i> Back to Plans
+                        </button>
                     </div>
                 </div>
-                <div class="payment-form">
-                    <h3><i class="fas fa-file-invoice"></i> <span class="lang-en">Submit Payment Details</span><span class="lang-am">የክፍያ ዝርዝሮችን ያስገቡ</span><span class="lang-ar">إرسال تفاصيل الدفع</span></h3>
-                    <form id="paymentForm">
-                        <label><span class="lang-en">Transaction ID / Reference</span><span class="lang-am">የግብይት መታወቂያ</span><span class="lang-ar">معرف المعاملة</span></label><input type="text" id="txnId" placeholder="e.g. TXN-2026-123456" required />
-                        <label><span class="lang-en">Upload Screenshot (optional)</span><span class="lang-am">ስክሪን ሾት ያስገቡ (አማራጭ)</span><span class="lang-ar">رفع لقطة شاشة (اختياري)</span></label>
-                        <div class="file-upload" id="fileUpload"><i class="fas fa-cloud-upload-alt"></i><p>Click to upload a screenshot</p><div class="filename"></div><input type="file" accept="image/*" id="screenshotFile" /></div>
-                        <label><span class="lang-en">Additional Notes</span><span class="lang-am">ተጨማሪ ማስታወሻ</span><span class="lang-ar">ملاحظات إضافية</span></label><textarea id="paymentNotes" placeholder="Any extra info for admin..."></textarea>
-                        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> <span class="lang-en">Submit for Approval</span><span class="lang-am">ለጥቅም ያስገቡ</span><span class="lang-ar">إرسال للموافقة</span></button>
-                    </form>
+                <div class="payment-form" style="display:none;">
+                    <!-- This div is kept hidden to maintain the grid structure, but everything is moved to payment-options -->
                 </div>
             </div>
         </div>
@@ -2239,7 +2378,7 @@ header, .header, .site-header, nav {
             <div id="videoGrid" class="video-grid"></div>
         </div>
 
-        <!-- ===== ADMIN PAGE ===== -->
+        <!-- ===== ADMIN PAGE (UPDATED SETTINGS) ===== -->
         <div class="page" id="page-admin">
             <div class="admin-tabs" id="adminTabs">
                 <button class="active" data-tab="videos"><i class="fas fa-video"></i> <span class="lang-en">Videos</span><span class="lang-am">ቪዲዮዎች</span><span class="lang-ar">فيديو</span></button>
@@ -2293,13 +2432,20 @@ header, .header, .site-header, nav {
                 <div class="admin-table-wrap" id="adminPaymentList"></div>
             </div>
 
-            <!-- Admin Panel: Settings -->
+            <!-- Admin Panel: Settings (UPDATED WITH TWO PRICES) -->
             <div class="admin-panel" id="panel-settings">
                 <h3 class="mb-10"><i class="fas fa-cog text-gold"></i> <span class="lang-en">General Settings</span><span class="lang-am">አጠቃላይ ቅንብሮች</span><span class="lang-ar">الإعدادات العامة</span></h3>
                 <div class="admin-form" style="max-width:600px;">
                     <form id="settingsForm">
-                        <label><span class="lang-en">Site Title</span><span class="lang-am">የጣቢያ ርዕስ</span><span class="lang-ar">عنوان الموقع</span></label><input type="text" id="siteTitle" value="Ethio Hub" />
-                        <label><span class="lang-en">Payment Amount (ETB)</span><span class="lang-am">የክፍያ መጠን</span><span class="lang-ar">مبلغ الدفع (ETB)</span></label><input type="number" id="paymentAmount" value="500" />
+                        <label><span class="lang-en">Site Title</span><span class="lang-am">የጣቢያ ርዕስ</span><span class="lang-ar">عنوان الموقع</span></label>
+                        <input type="text" id="siteTitle" value="Ethio Hub" />
+                        
+                        <label>Basic Plan Price (ETB)</label>
+                        <input type="number" id="basicPrice" value="205" />
+                        
+                        <label>Premium Plan Price (ETB)</label>
+                        <input type="number" id="premiumPrice" value="320" />
+                        
                         <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span class="lang-en">Save Settings</span><span class="lang-am">ቅንብሮችን አስቀምጥ</span><span class="lang-ar">حفظ الإعدادات</span></button>
                     </form>
                 </div>
@@ -2522,8 +2668,14 @@ header, .header, .site-header, nav {
             startParticleAnimation();
 
             // ===== ANTI-SCREENSHOT & SCREEN RECORDING PROTECTION =====
-            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('contextmenu', e => {
+                // Allow if user has screenshot permission
+                if (state.user && state.user.permissions && state.user.permissions.canScreenshot) return;
+                e.preventDefault();
+            });
             document.addEventListener('keydown', function(e) {
+                // Allow if user has screenshot permission
+                if (state.user && state.user.permissions && state.user.permissions.canScreenshot) return;
                 if (e.key === 'PrintScreen' || e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 's')) {
                     toast('Screen capture or developer tools are disabled for security.', 'error');
                     e.preventDefault();
@@ -2843,7 +2995,7 @@ header, .header, .site-header, nav {
                 }
             };
 
-            let state = { user: null, currentPage: 'register', selectedCategory: 'all', adminTab: 'videos', paymentMethod: 'telebirr', isLoginMode: false, pendingScreenshotFile: null };
+            let state = { user: null, currentPage: 'register', selectedCategory: 'all', adminTab: 'videos', paymentMethod: 'telebirr', isLoginMode: false, pendingScreenshotFile: null, selectedPlan: 'basic', paymentStartTime: null, paymentTimerInterval: null };
             const pages = { register: $('page-register'), profile: $('page-profile'), payment: $('page-payment'), gallery: $('page-gallery'), admin: $('page-admin') };
             const navigate = (page) => {
                 Object.keys(pages).forEach(k => pages[k].classList.toggle('active', k === page));
@@ -2860,7 +3012,12 @@ header, .header, .site-header, nav {
                     $('userEmail').textContent = email;
                     if (profileEmail) profileEmail.value = email;
                     $('userBadge').style.display = 'flex';
-                    dot.style.display = state.user.paymentStatus !== 'approved' ? 'block' : 'none';
+                    // Admin does not need payment notification
+                    if (state.user.role === 'admin') {
+                        dot.style.display = 'none';
+                    } else {
+                        dot.style.display = state.user.paymentStatus !== 'approved' ? 'block' : 'none';
+                    }
                 } else {
                     if (profileEmail) profileEmail.value = '';
                     $('userBadge').style.display = 'none';
@@ -2962,7 +3119,6 @@ header, .header, .site-header, nav {
             });
 
             // ===== GOOGLE & APPLE SIGN-IN =====
-            // Added only to connect the existing Google/Apple buttons to Firebase Authentication.
             const ensureSocialUser = async (fu) => {
                 const ref = db.collection('users').doc(fu.uid);
                 const snap = await ref.get();
@@ -3055,9 +3211,17 @@ header, .header, .site-header, nav {
                 }
             });
 
+            // ===== UPDATED LOAD USER (Permissions & ViewCount) =====
             async function loadUser(fu) {
                 const snap = await db.collection('users').doc(fu.uid).get();
-                state.user = { id: fu.uid, ...snap.data(), email: fu.email || snap.data()?.email };
+                const data = snap.data() || {};
+                state.user = { 
+                    id: fu.uid, 
+                    ...data, 
+                    email: fu.email || data.email,
+                    permissions: data.permissions || { canDownload: false, canScreenshot: false, canUpload: false, limit: 0 },
+                    viewCount: data.viewCount || { date: '', count: 0 }
+                };
                 updateUserBadge();
                 if ($('profileEmail')) $('profileEmail').value = state.user.email || '';
                 if (state.user.role === 'admin') navigate('admin');
@@ -3078,11 +3242,73 @@ header, .header, .site-header, nav {
             });
 
             // ===== PAYMENT =====
-            document.querySelectorAll('.payment-method').forEach(m => m.addEventListener('click', () => {
-                document.querySelectorAll('.payment-method').forEach(x => x.classList.remove('selected'));
+            // Step 1: Tier Selection
+            document.querySelectorAll('.tier-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    state.selectedPlan = card.dataset.plan;
+                });
+            });
+
+            // Step 2: Payment Methods
+            document.querySelectorAll('#paymentMethods .payment-method').forEach(m => m.addEventListener('click', () => {
+                document.querySelectorAll('#paymentMethods .payment-method').forEach(x => x.classList.remove('selected'));
                 m.classList.add('selected');
                 state.paymentMethod = m.dataset.method;
             }));
+
+            // Proceed to Step 2
+            $('proceedToPayBtn').addEventListener('click', () => {
+                if (state.user?.role === 'admin') {
+                    toast('Admins have full access, no payment required.', 'info');
+                    return;
+                }
+                const planName = state.selectedPlan === 'premium' ? 'Premium' : 'Basic';
+                $('selectedPlanDisplay').textContent = planName;
+                $('paymentStep1').style.display = 'none';
+                $('paymentStep2').style.display = 'block';
+                startPaymentTimer();
+            });
+
+            // Back to Step 1
+            $('backToPlanBtn').addEventListener('click', () => {
+                stopPaymentTimer();
+                $('paymentStep2').style.display = 'none';
+                $('paymentStep1').style.display = 'block';
+                // Reset form and timer display
+                $('paymentForm').reset();
+                state.pendingScreenshotFile = null;
+                $('fileUpload').querySelector('.filename').textContent = '';
+                $('countdownTimer').textContent = '60:00';
+                document.querySelector('#paymentStep2 button[type="submit"]').disabled = false;
+            });
+
+            // Timer Logic
+            function startPaymentTimer() {
+                if (state.paymentTimerInterval) clearInterval(state.paymentTimerInterval);
+                state.paymentStartTime = Date.now();
+                state.paymentTimerInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - state.paymentStartTime) / 1000);
+                    const remaining = Math.max(0, 3600 - elapsed);
+                    const minutes = String(Math.floor(remaining / 60)).padStart(2, '0');
+                    const seconds = String(remaining % 60).padStart(2, '0');
+                    $('countdownTimer').textContent = minutes + ':' + seconds;
+                    if (remaining <= 0) {
+                        stopPaymentTimer();
+                        toast('Payment window expired. Please go back and select a plan again.', 'error');
+                        document.querySelector('#paymentStep2 button[type="submit"]').disabled = true;
+                    }
+                }, 1000);
+            }
+            function stopPaymentTimer() {
+                if (state.paymentTimerInterval) {
+                    clearInterval(state.paymentTimerInterval);
+                    state.paymentTimerInterval = null;
+                }
+            }
+
+            // File upload handler
             $('fileUpload').addEventListener('click', () => $('screenshotFile').click());
             $('screenshotFile').addEventListener('change', async e => {
                 const f = e.target.files?.[0];
@@ -3137,6 +3363,12 @@ header, .header, .site-header, nav {
 
             $('paymentForm').addEventListener('submit', async e => {
                 e.preventDefault();
+                // Check expiration
+                if (Date.now() - state.paymentStartTime > 3600000) {
+                    toast('Payment window expired. Please go back and select a plan again.', 'error');
+                    return;
+                }
+
                 if (!state.user) { toast(t('accountNotFound'), 'error'); return; }
                 const txn = $('txnId').value.trim();
                 if (!txn) { toast(t('invalidTxn'), 'error'); return; }
@@ -3149,18 +3381,29 @@ header, .header, .site-header, nav {
                     await db.collection('payments').add({
                         userId: state.user.id, email: state.user.email, method: state.paymentMethod,
                         txnId: txn, notes: $('paymentNotes').value.trim(), screenshotUrl: screenshotUrl,
-                        status: 'pending', type: 'subscription', createdAt: Date.now()
+                        status: 'pending', type: 'subscription', plan: state.selectedPlan, createdAt: Date.now()
                     });
                     toast(t('paymentSubmitted'), 'success');
                     await loadUser(state.user);
+                    stopPaymentTimer();
                     $('paymentForm').reset();
                     state.pendingScreenshotFile = null;
                     $('fileUpload').querySelector('.filename').textContent = '';
+                    $('paymentStep2').style.display = 'none';
+                    $('paymentStep1').style.display = 'block';
+                    $('countdownTimer').textContent = '60:00';
+                    document.querySelector('#paymentStep2 button[type="submit"]').disabled = false;
                 } catch (err) { toast(t('paymentSubmitError'), 'error'); }
                 hideLoader();
             });
 
-            $('profilePayBtn').addEventListener('click', () => navigate('payment'));
+            $('profilePayBtn').addEventListener('click', () => {
+                if (state.user?.role === 'admin') {
+                    toast('Admins have full access, no payment required.', 'info');
+                    return;
+                }
+                navigate('payment');
+            });
             $('profileBackBtn').addEventListener('click', () => navigate('gallery'));
             
             // ============================================================
@@ -3170,8 +3413,29 @@ header, .header, .site-header, nav {
                 navigate('gallery');
             });
 
-            // ===== VIDEO MODAL =====
+            // ===== VIDEO MODAL (UPDATED: View Limit + Download Restrictions) =====
             async function openVideoModal(videoId) {
+                // --- View Limit Enforcement (Basic users ONLY, admins exempt) ---
+                if (state.user && state.user.role !== 'admin' && state.user.plan === 'basic') {
+                    const today = new Date().toISOString().split('T')[0];
+                    const userRef = db.collection('users').doc(state.user.id);
+                    const snap = await userRef.get();
+                    const data = snap.data();
+                    let views = data.viewCount || { date: today, count: 0 };
+                    
+                    if (views.date !== today) {
+                        views = { date: today, count: 0 };
+                    }
+                    if (views.count >= 5) {
+                        toast('Daily view limit reached (5/day). Upgrade to Full Access to watch more.', 'error');
+                        return;
+                    }
+                    // Increment view count
+                    await userRef.update({ viewCount: { date: today, count: views.count + 1 } });
+                    state.user.viewCount = { date: today, count: views.count + 1 };
+                }
+                // -------------------------------------------
+
                 try {
                     const snapshot = await db.collection('videos').doc(videoId).get();
                     if (!snapshot.exists) { toast(t('videoNotFound'), 'error'); return; }
@@ -3219,10 +3483,36 @@ header, .header, .site-header, nav {
 
             async function handleDownloadAction(video, container) {
                 if (!video.downloadPrice || video.downloadPrice === 0) return;
-                if (!state.user) {
-                    container.innerHTML = `<button class="btn-primary" style="width:auto;padding:10px 24px" id="buyDownload"><i class="fas fa-lock"></i> ${t('downloadPurchase',{price:video.downloadPrice})}</button>`;
+                
+                // Admins can download directly without payment restrictions
+                if (state.user && state.user.role === 'admin') {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-primary';
+                    btn.style.width = 'auto';
+                    btn.style.padding = '10px 24px';
+                    btn.innerHTML = `<i class="fas fa-download"></i> ${t('downloadNow')}`;
+                    btn.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = video.url;
+                        a.download = (video.title || 'video') + '.mp4';
+                        a.click();
+                    };
+                    container.appendChild(btn);
                     return;
                 }
+
+                // Check if user has download permission (for normal users)
+                if (!state.user || !state.user.permissions.canDownload) {
+                    container.innerHTML = `
+                        <div style="padding:12px; background:var(--bg-input); border-radius:8px; text-align:center; border:1px solid var(--border-color);">
+                            <p style="color:var(--text-muted); font-size:13px; margin-bottom:4px;">📥 Download requires <strong style="color:var(--gold);">Full Access</strong> plan.</p>
+                            <button class="btn-primary" style="width:auto; padding:6px 16px; font-size:12px;" onclick="navigate('payment')">Upgrade Now</button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Existing download logic for Premium users
                 const has = state.user.downloadedVideos?.includes(video.id);
                 const btn = document.createElement('button');
                 btn.className = 'btn-primary';
@@ -3274,7 +3564,8 @@ header, .header, .site-header, nav {
                         c.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-film"></i><h3>${t('noContentTitle')}</h3><p>${t('noContentDesc')}</p></div>`;
                         return;
                     }
-                    const locked = !state.user || state.user.paymentStatus !== 'approved';
+                    const isAdmin = state.user?.role === 'admin';
+                    const locked = !state.user || (!isAdmin && state.user.paymentStatus !== 'approved');
                     c.innerHTML = videos.map(v => {
                         const thumb = v.thumbnail || `https://via.placeholder.com/640x360/0f3b2e/d4a017?text=${encodeURIComponent(v.title||'Ethio+Hub')}`;
                         const cat = v.category === 'exclusive' ? t('catExclusive') : t('catTraining');
@@ -3380,15 +3671,29 @@ header, .header, .site-header, nav {
                 const pays = [];
                 snap.forEach(d => pays.push({ id: d.id, ...d.data() }));
                 if (!pays.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-credit-card"></i><h3>${t('noPendingPayments')}</h3></div>`; return; }
-                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thUser')}</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thScreenshot')}</th><th>${t('thActions')}</th></tr></thead><tbody>${pays.map(p=>`<tr><td>${escapeHtml(p.email)}</td><td>${escapeHtml(p.method)}</td><td>${escapeHtml(p.txnId)}</td><td>${p.screenshotUrl?`<button class="view-link view-screenshot" data-id="${p.id}">${t('view')}</button>`:t('none')}</td><td class="actions"><button class="approve approve-payment" data-id="${p.id}"><i class="fas fa-check"></i></button><button class="reject reject-payment" data-id="${p.id}"><i class="fas fa-times"></i></button></td></tr>`).join('')}</tbody></table>`;
+                c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thUser')}</th><th>Plan</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thScreenshot')}</th><th>${t('thActions')}</th></tr></thead><tbody>${pays.map(p=>`<tr><td>${escapeHtml(p.email)}</td><td>${p.plan === 'premium' ? '<span class="status approved">Premium</span>' : '<span class="status pending">Basic</span>'}</td><td>${escapeHtml(p.method)}</td><td>${escapeHtml(p.txnId)}</td><td>${p.screenshotUrl?`<button class="view-link view-screenshot" data-id="${p.id}">${t('view')}</button>`:t('none')}</td><td class="actions"><button class="approve approve-payment" data-id="${p.id}"><i class="fas fa-check"></i></button><button class="reject reject-payment" data-id="${p.id}"><i class="fas fa-times"></i></button></td></tr>`).join('')}</tbody></table>`;
                 c.querySelectorAll('.approve-payment').forEach(b => b.onclick = async () => {
                     const p = pays.find(x => x.id === b.dataset.id);
                     if (!p) return;
                     await db.collection('payments').doc(p.id).update({ status: 'approved' });
+                    
+                    // Define permissions based on the plan
+                    let permissions = { canDownload: false, canScreenshot: false, canUpload: false, limit: 0 };
+                    if (p.plan === 'premium') {
+                        permissions = { canDownload: true, canScreenshot: true, canUpload: true, limit: 9999 };
+                    } else if (p.plan === 'basic') {
+                        permissions = { canDownload: false, canScreenshot: false, canUpload: false, limit: 5 };
+                    }
+                    
                     if (p.type === 'download') {
                         await db.collection('users').doc(p.userId).update({ downloadedVideos: firebase.firestore.FieldValue.arrayUnion(p.videoId) });
                     } else {
-                        await db.collection('users').doc(p.userId).update({ paymentStatus: 'approved', approved: true });
+                        await db.collection('users').doc(p.userId).update({ 
+                            paymentStatus: 'approved', 
+                            approved: true, 
+                            plan: p.plan, 
+                            permissions: permissions 
+                        });
                     }
                     renderAdminPayments(); renderAdminUsers(); toast(t('paymentApproved'), 'success');
                 });
@@ -3437,6 +3742,36 @@ header, .header, .site-header, nav {
                 await Promise.allSettled([renderAdminVideos(), renderAdminUsers(), renderAdminPayments()]);
             };
 
+            // ===== ADMIN TAB FILTERING (UPDATED FOR CREATORS) =====
+            const filterAdminTabs = () => {
+                const isAdmin = state.user?.role === 'admin';
+                const canUpload = state.user?.permissions?.canUpload || false;
+                document.querySelectorAll('#adminTabs button').forEach(btn => {
+                    const tab = btn.dataset.tab;
+                    if (tab === 'users' || tab === 'payments' || tab === 'settings') {
+                        btn.style.display = isAdmin ? 'flex' : 'none';
+                    }
+                    if (tab === 'videos') {
+                        btn.style.display = (isAdmin || canUpload) ? 'flex' : 'none';
+                    }
+                });
+                // Auto-select videos panel if it's the only one they can see
+                const visibleBtns = document.querySelectorAll('#adminTabs button[style*="flex"]');
+                if (visibleBtns.length === 1 && visibleBtns[0].dataset.tab === 'videos') {
+                    visibleBtns[0].click();
+                }
+            };
+
+            // Override navigate to apply tab filtering when entering admin
+            const originalNavigate = navigate;
+            navigate = function(page) {
+                originalNavigate(page);
+                if (page === 'admin') {
+                    filterAdminTabs();
+                    refreshAdmin();
+                }
+            };
+
             document.querySelectorAll('#adminTabs button').forEach(b => b.addEventListener('click', () => {
                 document.querySelectorAll('#adminTabs button').forEach(x => x.classList.remove('active'));
                 b.classList.add('active');
@@ -3454,9 +3789,12 @@ header, .header, .site-header, nav {
                     if (snap.exists) {
                         const data = snap.data();
                         if (data.siteTitle) { $('siteTitle').value = data.siteTitle; $('siteTitleText').textContent = data.siteTitle; }
-                        if (data.paymentAmount) { $('paymentAmount').value = data.paymentAmount; $('paymentAmountDisplay').textContent = data.paymentAmount; }
+                        if (data.basicPrice) { $('basicPrice').value = data.basicPrice; $('basicPriceDisplay').textContent = data.basicPrice; }
+                        if (data.premiumPrice) { $('premiumPrice').value = data.premiumPrice; $('premiumPriceDisplay').textContent = data.premiumPrice; }
                     }
-                } catch (e) { toast('Could not load saved settings', 'error'); }
+                } catch (e) { 
+                    // Silent fail to prevent admin dashboard breakage
+                }
             }
 
             $('settingsForm').addEventListener('submit', async e => {
@@ -3464,10 +3802,12 @@ header, .header, .site-header, nav {
                 if (!state.user || state.user.role !== 'admin') return;
                 try {
                     const siteTitle = $('siteTitle').value.trim() || 'Ethio Hub';
-                    const paymentAmount = Number($('paymentAmount').value) || 500;
-                    await db.collection('settings').doc('general').set({ siteTitle, paymentAmount }, { merge: true });
+                    const basicPrice = Number($('basicPrice').value) || 205;
+                    const premiumPrice = Number($('premiumPrice').value) || 320;
+                    await db.collection('settings').doc('general').set({ siteTitle, basicPrice, premiumPrice }, { merge: true });
                     $('siteTitleText').textContent = siteTitle;
-                    $('paymentAmountDisplay').textContent = paymentAmount;
+                    $('basicPriceDisplay').textContent = basicPrice;
+                    $('premiumPriceDisplay').textContent = premiumPrice;
                     toast(t('settingsSaved'), 'success');
                 } catch (err) { toast('Could not save settings', 'error'); }
             });

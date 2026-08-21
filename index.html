@@ -1349,7 +1349,56 @@
             transition: filter 0.4s ease, opacity 0.4s ease;
         }
         .video-card .thumb.locked {
-            filter: blur(5px) brightness(0.6);
+            filter: blur(7px) brightness(0.58) saturate(0.72);
+            transform: scale(1.025);
+        }
+        .video-card .thumb.locked::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 45%, rgba(0,0,0,.08), rgba(0,0,0,.38)), linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.34));
+            pointer-events: none;
+        }
+        .video-card .thumb .locked-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            color: #fff;
+            text-align: center;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.20));
+        }
+        .video-card .thumb .locked-overlay .lock-badge {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: rgba(10,15,14,.68);
+            border: 1px solid rgba(255,255,255,.22);
+            box-shadow: 0 8px 24px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.12);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--gold);
+            font-size: 17px;
+        }
+        .video-card .thumb .locked-overlay .lock-label {
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: rgba(10,15,14,.62);
+            border: 1px solid rgba(255,255,255,.14);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            font-size: 10px;
+            line-height: 1;
+            font-weight: 700;
+            letter-spacing: .3px;
+            color: rgba(255,255,255,.92);
         }
         .video-card .thumb .play-overlay {
             position: absolute;
@@ -1457,11 +1506,11 @@
             position: relative;
             width: 100%;
             max-width: 900px;
-            background: var(--bg-app);
-            border-radius: var(--radius);
+            background: linear-gradient(180deg, color-mix(in srgb, var(--bg-app) 96%, white 4%), var(--bg-app));
+            border-radius: calc(var(--radius) + 2px);
             overflow: hidden;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.9);
-            padding: 16px 16px 20px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.82), 0 0 0 1px rgba(255,255,255,.035);
+            padding: 12px 12px 16px;
             border: 1px solid var(--border-color);
             user-select: none;
             -webkit-user-select: none;
@@ -1501,6 +1550,14 @@
             overflow: hidden;
             position: relative;
             pointer-events: auto;
+        }
+        #modalVideoContainer::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(180deg, rgba(255,255,255,.025), transparent 22%, transparent 78%, rgba(0,0,0,.18));
         }
         #modalVideoContainer iframe,
         #modalVideoContainer video {
@@ -2193,6 +2250,32 @@ header, .header, .site-header, nav {
 /* ------------------------------------------------------------- */
 </style>
 
+    <style id="locked-video-ui-polish">
+        .video-card .thumb.locked {
+            transition: filter .45s ease, transform .45s cubic-bezier(.2,.75,.2,1);
+        }
+        .video-card:active .thumb.locked {
+            transform: scale(1.012);
+        }
+        .video-card .locked-overlay .lock-badge {
+            animation: lockedBadgeFloat 3.2s ease-in-out infinite;
+        }
+        .modal-overlay.active .modal-content {
+            animation: videoModalIn .28s cubic-bezier(.2,.75,.2,1) both;
+        }
+        @keyframes lockedBadgeFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+        @keyframes videoModalIn {
+            from { opacity: 0; transform: translateY(8px) scale(.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .video-card .locked-overlay .lock-badge,
+            .modal-overlay.active .modal-content { animation: none !important; }
+        }
+    </style>
     <style id="performance-smoothing">
         /* Performance-only safeguards: preserve the existing visual design. */
         html { text-rendering: optimizeLegibility; }
@@ -4105,7 +4188,8 @@ button:active,
                         const thumb = v.thumbnail || `https://via.placeholder.com/640x360/0f3b2e/d4a017?text=${encodeURIComponent(v.title||'Ethio+Hub')}`;
                         const cat = v.category === 'exclusive' ? t('catExclusive') : t('catTraining');
                         const liked = state.user && v.likes?.includes(state.user.id);
-                        return `<article class="video-card" data-id="${v.id}"><div class="thumb ${locked&&!v.isFree?'locked':''}" style="background-image:url('${escapeHtml(thumb)}')"><div class="play-overlay"><i class="fas fa-circle-play"></i></div></div><div class="body"><div class="title">${escapeHtml(v.title)}</div><div class="desc">${escapeHtml(v.description||t('noDescription'))}</div><div class="meta"><span class="cat">${cat}</span><div class="like-container" data-id="${v.id}"><i class="${liked?'fa-solid':'fa-regular'} fa-heart" style="${liked?'color:var(--gold)':''}"></i> ${v.likes?.length||0}</div></div></div></article>`;
+                        const isLocked = locked && !v.isFree;
+                         return `<article class="video-card" data-id="${v.id}" aria-label="${escapeHtml(v.title)}${isLocked ? ' — locked premium content' : ''}"><div class="thumb ${isLocked?'locked':''}" style="background-image:url('${escapeHtml(thumb)}')">${isLocked ? `<div class="locked-overlay" aria-hidden="true"><span class="lock-badge"><i class="fas fa-lock"></i></span><span class="lock-label">Premium</span></div>` : `<div class="play-overlay"><i class="fas fa-circle-play"></i></div>`}</div><div class="body"><div class="title">${escapeHtml(v.title)}</div><div class="desc">${escapeHtml(v.description||t('noDescription'))}</div><div class="meta"><span class="cat">${cat}</span><div class="like-container" data-id="${v.id}"><i class="${liked?'fa-solid':'fa-regular'} fa-heart" style="${liked?'color:var(--gold)':''}"></i> ${v.likes?.length||0}</div></div></div></article>`;
                     }).join('');
                     c.querySelectorAll('.video-card').forEach(card => card.addEventListener('click', e => {
                         if (e.target.closest('.like-container')) return;

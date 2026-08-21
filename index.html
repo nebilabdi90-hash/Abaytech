@@ -3951,25 +3951,16 @@ button:active,
                 });
             }
 
-            // Payment proof screenshots use the same Cloudinary unsigned preset only when
-            // that preset is configured to accept images. If the existing preset is video-only,
-            // the payment flow now reports the real Cloudinary error instead of hiding it.
-            async function uploadImageToCloudinary(file) {
-                const compressedDataUrl = await compressImage(file, 200);
-                const fd = new FormData();
-                const res = await fetch(compressedDataUrl);
-                const blob = await res.blob();
-                fd.append('file', blob, file.name);
-                fd.append('upload_preset', cloudinaryConfig.uploadPreset);
-                const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
-                    method: 'POST', body: fd
-                });
-                const data = await response.json().catch(() => ({}));
-                if (!response.ok || !data.secure_url) {
-                    const message = data?.error?.message || `Screenshot upload failed (${response.status})`;
-                    throw new Error(message);
+            // Payment proof screenshots are compressed and stored directly with the
+            // pending payment record. This keeps the payment workflow independent from
+            // the video-only Cloudinary upload preset. The image is capped at ~200KB,
+            // which keeps it safely below Firestore's document-size limit.
+            async function preparePaymentProof(file) {
+                const dataUrl = await compressImage(file, 200);
+                if (!dataUrl || dataUrl.length > 300 * 1024) {
+                    throw new Error('Payment screenshot could not be compressed enough.');
                 }
-                return data.secure_url;
+                return dataUrl;
             }
 
             $('paymentForm').addEventListener('submit', async e => {
@@ -3989,27 +3980,56 @@ button:active,
                 if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true'); }
                 showLoader();
 
+                let paymentRef = null;
+                let paymentSaved = false;
+
                 try {
-                    let screenshotUrl = '';
+                    // IMPORTANT: save the payment request FIRST.
+                    // Screenshot upload is optional and must never prevent a payment
+                    // from reaching the admin approval queue.
+                    paymentRef = await db.collection('payments').add({
+                        userId: state.user.id,
+                        email: state.user.email,
+                        method: state.paymentMethod,
+                        txnId: txn,
+                        notes: $('paymentNotes').value.trim(),
+                        screenshotUrl: '',
+                        status: 'pending',
+                        type: 'subscription',
+                        plan: state.selectedPlan,
+                        createdAt: Date.now()
+                    });
+                    paymentSaved = true;
+
+                    // Keep the user's account explicitly pending until an admin approves it.
+                    try {
+                        await db.collection('users').doc(state.user.id).set({
+                            paymentStatus: 'pending',
+                            approved: false,
+                            pendingPaymentId: paymentRef.id,
+                            pendingPlan: state.selectedPlan
+                        }, { merge: true });
+                        state.user.paymentStatus = 'pending';
+                        state.user.approved = false;
+                        state.user.pendingPaymentId = paymentRef.id;
+                        state.user.pendingPlan = state.selectedPlan;
+                    } catch (userUpdateErr) {
+                        console.warn('[Ethio Hub] Payment saved, but pending user status could not be refreshed:', userUpdateErr);
+                    }
+
+                    // Screenshot is optional. If Cloudinary rejects it, the payment remains
+                    // safely in the admin queue instead of showing a false submission error.
                     if (state.pendingScreenshotFile) {
                         try {
-                            screenshotUrl = await uploadImageToCloudinary(state.pendingScreenshotFile);
+                            const screenshotUrl = await uploadImageToCloudinary(state.pendingScreenshotFile);
+                            await paymentRef.update({ screenshotUrl });
                         } catch (uploadErr) {
-                            console.error('[Ethio Hub] Payment proof upload failed:', uploadErr);
-                            toast(`Payment proof upload failed: ${uploadErr.message || 'Please try again.'}`, 'error');
-                            return;
+                            console.warn('[Ethio Hub] Payment saved, but proof screenshot upload failed:', uploadErr);
+                            toast('Payment submitted for admin approval. The screenshot could not be uploaded, but your payment request is safely pending.', 'info');
                         }
                     }
 
-                    // Only this Firestore write determines whether the payment was submitted.
-                    // A later profile refresh must never turn a successful payment submission
-                    // into a misleading "something went wrong" message.
-                    await db.collection('payments').add({
-                        userId: state.user.id, email: state.user.email, method: state.paymentMethod,
-                        txnId: txn, notes: $('paymentNotes').value.trim(), screenshotUrl,
-                        status: 'pending', type: 'subscription', plan: state.selectedPlan, createdAt: Date.now()
-                    });
-
+                    // The admin must approve this request before premium access is granted.
                     toast(t('paymentSubmitted'), 'success');
                     stopPaymentTimer();
                     $('paymentForm').reset();
@@ -4019,17 +4039,17 @@ button:active,
                     $('paymentStep1').style.display = 'block';
                     $('countdownTimer').textContent = '60:00';
 
-                    // Refresh the user state separately. If this read fails, payment is still
-                    // already stored and the user should not be told the submission failed.
+                    // Refresh only the local profile state; failure here cannot undo the saved request.
                     try {
                         await loadUser(state.user);
                     } catch (refreshErr) {
-                        console.warn('[Ethio Hub] Payment submitted, but profile refresh failed:', refreshErr);
+                        console.warn('[Ethio Hub] Payment pending, but profile refresh failed:', refreshErr);
+                        navigate('profile');
                     }
                 } catch (err) {
-                    console.error('[Ethio Hub] Payment submission failed:', err);
+                    console.error('[Ethio Hub] Payment submission failed before reaching admin queue:', err);
                     const message = err?.code === 'permission-denied'
-                        ? 'Payment was blocked by Firestore permissions. Please check your Firebase rules.'
+                        ? 'Payment could not be added to the admin approval queue because Firebase denied the write. Please check your Firestore rules.'
                         : (err?.message || t('paymentSubmitError'));
                     toast(message, 'error');
                 } finally {
@@ -4038,7 +4058,7 @@ button:active,
                 }
             });
 
-            $('profilePayBtn').addEventListener('click', () => {
+$('profilePayBtn').addEventListener('click', () => {
                 if (state.user?.role === 'admin') {
                     toast('Admins have full access, no payment required.', 'info');
                     return;
@@ -4583,31 +4603,37 @@ button:active,
 
                         showLoader();
                         try {
-                            await db.collection('payments').doc(p.id).update({ status: 'approved', reviewedAt: Date.now() });
+                            const batch = db.batch();
+                            const paymentRef = db.collection('payments').doc(p.id);
+                            batch.update(paymentRef, { status: 'approved', reviewedAt: Date.now() });
 
                             if (p.userId) {
+                                const userRef = db.collection('users').doc(p.userId);
                                 if (p.type === 'download') {
                                     // Legacy download purchases are no longer created by the UI.
-                                    // Keep old records safe: approval simply grants that legacy
-                                    // download without creating another payment.
-                                    await db.collection('users').doc(p.userId).update({
+                                    batch.set(userRef, {
                                         downloadedVideos: firebase.firestore.FieldValue.arrayUnion(p.videoId)
-                                    });
+                                    }, { merge: true });
                                 } else {
                                     const plan = p.plan === 'premium' ? 'premium' : 'basic';
-                                    await db.collection('users').doc(p.userId).update({
+                                    batch.set(userRef, {
                                         paymentStatus: 'approved',
                                         approved: true,
                                         plan,
-                                        permissions: permissionsForPlan(plan)
-                                    });
+                                        permissions: permissionsForPlan(plan),
+                                        pendingPaymentId: firebase.firestore.FieldValue.delete(),
+                                        pendingPlan: firebase.firestore.FieldValue.delete()
+                                    }, { merge: true });
                                 }
                             }
 
+                            // Approving the payment and granting access happen together.
+                            await batch.commit();
                             await Promise.allSettled([renderAdminPayments(), renderAdminUsers()]);
                             toast(t('paymentApproved'), 'success');
                         } catch (e) {
-                            toast('Could not approve the payment.', 'error');
+                            console.error('[Ethio Hub] Payment approval failed:', e);
+                            toast(e?.message || 'Could not approve the payment.', 'error');
                         } finally {
                             hideLoader();
                         }
@@ -4619,11 +4645,22 @@ button:active,
 
                         showLoader();
                         try {
-                            await db.collection('payments').doc(p.id).update({ status: 'rejected', reviewedAt: Date.now() });
-                            await renderAdminPayments();
+                            const batch = db.batch();
+                            batch.update(db.collection('payments').doc(p.id), { status: 'rejected', reviewedAt: Date.now() });
+                            if (p.userId && p.type !== 'download') {
+                                batch.set(db.collection('users').doc(p.userId), {
+                                    paymentStatus: 'rejected',
+                                    approved: false,
+                                    pendingPaymentId: firebase.firestore.FieldValue.delete(),
+                                    pendingPlan: firebase.firestore.FieldValue.delete()
+                                }, { merge: true });
+                            }
+                            await batch.commit();
+                            await Promise.allSettled([renderAdminPayments(), renderAdminUsers()]);
                             toast(t('paymentRejected'), 'error');
                         } catch (e) {
-                            toast('Could not reject the payment.', 'error');
+                            console.error('[Ethio Hub] Payment rejection failed:', e);
+                            toast(e?.message || 'Could not reject the payment.', 'error');
                         } finally {
                             hideLoader();
                         }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+,<!DOCTYPE html>
 <html lang="en" data-lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8" />
@@ -1519,6 +1519,131 @@
             .modal-overlay.active { display: none !important; }
         }
 
+        /* ===== ADMIN DASHBOARD POLISH ===== */
+        #page-admin {
+            position: relative;
+            isolation: isolate;
+        }
+        #page-admin::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            border-radius: 28px;
+            background: radial-gradient(circle at 8% 0%, rgba(212,160,23,.08), transparent 28%),
+                        radial-gradient(circle at 100% 12%, rgba(212,160,23,.05), transparent 25%);
+            z-index: -1;
+        }
+        #page-admin .admin-tabs {
+            position: sticky;
+            top: 8px;
+            z-index: 20;
+            box-shadow: 0 10px 30px rgba(0,0,0,.06);
+        }
+        #page-admin .admin-panel > h3,
+        #page-admin .flex-between h3 {
+            letter-spacing: -.02em;
+        }
+        #page-admin .admin-form {
+            max-width: none;
+            box-shadow: 0 14px 40px rgba(0,0,0,.06);
+            border-color: color-mix(in srgb, var(--border-color) 80%, var(--gold));
+        }
+        #page-admin .admin-form input:focus,
+        #page-admin .admin-form select:focus,
+        #page-admin .admin-form textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212,160,23,.12);
+        }
+        #page-admin .file-input-group {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 8px;
+            padding: 14px;
+            border: 1px dashed var(--border-color);
+            border-radius: 16px;
+            background: color-mix(in srgb, var(--bg-input) 60%, transparent);
+        }
+        #page-admin .file-input-group label {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-main);
+        }
+        #page-admin .upload-hint {
+            display: block;
+            margin-top: 4px;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 400;
+        }
+        #page-admin .file-picker {
+            min-width: 0;
+            display: grid;
+            grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+            align-items: center;
+            gap: 10px;
+            padding: 7px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-app);
+        }
+        #page-admin .file-picker input[type=file] {
+            width: 100%;
+            min-width: 0;
+            margin: 0;
+            padding: 4px;
+            border: 0;
+            background: transparent;
+        }
+        #page-admin .file-name {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+        #page-admin .upload-status {
+            display: none;
+            padding-top: 2px;
+        }
+        #page-admin .upload-status.visible { display: block; }
+        #page-admin .upload-status-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+        #page-admin .upload-status-head strong { color: var(--gold); }
+        #page-admin .upload-progress {
+            height: 7px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: var(--border-color);
+        }
+        #page-admin .upload-progress span {
+            display: block;
+            width: 0;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--gold), #f5ca3b);
+            transition: width .2s ease;
+        }
+        #page-admin .admin-table-wrap {
+            box-shadow: 0 12px 35px rgba(0,0,0,.05);
+        }
+        #page-admin .admin-table tbody tr { transition: background .18s ease; }
+        #page-admin .admin-table tbody tr:hover { background: color-mix(in srgb, var(--gold) 5%, transparent); }
+        #page-admin .admin-table .actions button {
+            width: 36px;
+            min-width: 36px;
+            padding: 4px;
+        }
+        #page-admin .admin-table th:first-child,
+        #page-admin .admin-table td:first-child { padding-left: 16px; }
+
         .admin-tabs {
             display: flex;
             gap: 4px;
@@ -1608,25 +1733,71 @@
             background: var(--bg-input);
         }
         .admin-form .checkbox-group {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 12px;
+            min-height: 44px;
+            margin: 2px 0 14px;
+            padding: 5px 10px 5px 7px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg-input);
+            cursor: pointer;
+            transition: border-color .18s ease, background .18s ease, transform .18s ease, box-shadow .18s ease;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .admin-form .checkbox-group:hover {
+            border-color: rgba(212, 160, 23, 0.55);
+            transform: translateY(-1px);
+        }
+        .admin-form .checkbox-group:has(input[type="checkbox"]:focus-visible) {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
         }
         .admin-form .checkbox-group input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
             width: 18px;
             height: 18px;
-            accent-color: var(--gold);
-            cursor: pointer;
             margin: 0;
-            border-radius: 4px;
-            flex-shrink: 0;
+            flex: 0 0 18px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-input);
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .admin-form .checkbox-group input[type="checkbox"]::after {
+            content: "";
+            width: 5px;
+            height: 9px;
+            border: solid #0a0f0e;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg) scale(0);
+            transition: transform 0.18s ease;
+        }
+        .admin-form .checkbox-group input[type="checkbox"]:checked {
+            background: var(--gold);
+            border-color: var(--gold);
+            box-shadow: 0 0 8px var(--gold-glow);
+            transform: scale(1.02);
+        }
+        .admin-form .checkbox-group input[type="checkbox"]:checked::after {
+            transform: rotate(45deg) scale(1);
         }
         .admin-form .checkbox-group label {
             margin: 0;
             cursor: pointer;
             color: var(--text-main);
             font-size: 13px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .admin-form .checkbox-group input[type="checkbox"]:checked + label {
+            color: var(--gold);
         }
         .admin-form .file-input-group {
             display: flex;
@@ -1790,6 +1961,26 @@
         }
 
         @media (max-width: 600px) {
+            #page-admin .admin-tabs {
+                position: sticky;
+                top: 4px;
+                gap: 3px;
+                padding: 5px;
+                border-radius: 18px;
+            }
+            #page-admin .admin-tabs button {
+                min-width: 0;
+                padding: 7px 5px;
+                font-size: 10px;
+            }
+            #page-admin .admin-form { padding: 16px; border-radius: 20px; }
+            #page-admin .file-picker { grid-template-columns: 1fr; }
+            #page-admin .file-name { padding: 0 5px 3px; }
+            #page-admin .flex-between { gap: 10px; align-items: center; }
+            #page-admin .flex-between h3 { font-size: 18px; }
+            #page-admin #showAddVideoForm { padding: 8px 14px !important; white-space: nowrap; }
+            #page-admin .admin-table-wrap { border-radius: 18px; }
+            #page-admin .admin-table { min-width: 620px; }
             #app { padding: 12px 14px 18px; }
             .app-header { padding: 4px 4px 4px 12px; border-radius: 40px; gap: 4px; margin-bottom: 16px;}
             .logo-area h1 { font-size: 15px; }
@@ -2013,6 +2204,359 @@ header, .header, .site-header, nav {
         }
     </style>
 
+<style>
+        /* ===== ADMIN DASHBOARD TYPOGRAPHY POLISH ===== */
+        #page-admin .admin-tabs button {
+            font-size: 13px;
+            font-weight: 650;
+            line-height: 1.2;
+        }
+        #page-admin .admin-panel > h3,
+        #page-admin .flex-between h3 {
+            font-size: 20px;
+            line-height: 1.25;
+        }
+        #page-admin .admin-form label {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.35;
+            margin-bottom: 6px;
+        }
+        #page-admin .admin-form input,
+        #page-admin .admin-form select,
+        #page-admin .admin-form textarea {
+            font-size: 15px;
+            line-height: 1.45;
+        }
+        #page-admin .admin-form textarea {
+            line-height: 1.5;
+        }
+        #page-admin .file-input-group label {
+            font-size: 14px;
+            font-weight: 650;
+            line-height: 1.35;
+        }
+        #page-admin .upload-hint {
+            font-size: 12px;
+            line-height: 1.35;
+        }
+        #page-admin .file-name {
+            font-size: 12px;
+            line-height: 1.35;
+        }
+        #page-admin .admin-form .checkbox-group label {
+            font-size: 14px;
+            line-height: 1.35;
+        }
+        #page-admin .admin-table {
+            font-size: 13px;
+        }
+        #page-admin .admin-table th {
+            font-size: 13px;
+            line-height: 1.35;
+        }
+        #page-admin .admin-table td {
+            line-height: 1.4;
+        }
+        #page-admin .admin-table .status {
+            font-size: 11px;
+        }
+        #page-admin .admin-table .actions button {
+            font-size: 12px;
+        }
+        #page-admin .btn-primary {
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            #page-admin .admin-tabs button {
+                font-size: 12px;
+                line-height: 1.2;
+            }
+            #page-admin .admin-panel > h3,
+            #page-admin .flex-between h3 {
+                font-size: 20px;
+            }
+            #page-admin .admin-form label {
+                font-size: 14px;
+            }
+            #page-admin .admin-form input,
+            #page-admin .admin-form select,
+            #page-admin .admin-form textarea {
+                font-size: 15px;
+            }
+            #page-admin .file-input-group label {
+                font-size: 14px;
+            }
+            #page-admin .upload-hint,
+            #page-admin .file-name {
+                font-size: 12px;
+            }
+            #page-admin .admin-form .checkbox-group {
+                min-height: 42px;
+                gap: 8px;
+                padding: 4px 9px 4px 7px;
+            }
+            #page-admin .admin-form .checkbox-group input[type="checkbox"] {
+                width: 18px;
+                height: 18px;
+                flex-basis: 18px;
+            }
+            #page-admin .admin-form .checkbox-group label {
+                font-size: 13px;
+                line-height: 1.3;
+            }
+            #page-admin .admin-table {
+                font-size: 13px;
+            }
+            #page-admin .admin-table th {
+                font-size: 13px;
+            }
+        }
+</style>
+
+<style id="micro-interaction-layer">
+/* ===== MICRO-INTERACTION / GLASS MOTION LAYER =====
+   Visual language intentionally stays inside the existing design system.
+   Motion uses transform/opacity so it remains light on mobile GPUs. */
+:root {
+  --motion-spring: cubic-bezier(.22,1,.36,1);
+  --motion-snap: cubic-bezier(.34,1.56,.64,1);
+}
+
+/* Subtle floating depth for existing cards — no size/layout changes. */
+#page-admin .admin-form,
+#page-admin .admin-table-wrap,
+#page-admin .admin-tabs,
+.profile-container,
+.payment-form,
+.tier-card {
+  position: relative;
+  transform: translate3d(0,0,0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition:
+    transform .32s var(--motion-spring),
+    box-shadow .32s var(--motion-spring),
+    border-color .24s ease;
+}
+
+#page-admin .admin-form::before,
+#page-admin .admin-table-wrap::before,
+.profile-container::before,
+.payment-form::before,
+.tier-card::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: .32;
+  background: linear-gradient(125deg,
+    rgba(255,255,255,.12) 0%,
+    rgba(255,255,255,.035) 24%,
+    transparent 48%,
+    transparent 72%,
+    rgba(255,255,255,.045) 100%);
+  mix-blend-mode: screen;
+  z-index: 0;
+}
+
+#page-admin .admin-form > *,
+#page-admin .admin-table-wrap > *,
+.profile-container > *,
+.payment-form > *,
+.tier-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (hover:hover) and (pointer:fine) {
+  #page-admin .admin-form:hover,
+  #page-admin .admin-table-wrap:hover,
+  .profile-container:hover,
+  .payment-form:hover {
+    transform: translate3d(0,-2px,0);
+  }
+}
+
+/* Fluid press feedback for the existing controls. */
+button,
+.admin-tabs button,
+.payment-method,
+.tier-card,
+.social-btn,
+.file-upload,
+.checkbox-group,
+.icon-btn {
+  -webkit-tap-highlight-color: transparent;
+  transform: translate3d(0,0,0);
+  backface-visibility: hidden;
+}
+
+button,
+.payment-method,
+.social-btn,
+.file-upload,
+.icon-btn {
+  transition:
+    transform .22s var(--motion-spring),
+    filter .22s ease,
+    box-shadow .22s var(--motion-spring),
+    background-color .22s ease,
+    border-color .22s ease;
+}
+
+button:active,
+.payment-method:active,
+.social-btn:active,
+.file-upload:active,
+.icon-btn:active {
+  transform: translate3d(0,1px,0) scale(.975);
+}
+
+/* Ripple is an optical touch cue; it never changes layout. */
+.micro-ripple {
+  position: absolute !important;
+  z-index: 9999 !important;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: rgba(255,255,255,.24);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08);
+  transform: scale(0);
+  opacity: .75;
+  animation: microRipple .52s var(--motion-spring) forwards;
+}
+
+@keyframes microRipple {
+  0% { transform: scale(.15); opacity: .65; }
+  65% { opacity: .18; }
+  100% { transform: scale(9); opacity: 0; }
+}
+
+/* Admin navigation gets a smoother active-state handoff. */
+#page-admin .admin-tabs button {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform .24s var(--motion-spring),
+    color .22s ease,
+    background-color .28s ease,
+    box-shadow .28s var(--motion-spring);
+}
+#page-admin .admin-tabs button.active {
+  animation: adminTabSettle .38s var(--motion-spring);
+}
+@keyframes adminTabSettle {
+  0% { transform: scale(.97); }
+  58% { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+
+/* Smaller, premium-feeling free-video checkbox with a spring check. */
+#page-admin .admin-form .checkbox-group {
+  min-height: 36px;
+  gap: 8px;
+  padding: 4px 10px 4px 7px;
+  border-radius: 11px;
+  transition:
+    transform .28s var(--motion-spring),
+    border-color .24s ease,
+    background-color .24s ease,
+    box-shadow .28s var(--motion-spring);
+}
+#page-admin .admin-form .checkbox-group:hover {
+  transform: translate3d(0,-1px,0);
+}
+#page-admin .admin-form .checkbox-group input[type="checkbox"] {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex-basis: 16px;
+  border-radius: 5px;
+  overflow: visible;
+  transition:
+    transform .28s var(--motion-snap),
+    background-color .2s ease,
+    border-color .2s ease;
+}
+#page-admin .admin-form .checkbox-group input[type="checkbox"]::after {
+  width: 4px;
+  height: 8px;
+  border-width: 0 1.8px 1.8px 0;
+  transform: rotate(45deg) scale(0);
+  transform-origin: center;
+}
+#page-admin .admin-form .checkbox-group input[type="checkbox"]:checked {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 3px rgba(212,160,23,.08);
+}
+#page-admin .admin-form .checkbox-group input[type="checkbox"]:checked::after {
+  animation: checkboxPop .34s var(--motion-snap) both;
+}
+#page-admin .admin-form .checkbox-group:has(input[type="checkbox"]:checked) {
+  border-color: color-mix(in srgb, var(--gold) 60%, var(--border-color));
+  box-shadow: 0 7px 20px rgba(212,160,23,.07), inset 0 1px 0 rgba(255,255,255,.05);
+}
+@keyframes checkboxPop {
+  0% { transform: rotate(45deg) scale(0); opacity: 0; }
+  60% { transform: rotate(45deg) scale(1.18); opacity: 1; }
+  100% { transform: rotate(45deg) scale(1); opacity: 1; }
+}
+
+/* Theme/profile controls receive a restrained spring rather than a visual redesign. */
+.theme-toggle,
+.toggle-pwd {
+  transition: transform .36s var(--motion-spring), box-shadow .28s ease, background-color .25s ease;
+}
+.theme-toggle:active,
+.toggle-pwd:active {
+  transform: scale(.9) rotate(-8deg);
+}
+.theme-toggle i,
+.toggle-pwd i {
+  transition: transform .38s var(--motion-spring), opacity .2s ease;
+}
+.theme-toggle:active i {
+  transform: rotate(28deg) scale(.88);
+}
+
+/* Smooth appearance when admin panels change; preserves the existing fade-up direction. */
+#page-admin .admin-panel.active {
+  animation: adminPanelEnter .34s var(--motion-spring) both;
+}
+@keyframes adminPanelEnter {
+  from { opacity: 0; transform: translate3d(0,7px,0) scale(.995); }
+  to { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+}
+
+/* Respect Android/browser reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  #page-admin .admin-form,
+  #page-admin .admin-table-wrap,
+  #page-admin .admin-tabs,
+  .profile-container,
+  .payment-form,
+  .tier-card,
+  button,
+  .payment-method,
+  .social-btn,
+  .file-upload,
+  .icon-btn,
+  .checkbox-group {
+    transition-duration: .001ms !important;
+  }
+  .micro-ripple,
+  #page-admin .admin-tabs button.active,
+  #page-admin .admin-form .checkbox-group input[type="checkbox"]:checked::after,
+  #page-admin .admin-panel.active {
+    animation: none !important;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -2406,8 +2950,15 @@ header, .header, .site-header, nav {
                             <label><span class="lang-en">Category</span><span class="lang-am">ምድብ</span><span class="lang-ar">الفئة</span></label><select id="videoCategory"><option value="exclusive">Exclusive Hub</option><option value="training">Training</option></select>
                             
                             <div class="file-input-group">
-                                <label><i class="fas fa-upload"></i> <span class="lang-en">Upload Video File (Up to 1GB):</span><span class="lang-am">የቪዲዮ ፋይል ስቀል (እስከ 1 ጂቢ):</span><span class="lang-ar">رفع ملف الفيديو (حتى 1 جيجابايت):</span></label>
-                                <input type="file" id="videoFile" accept="video/*" />
+                                <label for="videoFile"><i class="fas fa-cloud-arrow-up"></i> <span class="lang-en">Upload Video File</span><span class="lang-am">የቪዲዮ ፋይል ስቀል</span><span class="lang-ar">رفع ملف الفيديو</span><small class="upload-hint">Up to 1GB • large files upload in secure chunks</small></label>
+                                <div class="file-picker">
+                                    <input type="file" id="videoFile" accept="video/*" />
+                                    <span id="videoFileName" class="file-name">No file selected</span>
+                                </div>
+                                <div id="videoUploadStatus" class="upload-status" aria-live="polite">
+                                    <div class="upload-status-head"><span id="videoUploadMessage">Ready to upload</span><strong id="videoUploadPercent">0%</strong></div>
+                                    <div class="upload-progress"><span id="videoUploadProgress"></span></div>
+                                </div>
                             </div>
                             <label><span class="lang-en">OR Video URL (YouTube / Vimeo / direct)</span><span class="lang-am">ወይም የቪዲዮ አድራሻ</span><span class="lang-ar">أو رابط الفيديو (يوتيوب / فيميو / مباشر)</span></label>
                             <input type="url" id="videoUrl" placeholder="https://..." />
@@ -3399,13 +3950,23 @@ header, .header, .site-header, nav {
                 }
                 navigate('payment');
             });
-            $('profileBackBtn').addEventListener('click', () => navigate('gallery'));
+            // Admin profiles return to the admin dashboard; regular users return to the gallery.
+            $('profileBackBtn').addEventListener('click', () => {
+                // Admin profiles stay inside the admin area. The admin-aware
+                // navigate() wrapper handles tab filtering and data refresh.
+                navigate(state.user?.role === 'admin' ? 'admin' : 'gallery');
+            });
             
             // ============================================================
-            // FIXED BACK ARROW - Simply always go back to Gallery
+            // CONTEXT-AWARE BACK ARROW
+            // Admins must never be dropped into the normal user gallery.
             // ============================================================
             $('backBtn').addEventListener('click', () => {
-                navigate('gallery');
+                if (state.user?.role === 'admin') {
+                    navigate('profile');
+                } else {
+                    navigate('gallery');
+                }
             });
 
             // ===== VIDEO MODAL (UPDATED: View Limit + Download Restrictions) =====
@@ -3581,14 +4142,104 @@ header, .header, .site-header, nav {
             // ===== ADMIN =====
             const uploadVideoToCloudinary = async (file) => {
                 if (!file) return null;
-                if (file.size > 1024 * 1024 * 1024) throw new Error(t('fileTooLarge'));
-                const fd = new FormData();
-                fd.append('file', file);
-                fd.append('upload_preset', cloudinaryConfig.uploadPreset);
-                const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/video/upload`, { method: 'POST', body: fd });
-                if (!res.ok) throw new Error('Video upload failed');
-                const data = await res.json();
-                return data.secure_url;
+                const MAX_SIZE = 1024 * 1024 * 1024;
+                const CHUNK_SIZE = 10 * 1024 * 1024;
+                if (file.size > MAX_SIZE) throw new Error(t('fileTooLarge'));
+                if (!cloudinaryConfig.cloudName || !cloudinaryConfig.uploadPreset) {
+                    throw new Error('Cloudinary upload configuration is missing.');
+                }
+
+                const status = $('videoUploadStatus');
+                const message = $('videoUploadMessage');
+                const percent = $('videoUploadPercent');
+                const progress = $('videoUploadProgress');
+                const setProgress = (value, text) => {
+                    const v = Math.max(0, Math.min(100, Math.round(value)));
+                    if (status) status.classList.add('visible');
+                    if (percent) percent.textContent = `${v}%`;
+                    if (progress) progress.style.width = `${v}%`;
+                    if (message && text) message.textContent = text;
+                };
+                const parseError = async (res) => {
+                    let detail = '';
+                    try {
+                        const body = await res.json();
+                        detail = body?.error?.message || body?.message || '';
+                    } catch (_) {}
+                    if (res.status === 401 || /unsigned|preset/i.test(detail)) {
+                        return 'Video upload is not configured correctly. The Cloudinary preset must allow unsigned video uploads.';
+                    }
+                    if (res.status === 413) return 'This video is too large for a single upload. Please try again; large files use chunked upload.';
+                    return detail || `Cloudinary upload failed (HTTP ${res.status}).`;
+                };
+
+                // Cloudinary requires chunked uploads for files over 100 MB.
+                if (file.size <= 100 * 1024 * 1024) {
+                    setProgress(5, 'Preparing video…');
+                    const fd = new FormData();
+                    fd.append('file', file);
+                    fd.append('upload_preset', cloudinaryConfig.uploadPreset);
+                    const xhr = new XMLHttpRequest();
+                    const result = await new Promise((resolve, reject) => {
+                        xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/video/upload`);
+                        xhr.responseType = 'json';
+                        xhr.upload.onprogress = e => {
+                            if (e.lengthComputable) setProgress(5 + (e.loaded / e.total) * 90, 'Uploading video…');
+                        };
+                        xhr.onload = () => {
+                            if (xhr.status >= 200 && xhr.status < 300 && xhr.response?.secure_url) resolve(xhr.response);
+                            else reject(new Error(xhr.response?.error?.message || `Cloudinary upload failed (HTTP ${xhr.status}).`));
+                        };
+                        xhr.onerror = () => reject(new Error('Network error while uploading the video.'));
+                        xhr.onabort = () => reject(new Error('Video upload was cancelled.'));
+                        xhr.send(fd);
+                    });
+                    setProgress(100, 'Upload complete');
+                    return result.secure_url;
+                }
+
+                // Reliable chunked upload for large videos.
+                const uploadId = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+                let startByte = 0;
+                let finalResponse = null;
+                let chunkNumber = 0;
+                while (startByte < file.size) {
+                    const endExclusive = Math.min(startByte + CHUNK_SIZE, file.size);
+                    const endByte = endExclusive - 1;
+                    const chunk = file.slice(startByte, endExclusive);
+                    chunkNumber += 1;
+                    const fd = new FormData();
+                    fd.append('file', chunk, file.name);
+                    fd.append('upload_preset', cloudinaryConfig.uploadPreset);
+                    setProgress((startByte / file.size) * 95, `Uploading part ${chunkNumber}…`);
+
+                    const response = await new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/video/upload`);
+                        xhr.responseType = 'json';
+                        xhr.setRequestHeader('X-Unique-Upload-Id', uploadId);
+                        xhr.setRequestHeader('Content-Range', `bytes ${startByte}-${endByte}/${file.size}`);
+                        xhr.upload.onprogress = e => {
+                            if (e.lengthComputable) {
+                                const chunkProgress = e.loaded / e.total;
+                                setProgress(((startByte + e.loaded) / file.size) * 95, `Uploading part ${chunkNumber}…`);
+                            }
+                        };
+                        xhr.onload = () => {
+                            if (xhr.status >= 200 && xhr.status < 300 && xhr.response) resolve(xhr.response);
+                            else reject(new Error(xhr.response?.error?.message || `Cloudinary upload failed (HTTP ${xhr.status}).`));
+                        };
+                        xhr.onerror = () => reject(new Error('Network error while uploading the video.'));
+                        xhr.onabort = () => reject(new Error('Video upload was cancelled.'));
+                        xhr.send(fd);
+                    });
+                    finalResponse = response;
+                    startByte = endExclusive;
+                }
+
+                if (!finalResponse?.secure_url) throw new Error('Cloudinary finished the upload but did not return a video URL.');
+                setProgress(100, 'Upload complete');
+                return finalResponse.secure_url;
             };
 
             const renderAdminVideos = async () => {
@@ -3869,6 +4520,25 @@ header, .header, .site-header, nav {
 
             $('showAddVideoForm').addEventListener('click', () => $('addVideoFormWrap').classList.toggle('hidden'));
 
+            $('videoFile').addEventListener('change', () => {
+                const file = $('videoFile').files?.[0];
+                const name = $('videoFileName');
+                const status = $('videoUploadStatus');
+                const message = $('videoUploadMessage');
+                const percent = $('videoUploadPercent');
+                const progress = $('videoUploadProgress');
+                if (file) {
+                    if (name) name.textContent = `${file.name} • ${(file.size / 1024 / 1024).toFixed(1)} MB`;
+                    if (status) status.classList.add('visible');
+                    if (message) message.textContent = 'Ready to upload';
+                    if (percent) percent.textContent = '0%';
+                    if (progress) progress.style.width = '0%';
+                } else {
+                    if (name) name.textContent = 'No file selected';
+                    if (status) status.classList.remove('visible');
+                }
+            });
+
             $('addVideoForm').addEventListener('submit', async e => {
                 e.preventDefault();
                 if (!state.user || state.user.role !== 'admin') { toast('Admin access required', 'error'); return; }
@@ -3877,10 +4547,15 @@ header, .header, .site-header, nav {
                 const url = $('videoUrl').value.trim();
                 if (!title) { toast(t('titleRequired'), 'error'); return; }
                 if (!file && !url) { toast(t('provideFileOrUrl'), 'error'); return; }
+
+                const submitBtn = $('addVideoForm').querySelector('button[type="submit"]');
+                if (submitBtn?.disabled) return;
+                if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.originalText = submitBtn.innerHTML; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading…'; }
                 showLoader();
                 try {
                     let videoUrl = url;
                     if (file) videoUrl = await uploadVideoToCloudinary(file);
+                    if (!videoUrl) throw new Error('No video URL was returned.');
                     let duration = '00:00';
                     if (file) { const sec = await readVideoDuration(file); duration = formatDuration(sec); }
                     await db.collection('videos').add({
@@ -3897,10 +4572,19 @@ header, .header, .site-header, nav {
                     });
                     toast(t('videoPublished', { title }), 'success');
                     $('addVideoForm').reset();
+                    $('videoFileName').textContent = 'No file selected';
+                    $('videoUploadStatus').classList.remove('visible');
                     $('addVideoFormWrap').classList.add('hidden');
-                    renderAdminVideos(); renderVideoGrid();
-                } catch (err) { toast(t('videoSaveError'), 'error'); }
-                hideLoader();
+                    await Promise.allSettled([renderAdminVideos(), renderVideoGrid()]);
+                } catch (err) {
+                    console.error('Video publish error:', err);
+                    const detail = err?.message || t('videoSaveError');
+                    toast(detail, 'error');
+                    if ($('videoUploadMessage')) $('videoUploadMessage').textContent = 'Upload failed — check the message above';
+                } finally {
+                    hideLoader();
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = submitBtn.dataset.originalText || '<i class="fas fa-save"></i> Publish Video'; }
+                }
             });
 
             const refreshAdmin = async () => {
@@ -4045,6 +4729,54 @@ header, .header, .site-header, nav {
             // Copyright text is intentionally fixed to 2026.
         })();
     </script>
+
+
+<script id="micro-interaction-runtime">
+(function () {
+  'use strict';
+  /* Lightweight delegated touch ripple. It only runs on direct user input and
+     removes itself after one frame sequence, so it does not create a timer loop. */
+  const selector = 'button, .payment-method, .social-btn, .file-upload, .icon-btn, .checkbox-group';
+  let rippleSeq = 0;
+
+  document.addEventListener('pointerdown', function (event) {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    const target = event.target && event.target.closest ? event.target.closest(selector) : null;
+    if (!target || target.disabled || target.getAttribute('aria-disabled') === 'true') return;
+    if (target.closest('.micro-ripple')) return;
+
+    const rect = target.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    if (getComputedStyle(target).position === 'static') target.style.position = 'relative';
+    target.style.overflow = target.style.overflow === 'visible' ? 'hidden' : target.style.overflow;
+
+    const ripple = document.createElement('span');
+    ripple.className = 'micro-ripple';
+    ripple.dataset.rippleId = String(++rippleSeq);
+    ripple.style.left = (event.clientX - rect.left) + 'px';
+    ripple.style.top = (event.clientY - rect.top) + 'px';
+    target.appendChild(ripple);
+
+    ripple.addEventListener('animationend', function () { ripple.remove(); }, { once: true });
+    window.setTimeout(function () { if (ripple.isConnected) ripple.remove(); }, 700);
+  }, { passive: true });
+
+  /* Keep floating cards visually calm while the page is scrolling. */
+  let scrollFrame = 0;
+  window.addEventListener('scroll', function () {
+    if (scrollFrame) return;
+    scrollFrame = requestAnimationFrame(function () {
+      scrollFrame = 0;
+      document.documentElement.classList.add('is-scrolling');
+      clearTimeout(window.__ethioScrollTimer);
+      window.__ethioScrollTimer = setTimeout(function () {
+        document.documentElement.classList.remove('is-scrolling');
+      }, 120);
+    });
+  }, { passive: true });
+})();
+</script>
 
 <script id="runtime-safety">
 (function () {

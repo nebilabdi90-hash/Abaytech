@@ -1269,38 +1269,14 @@
         .gallery-header h2 {
             font-size: 19px;
         }
-        .gallery-header .category-tabs {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .gallery-header .category-tabs button {
-            padding: 6px 16px;
-            border-radius: 30px;
-            border: 1px solid var(--border-color);
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: var(--transition);
-            touch-action: manipulation;
-            min-height: var(--touch-target);
-        }
-        .gallery-header .category-tabs button.active {
-            background: var(--gold);
-            color: #0a0f0e;
-            border-color: var(--gold);
-            box-shadow: 0 4px 12px rgba(212, 160, 23, 0.15);
-        }
-        .gallery-header .category-tabs button:hover:not(.active) {
-            border-color: var(--text-main);
-            color: var(--text-main);
-        }
-        .gallery-header .category-tabs button:active {
-            transform: scale(0.96);
-            transition: var(--transition-fast);
-        }
+        .gallery-header .category-tabs { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:5px; border:1px solid transparent; border-radius:22px; transition:background .28s ease,border-color .28s ease,box-shadow .28s ease; position:sticky; top:10px; z-index:40; width:fit-content; max-width:100%; }
+        .gallery-header .category-tabs.is-floating { background:color-mix(in srgb,var(--bg-glass) 86%,transparent); border-color:var(--border-color); box-shadow:0 12px 30px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.08); backdrop-filter:blur(16px) saturate(1.12); -webkit-backdrop-filter:blur(16px) saturate(1.12); }
+        .gallery-header .category-tabs button { padding:7px 14px; border-radius:18px; border:1px solid var(--border-color); background:color-mix(in srgb,var(--bg-input) 55%,transparent); color:var(--text-muted); cursor:pointer; font-size:12px; font-weight:700; transition:transform .22s ease,background .22s ease,border-color .22s ease,color .22s ease,box-shadow .22s ease; touch-action:manipulation; min-height:38px; display:inline-flex; align-items:center; justify-content:center; gap:7px; white-space:nowrap; }
+        .gallery-header .category-tabs button i { font-size:14px; opacity:.92; transition:transform .22s ease; }
+        .gallery-header .category-tabs button.active { background:linear-gradient(135deg,var(--gold-light),var(--gold)); color:#0a0f0e; border-color:var(--gold); box-shadow:0 6px 16px rgba(212,160,23,.20),inset 0 1px 0 rgba(255,255,255,.28); }
+        .gallery-header .category-tabs button.active i { transform:translateY(-1px) scale(1.06); }
+        .gallery-header .category-tabs button:hover:not(.active) { border-color:var(--gold); color:var(--text-main); transform:translateY(-1px); box-shadow:0 5px 14px rgba(0,0,0,.08); }
+        .gallery-header .category-tabs button:active { transform:scale(.96); transition:var(--transition-fast); }
 
         .video-grid {
             display: grid;
@@ -1308,10 +1284,10 @@
             gap: 18px;
         }
         @media (max-width: 700px) {
-            .video-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
+            .video-grid { grid-template-columns:1fr 1fr; gap:10px; }
+            .gallery-header .category-tabs { top:6px; max-width:calc(100vw - 30px); overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; -ms-overflow-style:none; }
+            .gallery-header .category-tabs::-webkit-scrollbar { display:none; }
+            .gallery-header .category-tabs button { flex:0 0 auto; min-height:36px; padding:6px 12px; }
         }
         .video-card {
             background: var(--bg-glass);
@@ -3000,10 +2976,10 @@ button:active,
         <div class="page" id="page-gallery">
             <div class="gallery-header">
                 <h2><i class="fas fa-play-circle text-gold"></i> <span class="lang-en">Premium Content</span><span class="lang-am">ከፍተኛ ይዘት</span><span class="lang-ar">محتوى مميز</span></h2>
-                <div class="category-tabs" id="categoryTabs">
-                    <button class="active" data-cat="all"><span class="lang-en">All</span><span class="lang-am">ሁሉም</span><span class="lang-ar">الكل</span></button>
-                    <button data-cat="exclusive"><span class="lang-en">Exclusive Hub</span><span class="lang-am">ብቸኛ ማዕከል</span><span class="lang-ar">مركز حصري</span></button>
-                    <button data-cat="training"><span class="lang-en">Training</span><span class="lang-am">ሥልጠና</span><span class="lang-ar">تدريب</span></button>
+                <div class="category-tabs" id="categoryTabs" aria-label="Content categories">
+                    <button class="active" data-cat="all" aria-pressed="true"><i class="fas fa-folder-open" aria-hidden="true"></i><span class="lang-en">All</span><span class="lang-am">ሁሉም</span><span class="lang-ar">الكل</span></button>
+                    <button data-cat="exclusive" aria-pressed="false"><i class="fas fa-folder" aria-hidden="true"></i><span class="lang-en">18+</span><span class="lang-am">18+</span><span class="lang-ar">18+</span></button>
+                    <button data-cat="training" aria-pressed="false"><i class="fas fa-folder" aria-hidden="true"></i><span class="lang-en">New Hub</span><span class="lang-am">አዲስ ማዕከል</span><span class="lang-ar">المركز الجديد</span></button>
                 </div>
             </div>
             <div id="videoGrid" class="video-grid"></div>
@@ -4217,12 +4193,20 @@ button:active,
                 }
             };
 
+            const categoryTabs = $('categoryTabs');
             document.querySelectorAll('#categoryTabs button').forEach(b => b.addEventListener('click', () => {
-                document.querySelectorAll('#categoryTabs button').forEach(x => x.classList.remove('active'));
-                b.classList.add('active');
-                state.selectedCategory = b.dataset.cat;
-                renderVideoGrid();
+                document.querySelectorAll('#categoryTabs button').forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed','false'); });
+                b.classList.add('active'); b.setAttribute('aria-pressed','true');
+                state.selectedCategory = b.dataset.cat; renderVideoGrid();
             }));
+            let categoryScrollTick = false;
+            const updateCategoryFloat = () => {
+                if (!categoryTabs) return;
+                categoryTabs.classList.toggle('is-floating', categoryTabs.getBoundingClientRect().top <= 12);
+                categoryScrollTick = false;
+            };
+            window.addEventListener('scroll', () => { if (!categoryScrollTick) { categoryScrollTick=true; requestAnimationFrame(updateCategoryFloat); } }, { passive:true });
+            updateCategoryFloat();
 
             // ===== ADMIN =====
             const uploadVideoToCloudinary = async (file) => {
@@ -4426,13 +4410,24 @@ button:active,
                 return { canDownload: false, canScreenshot: false, canUpload: false, limit: 5 };
             };
 
+            let adminUsersUnsubscribe = null;
+            let adminUsersListenerActive = false;
+            const stopAdminUsersListener = () => {
+                if (typeof adminUsersUnsubscribe === 'function') adminUsersUnsubscribe();
+                adminUsersUnsubscribe = null;
+                adminUsersListenerActive = false;
+            };
+
             const renderAdminUsers = async () => {
                 const c = $('adminUserList');
                 if (!c) return;
                 try {
-                    const snap = await db.collection('users').get();
+                    if (adminUsersListenerActive) return;
+                    adminUsersListenerActive = true;
+                    adminUsersUnsubscribe = db.collection('users').onSnapshot(snap => {
                     const users = [];
                     snap.forEach(d => users.push({ id: d.id, ...d.data() }));
+                    users.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
 
                     if (!users.length) {
                         c.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><h3>${t('noUsers')}</h3></div>`;
@@ -4499,7 +4494,6 @@ button:active,
                             // Removes the Firestore profile. Firebase Auth accounts require a
                             // privileged backend/Cloud Function and cannot be safely deleted here.
                             await db.collection('users').doc(b.dataset.id).delete();
-                            await renderAdminUsers();
                             toast('User profile removed.', 'info');
                         } catch (e) {
                             toast('Could not remove the user profile.', 'error');
@@ -4507,7 +4501,15 @@ button:active,
                             hideLoader();
                         }
                     });
+                    }, e => {
+                        console.error('[Ethio Hub] Real-time users listener error:', e);
+                        adminUsersListenerActive = false;
+                        adminUsersUnsubscribe = null;
+                        c.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Unable to sync users</h3><p>Check your connection and admin permissions.</p></div>`;
+                    });
                 } catch (e) {
+                    adminUsersListenerActive = false;
+                    adminUsersUnsubscribe = null;
                     c.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Unable to load users</h3></div>`;
                 }
             };
@@ -4709,6 +4711,7 @@ button:active,
             // Override navigate to apply tab filtering when entering admin.
             const originalNavigate = navigate;
             navigate = function(page) {
+                if (page !== 'admin' && typeof stopAdminUsersListener === 'function') stopAdminUsersListener();
                 originalNavigate(page);
                 if (page === 'admin') {
                     filterAdminTabs();

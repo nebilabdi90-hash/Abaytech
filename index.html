@@ -4034,7 +4034,7 @@ button:active,
                     }
                     modal.classList.add('active');
                     handleDownloadAction(video, downloadContainer);
-                } catch (e) { toast(t('failedLoadVideo'), 'error'); }
+                } catch (e) { console.error('[Ethio Hub] Video modal error:', e); toast(t('failedLoadVideo'), 'error'); }
             }
 
             async function handleDownloadAction(video, container) {
@@ -4073,7 +4073,7 @@ button:active,
                 container.innerHTML = `
                     <div style="padding:12px; background:var(--bg-input); border-radius:8px; text-align:center; border:1px solid var(--border-color);">
                         <p style="color:var(--text-muted); font-size:13px; margin-bottom:4px;">📥 Download is included with <strong style="color:var(--gold);">Full Access</strong>.</p>
-                        <button class="btn-primary" style="width:auto; padding:6px 16px; font-size:12px;" onclick="navigate('payment')">Upgrade Now</button>
+                        <button class="btn-primary" style="width:auto; padding:6px 16px; font-size:12px;" onclick="EthioHubNavigate('payment')">Upgrade Now</button>
                     </div>
                 `;
             }
@@ -4128,6 +4128,7 @@ button:active,
                         renderVideoGrid();
                     }));
                 } catch (e) {
+                    console.error('[Ethio Hub] Video grid error:', e);
                     c.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-triangle-exclamation"></i><h3>Unable to load videos</h3><p>Check your connection and try again.</p></div>`;
                 }
             };
@@ -4590,7 +4591,11 @@ button:active,
             const refreshAdmin = async () => {
                 if (!state.user || state.user.role !== 'admin') { navigate('gallery'); return; }
                 await loadSettings();
-                await Promise.allSettled([renderAdminVideos(), renderAdminUsers(), renderAdminPayments()]);
+                // Refresh only the active admin panel to avoid three unnecessary
+                // Firestore reads every time the admin dashboard is opened.
+                if (state.adminTab === 'videos') await renderAdminVideos();
+                else if (state.adminTab === 'users') await renderAdminUsers();
+                else if (state.adminTab === 'payments') await renderAdminPayments();
             };
 
             // ===== ADMIN TAB FILTERING (UPDATED FOR CREATORS) =====
@@ -4609,7 +4614,11 @@ button:active,
                 const selected = visibleButtons.find(btn => btn.dataset.tab === state.adminTab) || visibleButtons[0];
 
                 if (selected) {
-                    selected.click();
+                    state.adminTab = selected.dataset.tab;
+                    buttons.forEach(btn => btn.classList.toggle('active', btn === selected));
+                    document.querySelectorAll('.admin-panel').forEach(panel => {
+                        panel.classList.toggle('active', panel.id === 'panel-' + selected.dataset.tab);
+                    });
                 }
             };
 
@@ -4622,6 +4631,8 @@ button:active,
                     refreshAdmin();
                 }
             };
+            // Safe console/test hook: exposes navigation without exposing user data.
+            window.EthioHubNavigate = (page) => navigate(page);
 
             document.querySelectorAll('#adminTabs button').forEach(b => b.addEventListener('click', () => {
                 document.querySelectorAll('#adminTabs button').forEach(x => x.classList.remove('active'));
@@ -4644,7 +4655,8 @@ button:active,
                         if (data.premiumPrice !== undefined) { $('premiumPrice').value = data.premiumPrice; $('premiumPriceDisplay').textContent = data.premiumPrice; }
                     }
                 } catch (e) { 
-                    // Silent fail to prevent admin dashboard breakage
+                    console.warn('[Ethio Hub] Settings could not be loaded:', e);
+                    // Keep the dashboard usable with its default settings.
                 }
             }
 
@@ -4660,7 +4672,7 @@ button:active,
                     $('basicPriceDisplay').textContent = basicPrice;
                     $('premiumPriceDisplay').textContent = premiumPrice;
                     toast(t('settingsSaved'), 'success');
-                } catch (err) { toast('Could not save settings', 'error'); }
+                } catch (err) { console.error('[Ethio Hub] Settings save error:', err); toast('Could not save settings', 'error'); }
             });
 
 
@@ -4781,15 +4793,53 @@ button:active,
 <script id="runtime-safety">
 (function () {
     'use strict';
-    // Prevent a failed optional animation from breaking unrelated UI controls.
-    window.addEventListener('unhandledrejection', function (event) {
-        if (event && event.promise) event.preventDefault();
-    });
-    // Keep accidental non-fatal resource failures from becoming uncaught UI failures.
+
+    // Console-integrated diagnostics: errors stay visible in DevTools instead of
+    // being swallowed. The public helper is intentionally small and read-only.
+    const startedAt = performance.now();
+    const diagnostics = {
+        version: '1.0.0',
+        startedAt,
+        lastError: null,
+        errorCount: 0,
+        rejectionCount: 0,
+        reportError(error, context) {
+            const err = error instanceof Error ? error : new Error(String(error || 'Unknown error'));
+            this.lastError = { message: err.message, name: err.name, stack: err.stack || '', context: context || 'runtime' };
+            this.errorCount += 1;
+            console.error('[Ethio Hub]', context || 'Runtime error', err);
+        },
+        selfTest() {
+            const requiredIds = ['backBtn', 'profileBackBtn', 'addVideoForm', 'videoFile', 'videoIsFree', 'adminTabs'];
+            const missing = requiredIds.filter(id => !document.getElementById(id));
+            const result = {
+                ok: missing.length === 0 && typeof window.EthioHubNavigate === 'function',
+                missing,
+                navigate: typeof window.EthioHubNavigate,
+                page: document.querySelector('.page.active')?.id || null,
+                uptimeMs: Math.round(performance.now() - startedAt)
+            };
+            if (!result.ok) console.warn('[Ethio Hub] Self-test found a problem:', result);
+            else console.info('[Ethio Hub] Self-test passed:', result);
+            return result;
+        }
+    };
+    window.EthioHubDiagnostics = diagnostics;
+
     window.addEventListener('error', function (event) {
-        if (event && event.target && event.target !== window) return;
-        return true;
-    }, true);
+        // Resource errors are already reported by the browser; only capture
+        // uncaught JavaScript errors here to avoid duplicate console noise.
+        if (event && event.target === window) {
+            diagnostics.reportError(event.error || event.message, 'Uncaught JavaScript error');
+        }
+    });
+
+    window.addEventListener('unhandledrejection', function (event) {
+        diagnostics.rejectionCount += 1;
+        diagnostics.reportError(event?.reason || 'Unhandled promise rejection', 'Unhandled promise rejection');
+        // Deliberately do NOT call preventDefault(): DevTools must still show
+        // the original rejection and stack trace for debugging.
+    });
 })();
 </script>
 

@@ -3951,6 +3951,9 @@ button:active,
                 });
             }
 
+            // Payment proof screenshots use the same Cloudinary unsigned preset only when
+            // that preset is configured to accept images. If the existing preset is video-only,
+            // the payment flow now reports the real Cloudinary error instead of hiding it.
             async function uploadImageToCloudinary(file) {
                 const compressedDataUrl = await compressImage(file, 200);
                 const fd = new FormData();
@@ -3961,15 +3964,20 @@ button:active,
                 const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
                     method: 'POST', body: fd
                 });
-                if (!response.ok) throw new Error('Screenshot upload failed');
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || !data.secure_url) {
+                    const message = data?.error?.message || `Screenshot upload failed (${response.status})`;
+                    throw new Error(message);
+                }
                 return data.secure_url;
             }
 
             $('paymentForm').addEventListener('submit', async e => {
                 e.preventDefault();
-                // Check expiration
-                if (Date.now() - state.paymentStartTime > 3600000) {
+                const submitBtn = $('paymentForm').querySelector('button[type="submit"]');
+                if (submitBtn?.disabled) return;
+
+                if (!state.paymentStartTime || Date.now() - state.paymentStartTime > 3600000) {
                     toast('Payment window expired. Please go back and select a plan again.', 'error');
                     return;
                 }
@@ -3977,19 +3985,32 @@ button:active,
                 if (!state.user) { toast(t('accountNotFound'), 'error'); return; }
                 const txn = $('txnId').value.trim();
                 if (!txn) { toast(t('invalidTxn'), 'error'); return; }
+
+                if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true'); }
                 showLoader();
+
                 try {
                     let screenshotUrl = '';
                     if (state.pendingScreenshotFile) {
-                        screenshotUrl = await uploadImageToCloudinary(state.pendingScreenshotFile);
+                        try {
+                            screenshotUrl = await uploadImageToCloudinary(state.pendingScreenshotFile);
+                        } catch (uploadErr) {
+                            console.error('[Ethio Hub] Payment proof upload failed:', uploadErr);
+                            toast(`Payment proof upload failed: ${uploadErr.message || 'Please try again.'}`, 'error');
+                            return;
+                        }
                     }
+
+                    // Only this Firestore write determines whether the payment was submitted.
+                    // A later profile refresh must never turn a successful payment submission
+                    // into a misleading "something went wrong" message.
                     await db.collection('payments').add({
                         userId: state.user.id, email: state.user.email, method: state.paymentMethod,
-                        txnId: txn, notes: $('paymentNotes').value.trim(), screenshotUrl: screenshotUrl,
+                        txnId: txn, notes: $('paymentNotes').value.trim(), screenshotUrl,
                         status: 'pending', type: 'subscription', plan: state.selectedPlan, createdAt: Date.now()
                     });
+
                     toast(t('paymentSubmitted'), 'success');
-                    await loadUser(state.user);
                     stopPaymentTimer();
                     $('paymentForm').reset();
                     state.pendingScreenshotFile = null;
@@ -3997,9 +4018,24 @@ button:active,
                     $('paymentStep2').style.display = 'none';
                     $('paymentStep1').style.display = 'block';
                     $('countdownTimer').textContent = '60:00';
-                    document.querySelector('#paymentStep2 button[type="submit"]').disabled = false;
-                } catch (err) { toast(t('paymentSubmitError'), 'error'); }
-                hideLoader();
+
+                    // Refresh the user state separately. If this read fails, payment is still
+                    // already stored and the user should not be told the submission failed.
+                    try {
+                        await loadUser(state.user);
+                    } catch (refreshErr) {
+                        console.warn('[Ethio Hub] Payment submitted, but profile refresh failed:', refreshErr);
+                    }
+                } catch (err) {
+                    console.error('[Ethio Hub] Payment submission failed:', err);
+                    const message = err?.code === 'permission-denied'
+                        ? 'Payment was blocked by Firestore permissions. Please check your Firebase rules.'
+                        : (err?.message || t('paymentSubmitError'));
+                    toast(message, 'error');
+                } finally {
+                    hideLoader();
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy'); }
+                }
             });
 
             $('profilePayBtn').addEventListener('click', () => {

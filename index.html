@@ -1931,6 +1931,43 @@
             background: #3a0a0a;
             color: #f28b82;
         }
+        /* Professional payment review details */
+        #page-admin .admin-payment-table { min-width: 920px; }
+        #page-admin .admin-payment-table .payment-user-cell { min-width: 210px; }
+        #page-admin .admin-payment-table .payment-user-cell strong {
+            display: block;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 650;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+        #page-admin .admin-payment-table .payment-txn-cell { min-width: 180px; }
+        #page-admin .admin-payment-table .payment-txn-cell code {
+            display: inline-block;
+            max-width: 190px;
+            padding: 6px 9px;
+            border-radius: 8px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--gold);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .15px;
+            overflow-wrap: anywhere;
+        }
+        #page-admin .admin-payment-table .cell-label {
+            display: none;
+            margin-bottom: 4px;
+            color: var(--text-muted);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+        #page-admin .admin-payment-table .actions { white-space: nowrap; }
+
         .admin-table .actions .del:hover {
             background: #5a1a1a;
             transform: scale(1.04);
@@ -1955,6 +1992,80 @@
         }
         .admin-table .view-link:hover {
             text-decoration: underline;
+        }
+
+        /* ===== LIVE PAYMENT STATUS / APPROVAL UI ===== */
+        .payment-status-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 22px;
+            background: rgba(0,0,0,.62);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity .28s ease, visibility .28s ease;
+            z-index: 5000;
+        }
+        .payment-status-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        .payment-status-card {
+            width: min(420px, 100%);
+            border: 1px solid rgba(212,160,23,.28);
+            border-radius: 26px;
+            padding: 28px 24px 24px;
+            text-align: center;
+            background: color-mix(in srgb, var(--bg-card) 90%, transparent);
+            box-shadow: 0 28px 80px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08);
+            transform: translateY(16px) scale(.96);
+            transition: transform .38s cubic-bezier(.2,.85,.25,1.2);
+        }
+        .payment-status-overlay.show .payment-status-card { transform: translateY(0) scale(1); }
+        .payment-status-icon {
+            width: 78px;
+            height: 78px;
+            margin: 0 auto 17px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.18), rgba(212,160,23,.12) 55%, rgba(212,160,23,.04));
+            border: 1px solid rgba(212,160,23,.35);
+            box-shadow: 0 12px 35px rgba(212,160,23,.16), inset 0 1px 0 rgba(255,255,255,.1);
+        }
+        .payment-status-icon i {
+            font-size: 42px;
+            color: var(--gold);
+            animation: paymentCheckIn .62s cubic-bezier(.2,.9,.25,1.3) both;
+        }
+        .payment-status-card h3 { margin: 0 0 8px; font-size: 21px; }
+        .payment-status-card p { margin: 0 auto 20px; max-width: 330px; color: var(--text-muted); font-size: 13px; line-height: 1.55; }
+        .payment-status-card .payment-status-close {
+            width: 100%;
+            min-height: 44px;
+            border: 0;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--gold), #f0bd32);
+            color: #171717;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .payment-status-card .payment-status-close:active { transform: scale(.98); }
+        @keyframes paymentCheckIn {
+            0% { opacity: 0; transform: scale(.35) rotate(-20deg); }
+            55% { opacity: 1; transform: scale(1.18) rotate(4deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .payment-status-overlay, .payment-status-card { transition: none !important; }
+            .payment-status-icon i { animation: none !important; }
         }
 
         #toast {
@@ -2631,6 +2742,14 @@ button:active,
         </div>
     </div>
     <div id="toast"><i class="fas fa-info-circle"></i><span class="msg">Message</span></div>
+    <div class="payment-status-overlay" id="paymentStatusOverlay" role="dialog" aria-modal="true" aria-labelledby="paymentStatusTitle">
+        <div class="payment-status-card">
+            <div class="payment-status-icon" id="paymentStatusIcon"><i class="fas fa-check"></i></div>
+            <h3 id="paymentStatusTitle">Payment request sent</h3>
+            <p id="paymentStatusMessage">Your payment approval request has been sent to the admin. Please wait while your transaction ID is reviewed.</p>
+            <button class="payment-status-close" id="paymentStatusClose" type="button">Continue</button>
+        </div>
+    </div>
 
     <!-- ===== VIDEO MODAL ===== -->
     <div class="modal-overlay" id="videoModal">
@@ -3602,6 +3721,73 @@ button:active,
 
             let state = { user: null, currentPage: 'register', selectedCategory: 'all', adminTab: 'videos', paymentMethod: 'telebirr', isLoginMode: false, pendingScreenshotFile: null, selectedPlan: 'basic', paymentStartTime: null, paymentTimerInterval: null };
             const pages = { register: $('page-register'), profile: $('page-profile'), payment: $('page-payment'), gallery: $('page-gallery'), admin: $('page-admin') };
+            let userProfileUnsubscribe = null;
+            let userProfileListenerInitialized = false;
+            let adminPaymentsUnsubscribe = null;
+            let adminPaymentsListenerActive = false;
+
+            const stopUserProfileListener = () => {
+                if (typeof userProfileUnsubscribe === 'function') userProfileUnsubscribe();
+                userProfileUnsubscribe = null;
+                userProfileListenerInitialized = false;
+            };
+            const stopAdminPaymentsListener = () => {
+                if (typeof adminPaymentsUnsubscribe === 'function') adminPaymentsUnsubscribe();
+                adminPaymentsUnsubscribe = null;
+                adminPaymentsListenerActive = false;
+            };
+
+            const updateProfileStatusUI = (user) => {
+                const statusEl = $('profilePaymentStatus');
+                const accountEl = $('profileAccountStatus');
+                const descEl = $('profileDescription');
+                if (!statusEl || !accountEl || !descEl) return;
+                const status = user?.paymentStatus || 'pending';
+                statusEl.innerHTML = `<span class="status ${escapeHtml(status)}">${escapeHtml(status)}</span>`;
+                if (status === 'approved') {
+                    accountEl.innerHTML = `<span style="color:var(--text-success);font-weight:700;"><i class="fas fa-circle-check"></i> <span class="lang-en">Verified & Active</span><span class="lang-am">ተረጋግጧል እና ንቁ ነው</span><span class="lang-ar">تم التحقق والحساب نشط</span></span>`;
+                    descEl.innerHTML = `<span class="lang-en">Your payment has been approved. Premium access is now active.</span><span class="lang-am">ክፍያዎ ጸድቋል። ፕሪሚየም መዳረሻዎ አሁን ንቁ ነው።</span><span class="lang-ar">تمت الموافقة على دفعتك. أصبح الوصول المميز نشطًا الآن.</span>`;
+                    if ($('profilePayBtn')) $('profilePayBtn').style.display = 'none';
+                } else if (status === 'rejected') {
+                    accountEl.innerHTML = `<span style="color:var(--text-danger);font-weight:700;"><i class="fas fa-circle-xmark"></i> <span class="lang-en">Payment Rejected</span><span class="lang-am">ክፍያ ውድቅ ተደርጓል</span><span class="lang-ar">تم رفض الدفع</span></span>`;
+                    descEl.innerHTML = `<span class="lang-en">Your payment was rejected. You can submit a new request with a valid transaction ID.</span><span class="lang-am">ክፍያዎ ውድቅ ተደርጓል። ትክክለኛ የግብይት መለያ ይዘው እንደገና ያስገቡ።</span><span class="lang-ar">تم رفض دفعتك. يمكنك إرسال طلب جديد باستخدام معرّف معاملة صالح.</span>`;
+                    if ($('profilePayBtn')) $('profilePayBtn').style.display = '';
+                } else {
+                    accountEl.innerHTML = `<span style="color:#f39c12;font-weight:700;"><i class="fas fa-clock"></i> <span class="lang-en">Awaiting Approval</span><span class="lang-am">ማጽደቅን በመጠባበቅ ላይ</span><span class="lang-ar">في انتظار الموافقة</span></span>`;
+                    descEl.innerHTML = `<span class="lang-en">Your payment request was sent. Please wait while the admin reviews your transaction ID.</span><span class="lang-am">የክፍያ ጥያቄዎ ተልኳል። አስተዳዳሪው የግብይት መለያዎን እስኪገመግም ይጠብቁ።</span><span class="lang-ar">تم إرسال طلب الدفع. يرجى الانتظار حتى يراجع المسؤول معرّف المعاملة.</span>`;
+                    if ($('profilePayBtn')) $('profilePayBtn').style.display = '';
+                }
+                if (typeof applyLanguage === 'function') applyLanguage(document.documentElement.dataset.lang || 'en');
+            };
+
+            const showPaymentStatusModal = (mode = 'pending') => {
+                const overlay = $('paymentStatusOverlay');
+                const icon = $('paymentStatusIcon');
+                const title = $('paymentStatusTitle');
+                const msg = $('paymentStatusMessage');
+                if (!overlay || !icon || !title || !msg) return;
+                if (mode === 'approved') {
+                    icon.innerHTML = '<i class="fas fa-check"></i>';
+                    title.textContent = 'Payment approved successfully';
+                    msg.textContent = 'Your transaction ID was approved by the admin. Your account is now active and your premium access is available.';
+                } else {
+                    icon.innerHTML = '<i class="fas fa-check"></i>';
+                    title.textContent = 'Payment request sent';
+                    msg.textContent = 'Your payment approval request has been sent to the admin. Please wait while your transaction ID is reviewed.';
+                }
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            };
+            const closePaymentStatusModal = () => {
+                const overlay = $('paymentStatusOverlay');
+                if (!overlay) return;
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            };
+            $('paymentStatusClose')?.addEventListener('click', closePaymentStatusModal);
+            $('paymentStatusOverlay')?.addEventListener('click', e => { if (e.target.id === 'paymentStatusOverlay') closePaymentStatusModal(); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') closePaymentStatusModal(); });
+
             let navigate = (page) => {
                 Object.keys(pages).forEach(k => pages[k].classList.toggle('active', k === page));
                 state.currentPage = page;
@@ -3820,21 +4006,61 @@ button:active,
             async function loadUser(fu) {
                 const snap = await db.collection('users').doc(fu.uid).get();
                 const data = snap.data() || {};
-                state.user = { 
-                    id: fu.uid, 
-                    ...data, 
+                state.user = {
+                    id: fu.uid,
+                    ...data,
                     email: fu.email || data.email,
                     permissions: data.permissions || { canDownload: false, canScreenshot: false, canUpload: false, limit: 0 },
                     viewCount: data.viewCount || { date: '', count: 0 }
                 };
                 updateUserBadge();
-                if ($('profileEmail')) $('profileEmail').value = state.user.email || '';
+                updateProfileStatusUI(state.user);
                 if (state.user.role === 'admin') navigate('admin');
                 else navigate('gallery');
+                startUserProfileListener(fu.uid);
             }
+
+            function startUserProfileListener(uid) {
+                stopUserProfileListener();
+                userProfileListenerInitialized = false;
+                userProfileUnsubscribe = db.collection('users').doc(uid).onSnapshot(snap => {
+                    if (!snap.exists) return;
+                    const previousStatus = state.user?.paymentStatus || 'pending';
+                    const previousApproved = state.user?.approved === true;
+                    const data = snap.data() || {};
+                    state.user = {
+                        ...(state.user || {}),
+                        id: uid,
+                        ...data,
+                        email: state.user?.email || data.email,
+                        permissions: data.permissions || state.user?.permissions || { canDownload: false, canScreenshot: false, canUpload: false, limit: 0 },
+                        viewCount: data.viewCount || state.user?.viewCount || { date: '', count: 0 }
+                    };
+                    updateUserBadge();
+                    updateProfileStatusUI(state.user);
+
+                    if (!userProfileListenerInitialized) {
+                        userProfileListenerInitialized = true;
+                        return;
+                    }
+                    if (state.user.role === 'admin') return;
+                    if ((previousStatus !== 'approved' || !previousApproved) && state.user.paymentStatus === 'approved' && state.user.approved === true) {
+                        showPaymentStatusModal('approved');
+                        toast('Payment approved! Your account is now active.', 'success');
+                    } else if (previousStatus === 'pending' && state.user.paymentStatus === 'rejected') {
+                        if (typeof renderVideoGrid === 'function') renderVideoGrid();
+                        toast('Your payment request was rejected. Please check your transaction ID and submit again.', 'error');
+                    }
+                }, err => {
+                    console.error('[Ethio Hub] Live user profile listener error:', err);
+                });
+            }
+
 
             async function handleLogout() {
                 try { await auth.signOut(); } catch(e) { toast(e.message, 'error'); }
+                stopUserProfileListener();
+                stopAdminPaymentsListener();
                 state.user = null;
                 updateUserBadge();
                 setAuthMode(false);
@@ -4030,7 +4256,12 @@ button:active,
                     }
 
                     // The admin must approve this request before premium access is granted.
+                    state.user.paymentStatus = 'pending';
+                    state.user.approved = false;
+                    updateUserBadge();
+                    updateProfileStatusUI(state.user);
                     toast(t('paymentSubmitted'), 'success');
+                    showPaymentStatusModal('pending');
                     stopPaymentTimer();
                     $('paymentForm').reset();
                     state.pendingScreenshotFile = null;
@@ -4038,14 +4269,7 @@ button:active,
                     $('paymentStep2').style.display = 'none';
                     $('paymentStep1').style.display = 'block';
                     $('countdownTimer').textContent = '60:00';
-
-                    // Refresh only the local profile state; failure here cannot undo the saved request.
-                    try {
-                        await loadUser(state.user);
-                    } catch (refreshErr) {
-                        console.warn('[Ethio Hub] Payment pending, but profile refresh failed:', refreshErr);
-                        navigate('profile');
-                    }
+                    navigate('profile');
                 } catch (err) {
                     console.error('[Ethio Hub] Payment submission failed before reaching admin queue:', err);
                     const message = err?.code === 'permission-denied'
@@ -4574,7 +4798,9 @@ $('profilePayBtn').addEventListener('click', () => {
                 const c = $('adminPaymentList');
                 if (!c) return;
                 try {
-                    const snap = await db.collection('payments').orderBy('createdAt', 'desc').get();
+                    if (adminPaymentsListenerActive) return;
+                    adminPaymentsListenerActive = true;
+                    adminPaymentsUnsubscribe = db.collection('payments').orderBy('createdAt', 'desc').onSnapshot(snap => {
                     const pays = [];
                     snap.forEach(d => pays.push({ id: d.id, ...d.data() }));
 
@@ -4583,19 +4809,22 @@ $('profilePayBtn').addEventListener('click', () => {
                         return;
                     }
 
-                    c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thUser')}</th><th>Plan</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thScreenshot')}</th><th>Status</th><th>${t('thActions')}</th></tr></thead><tbody>${pays.map(p => `
+                    c.innerHTML = `<table class="admin-table admin-payment-table"><thead><tr><th>${t('thUser')}</th><th>Plan</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thScreenshot')}</th><th>Status</th><th>${t('thActions')}</th></tr></thead><tbody>${pays.map(p => {
+                        const paymentEmail = p.email || p.userEmail || p.user_email || '—';
+                        const transactionId = p.txnId || p.transactionId || p.transactionID || '—';
+                        return `
                         <tr>
-                            <td>${escapeHtml(p.email || '')}</td>
+                            <td class="payment-user-cell"><span class="cell-label">Email</span><strong>${escapeHtml(paymentEmail)}</strong></td>
                             <td>${p.plan === 'premium' ? '<span class="status approved">Premium</span>' : '<span class="status pending">Basic</span>'}</td>
-                            <td>${escapeHtml(p.method || '')}</td>
-                            <td>${escapeHtml(p.txnId || '')}</td>
+                            <td>${escapeHtml(p.method || '—')}</td>
+                            <td class="payment-txn-cell"><span class="cell-label">Transaction ID</span><code>${escapeHtml(transactionId)}</code></td>
                             <td>${p.screenshotUrl ? `<button class="view-link view-screenshot" data-id="${p.id}">${t('view')}</button>` : t('none')}</td>
                             <td><span class="status ${p.status || 'pending'}">${escapeHtml(p.status || 'pending')}</span></td>
                             <td class="actions">${p.status === 'pending'
                                 ? `<button class="approve approve-payment" data-id="${p.id}" title="Approve" aria-label="Approve"><i class="fas fa-check"></i></button>
                                    <button class="reject reject-payment" data-id="${p.id}" title="Reject" aria-label="Reject"><i class="fas fa-times"></i></button>`
                                 : '—'}</td>
-                        </tr>`).join('')}</tbody></table>`;
+                        </tr>`}).join('')}</tbody></table>`;
 
                     c.querySelectorAll('.approve-payment').forEach(b => b.onclick = async () => {
                         const p = pays.find(x => x.id === b.dataset.id);
@@ -4673,7 +4902,15 @@ $('profilePayBtn').addEventListener('click', () => {
                             if (!win) toast(t('allowPopups'), 'error');
                         }
                     });
+                    }, e => {
+                        console.error('[Ethio Hub] Real-time payments listener error:', e);
+                        adminPaymentsListenerActive = false;
+                        adminPaymentsUnsubscribe = null;
+                        c.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Unable to sync payments</h3><p>Check your connection and admin permissions.</p></div>`;
+                    });
                 } catch (e) {
+                    adminPaymentsListenerActive = false;
+                    adminPaymentsUnsubscribe = null;
                     c.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Unable to load payments</h3></div>`;
                 }
             };
@@ -4784,7 +5021,10 @@ $('profilePayBtn').addEventListener('click', () => {
             // Override navigate to apply tab filtering when entering admin.
             const originalNavigate = navigate;
             navigate = function(page) {
-                if (page !== 'admin' && typeof stopAdminUsersListener === 'function') stopAdminUsersListener();
+                if (page !== 'admin') {
+                    if (typeof stopAdminUsersListener === 'function') stopAdminUsersListener();
+                    if (typeof stopAdminPaymentsListener === 'function') stopAdminPaymentsListener();
+                }
                 originalNavigate(page);
                 if (page === 'admin') {
                     filterAdminTabs();
@@ -4803,6 +5043,7 @@ $('profilePayBtn').addEventListener('click', () => {
                 if (b.dataset.tab === 'videos') renderAdminVideos();
                 if (b.dataset.tab === 'users') renderAdminUsers();
                 if (b.dataset.tab === 'payments') renderAdminPayments();
+                else if (typeof stopAdminPaymentsListener === 'function') stopAdminPaymentsListener();
             }));
 
             async function loadSettings() {
@@ -4893,7 +5134,16 @@ $('profilePayBtn').addEventListener('click', () => {
 
             // ===== AUTH STATE =====
             auth.onAuthStateChanged(async fu => {
-                if (!fu) { state.user = null; updateUserBadge(); setAuthMode(false); navigate('register'); return; }
+                if (!fu) {
+                    stopUserProfileListener();
+                    stopAdminUsersListener();
+                    stopAdminPaymentsListener();
+                    state.user = null;
+                    updateUserBadge();
+                    setAuthMode(false);
+                    navigate('register');
+                    return;
+                }
                 try { await loadUser(fu); } catch (e) { toast('Could not restore your session.', 'error'); }
             });
 
@@ -5005,3 +5255,4 @@ $('profilePayBtn').addEventListener('click', () => {
 
 </body>
 </html>
+<style> @media (max-width:768px){#page-admin .admin-payment-table{min-width:860px}.admin-payment-table .cell-label{display:none}}</style>

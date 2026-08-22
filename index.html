@@ -1931,43 +1931,6 @@
             background: #3a0a0a;
             color: #f28b82;
         }
-        /* Professional payment review details */
-        #page-admin .admin-payment-table { min-width: 920px; }
-        #page-admin .admin-payment-table .payment-user-cell { min-width: 210px; }
-        #page-admin .admin-payment-table .payment-user-cell strong {
-            display: block;
-            color: var(--text-main);
-            font-size: 13px;
-            font-weight: 650;
-            line-height: 1.35;
-            word-break: break-word;
-        }
-        #page-admin .admin-payment-table .payment-txn-cell { min-width: 180px; }
-        #page-admin .admin-payment-table .payment-txn-cell code {
-            display: inline-block;
-            max-width: 190px;
-            padding: 6px 9px;
-            border-radius: 8px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            color: var(--gold);
-            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: .15px;
-            overflow-wrap: anywhere;
-        }
-        #page-admin .admin-payment-table .cell-label {
-            display: none;
-            margin-bottom: 4px;
-            color: var(--text-muted);
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-        }
-        #page-admin .admin-payment-table .actions { white-space: nowrap; }
-
         .admin-table .actions .del:hover {
             background: #5a1a1a;
             transform: scale(1.04);
@@ -4809,22 +4772,19 @@ $('profilePayBtn').addEventListener('click', () => {
                         return;
                     }
 
-                    c.innerHTML = `<table class="admin-table admin-payment-table"><thead><tr><th>${t('thUser')}</th><th>Plan</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thScreenshot')}</th><th>Status</th><th>${t('thActions')}</th></tr></thead><tbody>${pays.map(p => {
-                        const paymentEmail = p.email || p.userEmail || p.user_email || '—';
-                        const transactionId = p.txnId || p.transactionId || p.transactionID || '—';
-                        return `
+                    c.innerHTML = `<table class="admin-table"><thead><tr><th>${t('thUser')}</th><th>Plan</th><th>${t('thMethod')}</th><th>${t('thTxnId')}</th><th>${t('thScreenshot')}</th><th>Status</th><th>${t('thActions')}</th></tr></thead><tbody>${pays.map(p => `
                         <tr>
-                            <td class="payment-user-cell"><span class="cell-label">Email</span><strong>${escapeHtml(paymentEmail)}</strong></td>
+                            <td>${escapeHtml(p.email || '')}</td>
                             <td>${p.plan === 'premium' ? '<span class="status approved">Premium</span>' : '<span class="status pending">Basic</span>'}</td>
-                            <td>${escapeHtml(p.method || '—')}</td>
-                            <td class="payment-txn-cell"><span class="cell-label">Transaction ID</span><code>${escapeHtml(transactionId)}</code></td>
+                            <td>${escapeHtml(p.method || '')}</td>
+                            <td>${escapeHtml(p.txnId || '')}</td>
                             <td>${p.screenshotUrl ? `<button class="view-link view-screenshot" data-id="${p.id}">${t('view')}</button>` : t('none')}</td>
                             <td><span class="status ${p.status || 'pending'}">${escapeHtml(p.status || 'pending')}</span></td>
                             <td class="actions">${p.status === 'pending'
                                 ? `<button class="approve approve-payment" data-id="${p.id}" title="Approve" aria-label="Approve"><i class="fas fa-check"></i></button>
                                    <button class="reject reject-payment" data-id="${p.id}" title="Reject" aria-label="Reject"><i class="fas fa-times"></i></button>`
                                 : '—'}</td>
-                        </tr>`}).join('')}</tbody></table>`;
+                        </tr>`).join('')}</tbody></table>`;
 
                     c.querySelectorAll('.approve-payment').forEach(b => b.onclick = async () => {
                         const p = pays.find(x => x.id === b.dataset.id);
@@ -5255,4 +5215,3 @@ $('profilePayBtn').addEventListener('click', () => {
 
 </body>
 </html>
-<style> @media (max-width:768px){#page-admin .admin-payment-table{min-width:860px}.admin-payment-table .cell-label{display:none}}</style>

@@ -4624,6 +4624,76 @@
         }
     </style>
 
+
+<style id="ethiohub-header-final-fix">
+/* ===== ETHIO HUB HEADER — FINAL POLISH ONLY ===== */
+.app-header {
+    position: sticky !important;
+    top: 10px !important;
+    z-index: 5000 !important;
+    isolation: isolate;
+    flex-shrink: 0;
+    overflow: visible !important;
+    background: color-mix(in srgb, var(--bg-glass) 88%, transparent) !important;
+    border: 1px solid color-mix(in srgb, var(--gold) 18%, var(--border-color)) !important;
+    box-shadow:
+        0 12px 32px rgba(0,0,0,.13),
+        0 2px 10px rgba(0,0,0,.08),
+        inset 0 1px 0 rgba(255,255,255,.28) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(18px) saturate(145%);
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, box-shadow, background-color;
+}
+.app-header::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+    background: linear-gradient(105deg, rgba(255,255,255,.10), transparent 38%, rgba(212,160,23,.06));
+}
+.app-header .header-left,
+.app-header .header-actions {
+    min-height: 44px;
+}
+.app-header .logo-area {
+    min-width: 0;
+}
+.app-header .logo-area h1 {
+    margin: 0;
+}
+.app-header .icon-btn,
+.app-header .lang-btn,
+.app-header .user-badge,
+.app-header .back-btn {
+    position: relative;
+    z-index: 2;
+}
+.app-header .icon-btn:hover,
+.app-header .lang-btn:hover,
+.app-header .user-badge:hover {
+    transform: translateY(-1px);
+}
+@media (max-width: 600px) {
+    .app-header {
+        top: 7px !important;
+        margin-bottom: 16px !important;
+        padding: 4px 5px 4px 10px !important;
+        border-radius: 40px !important;
+    }
+    .app-header .header-left,
+    .app-header .header-actions {
+        min-height: 42px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .app-header { will-change: auto; }
+}
+</style>
+
 </head>
 <body>
 
@@ -5053,9 +5123,11 @@
                             <div class="file-input-group">
                                 <label for="videoFile"><i class="fas fa-cloud-arrow-up"></i> <span class="lang-en">Upload Video Directly to Upload18</span><span class="lang-am">ቪዲዮን በቀጥታ ወደ Upload18 ስቀል</span><span class="lang-ar">رفع الفيديو مباشرة إلى Upload18</span><small class="upload-hint">Up to 5GB • Upload18 handles large files in secure parts</small></label>
                                 <div class="file-picker">
-                                    <input type="file" id="videoFile" accept="video/*" />
-                                    <span id="videoFileName" class="file-name">No file selected</span>
+                                    <input type="file" id="videoFile" accept="video/*" multiple />
+                                    <span id="videoFileName" class="file-name">No files selected</span>
                                 </div>
+                                <div id="videoBatchList" class="upload-batch-list" aria-live="polite"></div>
+                                <div class="upload-hint" style="margin-top:8px;">Select up to 50 videos at once. Titles and descriptions are generated automatically from each filename.</div>
                                 <div id="videoUploadStatus" class="upload-status" aria-live="polite">
                                     <div class="upload-status-head"><span id="videoUploadMessage">Ready for Upload18</span><strong id="videoUploadPercent">0%</strong></div>
                                     <div class="upload-progress"><span id="videoUploadProgress"></span></div>
@@ -5105,6 +5177,20 @@
                         <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span class="lang-en">Save Settings</span><span class="lang-am">ቅንብሮችን አስቀምጥ</span><span class="lang-ar">حفظ الإعدادات</span></button>
                     </form>
                 </div>
+                <div class="admin-form" style="max-width:600px;margin-top:16px;">
+                    <div class="flex-between" style="gap:10px;align-items:center;">
+                        <h4 style="margin:0;"><i class="fas fa-layer-group text-gold"></i> Content Categories</h4>
+                        <span class="upload-hint">Shared with the user gallery</span>
+                    </div>
+                    <form id="categoryForm" style="margin-top:14px;">
+                        <label>Category name</label>
+                        <input type="text" id="newCategoryName" placeholder="e.g. New Releases" maxlength="40" required />
+                        <label>Icon (optional Font Awesome class)</label>
+                        <input type="text" id="newCategoryIcon" placeholder="fas fa-folder" maxlength="40" />
+                        <button type="submit" class="btn-primary"><i class="fas fa-plus"></i> Add Category</button>
+                    </form>
+                    <div id="adminCategoryList" class="admin-table-wrap" style="margin-top:14px;"></div>
+                </div>
             </div>
         </div>
 
@@ -5114,6 +5200,14 @@
         </div>
     </div>
 
+    <style>
+        .upload-batch-list{display:grid;gap:7px;margin-top:10px;max-height:240px;overflow:auto;}
+        .upload-batch-item{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:9px 10px;border:1px solid var(--border-color);border-radius:12px;background:var(--bg-input);font-size:12px;}
+        .upload-batch-item .batch-name{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .upload-batch-item .batch-state{font-weight:700;white-space:nowrap;}
+        .upload-batch-item.done .batch-state{color:var(--gold);}
+        .upload-batch-item.error .batch-state{color:#c94a4a;}
+    </style>
     <script>
         // ============================================================
         // Lucide Icon initialisation
@@ -5350,11 +5444,9 @@
             const auth = firebase.auth();
             const db = firebase.firestore();
 
-            // ===== CLOUDINARY (PAYMENT SCREENSHOTS ONLY) =====
-            const cloudinaryConfig = {
-                cloudName: 'qbisyz4q',
-                uploadPreset: 'ethio_hub_videos'
-            };
+            // ===== MEDIA STORAGE =====
+            // Videos are stored on Upload18. Payment proof screenshots are compressed
+            // locally and stored directly in Firestore, so no Cloudinary dependency is needed.
 
             const currentLang = () => localStorage.getItem('lang') || 'en';
             const t = (key, vars) => {
@@ -6151,28 +6243,13 @@
             async function preparePaymentProof(file) {
                 const dataUrl = await compressImage(file, 200);
                 if (!dataUrl || dataUrl.length > 300 * 1024) {
-                    throw new Error('Payment screenshot could not be compressed enough.');
+                    throw new Error('Payment screenshot could not be prepared. Please choose a smaller image.');
                 }
                 return dataUrl;
             }
 
-            // ----- helper to upload screenshot via Cloudinary -----
-            async function uploadImageToCloudinary(file) {
-                if (!file) return null;
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('upload_preset', cloudinaryConfig.uploadPreset);
-                const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
-                    method: 'POST',
-                    body: formData
-                });
-                if (!res.ok) {
-                    const err = await res.json().catch(() => ({}));
-                    throw new Error(err.error?.message || `Upload failed (HTTP ${res.status})`);
-                }
-                const data = await res.json();
-                return data.secure_url;
-            }
+            // Payment proof is compressed locally and stored in Firestore.
+            // This keeps the payment flow independent from third-party image storage.
 
             $('paymentForm').addEventListener('submit', async e => {
                 e.preventDefault();
@@ -6228,7 +6305,7 @@
 
                     if (state.pendingScreenshotFile) {
                         try {
-                            const screenshotUrl = await uploadImageToCloudinary(state.pendingScreenshotFile);
+                            const screenshotUrl = await preparePaymentProof(state.pendingScreenshotFile);
                             await paymentRef.update({ screenshotUrl });
                         } catch (uploadErr) {
                             console.warn(
@@ -6478,7 +6555,7 @@
                     c.innerHTML = videos.map(v => {
                         const thumb = v.thumbnail ||
                             `https://via.placeholder.com/640x360/0f3b2e/d4a017?text=${encodeURIComponent(v.title||'Ethio+Hub')}`;
-                        const cat = v.category === 'exclusive' ? t('catExclusive') : t('catTraining');
+                        const cat = appCategories.find(c => c.id === v.category)?.name || v.category || 'Uncategorized';
                         const liked = state.user && v.likes?.includes(state.user.id);
                         const isLocked = locked && !v.isFree;
                         return `<article class="video-card" data-id="${v.id}" aria-label="${escapeHtml(v.title)}${isLocked ? ' — locked premium content' : ''}"><div class="thumb ${isLocked?'locked':''}" style="background-image:url('${escapeHtml(thumb)}')">${isLocked ? `<div class="locked-overlay" aria-hidden="true"><span class="lock-badge"><i class="fas fa-lock"></i></span><span class="lock-label">Premium</span></div>` : `<div class="play-overlay"><i class="fas fa-circle-play"></i></div>`}</div><div class="body"><div class="title">${escapeHtml(v.title)}</div><div class="desc">${escapeHtml(v.description||t('noDescription'))}</div><div class="meta"><span class="cat">${cat}</span><div class="like-container" data-id="${v.id}"><i class="${liked?'fa-solid':'fa-regular'} fa-heart" style="${liked?'color:var(--gold)':''}"></i> ${v.likes?.length||0}</div></div></div></article>`;
@@ -6576,11 +6653,9 @@
                 return visit(payload);
             };
 
-            const uploadVideoToUpload18 = async (file) => {
+            const uploadVideoToUpload18 = async (file, progressOffset = 0, progressSpan = 100) => {
                 if (!file) return null;
-                if (file.size > UPLOAD18_CONFIG.maxSize) {
-                    throw new Error('This video is larger than the 5 GB Upload18 limit configured for the Admin.');
-                }
+                if (file.size > UPLOAD18_CONFIG.maxSize) throw new Error('This video is larger than the 5 GB Upload18 limit.');
 
                 const status = $('videoUploadStatus');
                 const message = $('videoUploadMessage');
@@ -6593,38 +6668,33 @@
                     if (progress) progress.style.width = `${v}%`;
                     if (message && text) message.textContent = text;
                 };
+                const mapProgress = v => progressOffset + (v / 100) * progressSpan;
+                setProgress(mapProgress(2), `Preparing ${file.name}…`);
 
-                setProgress(2, 'Preparing Upload18…');
-
-                const form = new FormData();
-                // Upload18 v2.1 accepts the legacy multipart apikey field.
-                // This avoids putting an Authorization header on the browser upload request.
-                form.append('apikey', UPLOAD18_CONFIG.apiKey);
-                form.append('cid', UPLOAD18_CONFIG.cid);
-                form.append('fid', UPLOAD18_CONFIG.fid);
-                form.append('video', file, file.name);
-
-                const uploadResponse = await new Promise((resolve, reject) => {
+                const postMultipart = (blob, fields, loadedPrefix, loadedSpan, filename) => new Promise((resolve, reject) => {
+                    const form = new FormData();
+                    form.append('apikey', UPLOAD18_CONFIG.apiKey);
+                    form.append('cid', UPLOAD18_CONFIG.cid);
+                    form.append('fid', UPLOAD18_CONFIG.fid);
+                    Object.entries(fields || {}).forEach(([k, v]) => form.append(k, String(v)));
+                    form.append('video', blob, filename || file.name);
                     const xhr = new XMLHttpRequest();
                     xhr.open('POST', `${UPLOAD18_CONFIG.baseUrl}/upload`, true);
                     xhr.responseType = 'text';
                     xhr.timeout = 30 * 60 * 1000;
                     xhr.upload.onprogress = e => {
                         if (e.lengthComputable) {
-                            setProgress(5 + (e.loaded / e.total) * 80, 'Uploading to Upload18…');
-                        } else {
-                            setProgress(20, 'Uploading to Upload18…');
+                            const pct = loadedPrefix + (e.loaded / e.total) * loadedSpan;
+                            setProgress(mapProgress(pct), 'Uploading to Upload18…');
                         }
                     };
                     xhr.onload = () => {
                         let data = {};
                         try { data = xhr.responseText ? JSON.parse(xhr.responseText) : {}; } catch (_) {
-                            reject(new Error(`Upload18 returned an invalid response (HTTP ${xhr.status}).`));
-                            return;
+                            reject(new Error(`Upload18 returned an invalid response (HTTP ${xhr.status}).`)); return;
                         }
                         if (xhr.status >= 200 && xhr.status < 300 && data?.status !== 'error') resolve(data);
-                        else reject(new Error(data?.msg || data?.message || data?.error?.message ||
-                            `Upload18 upload failed (HTTP ${xhr.status}).`));
+                        else reject(new Error(data?.msg || data?.message || data?.error?.message || `Upload18 upload failed (HTTP ${xhr.status}).`));
                     };
                     xhr.onerror = () => reject(new Error('Network error while uploading to Upload18.'));
                     xhr.ontimeout = () => reject(new Error('Upload18 upload timed out. Please try again.'));
@@ -6632,39 +6702,121 @@
                     xhr.send(form);
                 });
 
-                const vid = uploadResponse?.vid ?? uploadResponse?.data?.vid ?? uploadResponse?.video?.vid;
-                if (!vid) {
-                    throw new Error('Upload18 accepted the upload but did not return a video ID.');
+                const extractVid = payload => {
+                    let found = null;
+                    const visit = value => {
+                        if (found || value == null) return;
+                        if (Array.isArray(value)) { value.forEach(visit); return; }
+                        if (typeof value !== 'object') return;
+                        for (const key of ['vid','video_id','videoId']) {
+                            if (value[key] != null && String(value[key]).trim()) { found = value[key]; return; }
+                        }
+                        Object.values(value).forEach(visit);
+                    };
+                    visit(payload);
+                    return found;
+                };
+
+                let uploadResponse = null;
+                const CHUNK_SIZE = 50 * 1024 * 1024;
+                if (file.size <= CHUNK_SIZE) {
+                    uploadResponse = await postMultipart(file, {}, 5, 80, file.name);
+                } else {
+                    const total = Math.ceil(file.size / CHUNK_SIZE);
+                    const uuid = `ethiohub-${Date.now()}-${crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2)}`;
+                    for (let index = 0; index < total; index++) {
+                        const startByte = index * CHUNK_SIZE;
+                        const endByte = Math.min(file.size, startByte + CHUNK_SIZE);
+                        const chunk = file.slice(startByte, endByte);
+                        let attempt = 0, response = null;
+                        while (attempt < 3) {
+                            attempt++;
+                            try {
+                                response = await postMultipart(chunk, {
+                                    dzuuid: uuid,
+                                    dzchunkindex: index,
+                                    dztotalchunkcount: total,
+                                    dzchunksize: chunk.size,
+                                    dztotalfilesize: file.size,
+                                    dzchunkbyteoffset: startByte
+                                }, 5 + (index / total) * 80, (1 / total) * 80, file.name);
+                                break;
+                            } catch (err) {
+                                if (attempt >= 3) throw err;
+                                setProgress(mapProgress(5 + (index / total) * 80), `Retrying Upload18 part ${index + 1}/${total}…`);
+                                await new Promise(r => setTimeout(r, 1500 * attempt));
+                            }
+                        }
+                        uploadResponse = response || uploadResponse;
+                    }
                 }
 
-                setProgress(88, 'Upload complete • processing video…');
+                const vid = extractVid(uploadResponse);
+                if (!vid) throw new Error('Upload18 accepted the upload but did not return a video ID.');
+                setProgress(mapProgress(88), 'Upload complete • processing video…');
 
-                // Upload18 documents zt: 0=pending, 1=transcoding, 2=done.
                 for (let attempt = 0; attempt < UPLOAD18_CONFIG.maxPolls; attempt++) {
                     const poll = await upload18Request(`/myvideo?per_page=100&apikey=${encodeURIComponent(UPLOAD18_CONFIG.apiKey)}`);
                     const item = findUpload18Video(poll, vid);
                     const zt = Number(item?.zt ?? item?.status_code ?? item?.processing_status ?? -1);
-                    const progressValue = Math.min(98, 88 + Math.round(((attempt + 1) / UPLOAD18_CONFIG.maxPolls) * 10));
+                    const local = Math.min(98, 88 + Math.round(((attempt + 1) / UPLOAD18_CONFIG.maxPolls) * 10));
                     if (zt === 2) {
-                        setProgress(100, 'Upload18 video ready');
-                        const playUrl = item?.play_url || item?.playUrl || item?.embed_url || item?.embedUrl ||
-                            item?.url || item?.link || `https://upload18.org/play/index/${encodeURIComponent(vid)}`;
-                        return playUrl;
+                        setProgress(mapProgress(100), 'Upload18 video ready');
+                        return item?.play_url || item?.playUrl || item?.embed_url || item?.embedUrl || item?.url || item?.link || `https://upload18.org/play/index/${encodeURIComponent(vid)}`;
                     }
-                    if (zt < 0) {
-                        setProgress(progressValue, 'Waiting for Upload18 processing…');
-                    } else if (zt === 0) {
-                        setProgress(progressValue, 'Upload18 queued…');
-                    } else {
-                        setProgress(progressValue, 'Upload18 transcoding…');
-                    }
+                    setProgress(mapProgress(local), zt === 0 ? 'Upload18 queued…' : zt === 1 ? 'Upload18 transcoding…' : 'Waiting for Upload18 processing…');
                     await new Promise(r => setTimeout(r, UPLOAD18_CONFIG.pollEveryMs));
                 }
-
-                // The upload is already stored. Keep the deterministic Upload18 player URL
-                // rather than falsely reporting failure after the polling window.
-                setProgress(100, 'Upload18 upload accepted');
+                setProgress(mapProgress(100), 'Upload18 upload accepted');
                 return `https://upload18.org/play/index/${encodeURIComponent(vid)}`;
+            };
+
+            const slugifyCategory = name => String(name || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 36);
+            const defaultCategories = [
+                { id:'exclusive', name:'18+', icon:'fas fa-folder', order:1, system:true },
+                { id:'training', name:'New Hub', icon:'fas fa-folder', order:2, system:true }
+            ];
+            let appCategories = [...defaultCategories];
+
+            const renderCategoryTabs = () => {
+                const tabs = $('categoryTabs'); if (!tabs) return;
+                tabs.innerHTML = `<button class="${state.selectedCategory==='all'?'active':''}" data-cat="all" aria-pressed="${state.selectedCategory==='all'}"><i class="fas fa-folder-open"></i><span>All</span></button>` +
+                    appCategories.map(c => `<button class="${state.selectedCategory===c.id?'active':''}" data-cat="${escapeHtml(c.id)}" aria-pressed="${state.selectedCategory===c.id}"><i class="${escapeHtml(c.icon || 'fas fa-folder')}"></i><span>${escapeHtml(c.name)}</span></button>`).join('');
+                tabs.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+                    tabs.querySelectorAll('button').forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed','false'); });
+                    b.classList.add('active'); b.setAttribute('aria-pressed','true'); state.selectedCategory = b.dataset.cat; renderVideoGrid();
+                }));
+            };
+
+            const renderCategorySelect = () => {
+                const select = $('videoCategory'); if (!select) return;
+                select.innerHTML = appCategories.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
+                if (!select.value) select.value = appCategories[0]?.id || 'exclusive';
+            };
+
+            const loadCategories = async () => {
+                try {
+                    const snap = await db.collection('categories').get();
+                    const custom = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+                    const map = new Map(defaultCategories.map(c => [c.id, c]));
+                    custom.forEach(c => map.set(c.id, { ...map.get(c.id), ...c }));
+                    appCategories = Array.from(map.values()).sort((a,b) => Number(a.order||999) - Number(b.order||999));
+                    if (state.user?.role === 'admin') {
+                        await Promise.all(defaultCategories.map(c => db.collection('categories').doc(c.id).set(c, {merge:true})));
+                    }
+                } catch (e) { console.warn('[Ethio Hub] Categories load fallback:', e); appCategories = [...defaultCategories]; }
+                renderCategoryTabs(); renderCategorySelect();
+            };
+
+            const renderAdminCategories = async () => {
+                const c = $('adminCategoryList'); if (!c) return;
+                c.innerHTML = appCategories.map(cat => `<div class="upload-batch-item"><i class="${escapeHtml(cat.icon || 'fas fa-folder')}"></i><span class="batch-name"><strong>${escapeHtml(cat.name)}</strong><br><small>${escapeHtml(cat.id)}</small></span>${cat.system ? '<span class="batch-state">System</span>' : `<button class="del delete-category" data-id="${escapeHtml(cat.id)}" title="Delete category"><i class="fas fa-trash"></i></button>`}</div>`).join('');
+                c.querySelectorAll('.delete-category').forEach(btn => btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    if (!confirm('Delete this category? Existing videos will remain but will no longer appear under a matching category.')) return;
+                    try { await db.collection('categories').doc(id).delete(); await loadCategories(); await renderAdminCategories(); await renderVideoGrid(); toast('Category deleted.', 'success'); }
+                    catch(e){ toast('Could not delete category.', 'error'); }
+                }));
             };
 
             const renderAdminVideos = async () => {
@@ -6718,12 +6870,12 @@
                         const desc = prompt(t('promptEditDesc'), v.description || '');
                         if (desc === null) return;
 
-                        const category = prompt('Category (exclusive/training):', v.category || 'exclusive');
+                        const categoryNames = appCategories.map(c => `${c.id} (${c.name})`).join(', ');
+                        const category = prompt(`Category ID (${categoryNames}):`, v.category || appCategories[0]?.id || 'exclusive');
                         if (category === null) return;
-                        const normalizedCategory = category.trim().toLowerCase();
-                        if (!['exclusive', 'training'].includes(normalizedCategory)) {
-                            toast('Category must be exclusive or training.', 'error');
-                            return;
+                        const normalizedCategory = slugifyCategory(category);
+                        if (!appCategories.some(c => c.id === normalizedCategory)) {
+                            toast('Choose an existing category ID from the list.', 'error'); return;
                         }
 
                         const freeAnswer = prompt('Free to watch? (yes/no):', v.isFree ? 'yes' : 'no');
@@ -7019,85 +7171,98 @@
 
             $('showAddVideoForm').addEventListener('click', () => $('addVideoFormWrap').classList.toggle('hidden'));
 
+            const makeGeneratedTitle = (file, index = 0) => {
+                const base = file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+                const clean = base.replace(/^(VID(?:EO)?)[ _-]?\d+[ _-]*/i, '').trim();
+                const fallback = `Ethio Hub Premium Video ${String(index + 1).padStart(2,'0')}`;
+                return (clean || fallback).replace(/\b\w/g, ch => ch.toUpperCase()).slice(0, 90);
+            };
+            const makeGeneratedDescription = (title, categoryName, index = 0) => {
+                const variants = [
+                    `Enjoy ${title} — premium ${categoryName} content curated for Ethio Hub.`,
+                    `Watch ${title} on Ethio Hub. A fresh ${categoryName} release prepared for our community.`,
+                    `${title} is now available in ${categoryName}. Open the video to enjoy the full experience.`,
+                    `Discover ${title}, newly added to Ethio Hub ${categoryName}. Premium viewing starts here.`,
+                    `A new ${categoryName} addition: ${title}. Enjoy it directly through Ethio Hub.`
+                ];
+                return variants[index % variants.length];
+            };
+
             $('videoFile').addEventListener('change', () => {
-                const file = $('videoFile').files?.[0];
-                const name = $('videoFileName');
-                const status = $('videoUploadStatus');
-                const message = $('videoUploadMessage');
-                const percent = $('videoUploadPercent');
-                const progress = $('videoUploadProgress');
-                if (file) {
-                    if (name) name.textContent = `${file.name} • ${(file.size / 1024 / 1024).toFixed(1)} MB`;
-                    if (status) status.classList.add('visible');
-                    if (message) message.textContent = 'Ready to upload';
-                    if (percent) percent.textContent = '0%';
-                    if (progress) progress.style.width = '0%';
+                const files = Array.from($('videoFile').files || []);
+                const name = $('videoFileName'), status = $('videoUploadStatus'), message = $('videoUploadMessage'), percent = $('videoUploadPercent'), progress = $('videoUploadProgress'), list = $('videoBatchList');
+                if (files.length > 50) { toast('You can select up to 50 videos at once.', 'error'); $('videoFile').value = ''; return; }
+                if (files.length) {
+                    if (name) name.textContent = `${files.length} video${files.length > 1 ? 's' : ''} selected`;
+                    if (status) status.classList.add('visible'); if (message) message.textContent = files.length > 1 ? `Ready to upload ${files.length} videos` : 'Ready to upload';
+                    if (percent) percent.textContent = '0%'; if (progress) progress.style.width = '0%';
+                    if (list) list.innerHTML = files.map((f,i) => `<div class="upload-batch-item" data-index="${i}"><i class="fas fa-circle-play"></i><span class="batch-name">${escapeHtml(f.name)}</span><span class="batch-state">Queued</span></div>`).join('');
                 } else {
-                    if (name) name.textContent = 'No file selected';
-                    if (status) status.classList.remove('visible');
+                    if (name) name.textContent = 'No files selected'; if (status) status.classList.remove('visible'); if (list) list.innerHTML = '';
                 }
+            });
+
+            $('categoryForm')?.addEventListener('submit', async e => {
+                e.preventDefault(); if (!state.user || state.user.role !== 'admin') return;
+                const name = $('newCategoryName').value.trim(); const id = slugifyCategory(name);
+                if (!id || id.length < 2) { toast('Enter a valid category name.', 'error'); return; }
+                if (appCategories.some(c => c.id === id)) { toast('That category already exists.', 'error'); return; }
+                try {
+                    await db.collection('categories').doc(id).set({ id, name, icon: $('newCategoryIcon').value.trim() || 'fas fa-folder', order: appCategories.length + 1, system: false, createdAt: Date.now() });
+                    $('categoryForm').reset(); await loadCategories(); await renderAdminCategories(); toast('Category added.', 'success');
+                } catch (e) { console.error(e); toast('Could not add category.', 'error'); }
             });
 
             $('addVideoForm').addEventListener('submit', async e => {
                 e.preventDefault();
                 if (!state.user || state.user.role !== 'admin') { toast('Admin access required', 'error'); return; }
-                const title = $('videoTitle').value.trim();
-                const file = $('videoFile').files?.[0];
-                const url = $('videoUrl').value.trim();
-                if (!title) { toast(t('titleRequired'), 'error'); return; }
-                if (!file && !url) { toast(t('provideFileOrUrl'), 'error'); return; }
+                const files = Array.from($('videoFile').files || []);
+                const title = $('videoTitle').value.trim(); const url = $('videoUrl').value.trim();
+                if (files.length > 50) { toast('Maximum 50 videos per batch.', 'error'); return; }
+                if (!files.length && !url) { toast(t('provideFileOrUrl'), 'error'); return; }
+                if (files.length === 1 && !title) { toast(t('titleRequired'), 'error'); return; }
 
-                const submitBtn = $('addVideoForm').querySelector('button[type="submit"]');
-                if (submitBtn?.disabled) return;
-                if (submitBtn) { submitBtn.disabled = true;
-                    submitBtn.dataset.originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading…'; }
+                const submitBtn = $('addVideoForm').querySelector('button[type="submit"]'); if (submitBtn?.disabled) return;
+                if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.originalText = submitBtn.innerHTML; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing…'; }
                 showLoader();
                 try {
-                    let videoUrl = url;
-                    if (file) videoUrl = await uploadVideoToUpload18(file);
-                    if (!videoUrl) throw new Error('No video URL was returned.');
-                    let duration = '00:00';
-                    if (file) { const sec = await readVideoDuration(file);
-                        duration = formatDuration(sec); }
-                    await db.collection('videos').add({
-                        title,
-                        description: $('videoDesc').value.trim(),
-                        category: $('videoCategory').value,
-                        isFree: $('videoIsFree').checked,
-                        url: videoUrl,
-                        thumbnail: $('videoThumb').value.trim(),
-                        duration,
-                        likes: [],
-                        createdAt: Date.now(),
-                        updatedAt: Date.now()
-                    });
-                    toast(t('videoPublished', { title }), 'success');
-                    $('addVideoForm').reset();
-                    $('videoFileName').textContent = 'No file selected';
-                    $('videoUploadStatus').classList.remove('visible');
-                    $('addVideoFormWrap').classList.add('hidden');
+                    const categoryId = $('videoCategory').value; const categoryName = appCategories.find(c=>c.id===categoryId)?.name || categoryId;
+                    if (files.length > 1) {
+                        for (let i=0; i<files.length; i++) {
+                            const file = files[i]; const item = document.querySelector(`.upload-batch-item[data-index="${i}"]`); const stateEl = item?.querySelector('.batch-state');
+                            if (stateEl) stateEl.textContent = 'Uploading…';
+                            const videoUrl = await uploadVideoToUpload18(file, (i/files.length)*100, (1/files.length)*100);
+                            const generatedTitle = makeGeneratedTitle(file, i);
+                            const generatedDescription = makeGeneratedDescription(generatedTitle, categoryName, i);
+                            const sec = await readVideoDuration(file);
+                            await db.collection('videos').add({ title: generatedTitle, description: generatedDescription, category: categoryId, isFree: $('videoIsFree').checked, url: videoUrl, thumbnail: '', duration: formatDuration(sec), likes: [], source: 'upload18', sourceFileName: file.name, createdAt: Date.now(), updatedAt: Date.now() });
+                            if (item) item.classList.add('done'); if (stateEl) stateEl.textContent = 'Published';
+                        }
+                        toast(`🎬 ${files.length} videos published successfully!`, 'success');
+                    } else {
+                        let videoUrl = url; let finalTitle = title; let finalDesc = $('videoDesc').value.trim(); let duration = '00:00';
+                        if (files.length === 1) { videoUrl = await uploadVideoToUpload18(files[0]); duration = formatDuration(await readVideoDuration(files[0])); }
+                        if (!finalDesc) finalDesc = makeGeneratedDescription(finalTitle, categoryName, 0);
+                        await db.collection('videos').add({ title: finalTitle, description: finalDesc, category: categoryId, isFree: $('videoIsFree').checked, url: videoUrl, thumbnail: $('videoThumb').value.trim(), duration, likes: [], source: 'upload18', createdAt: Date.now(), updatedAt: Date.now() });
+                        toast(t('videoPublished', { title: finalTitle }), 'success');
+                    }
+                    $('addVideoForm').reset(); $('videoFileName').textContent = 'No files selected'; $('videoBatchList').innerHTML=''; $('videoUploadStatus').classList.remove('visible'); $('addVideoFormWrap').classList.add('hidden');
                     await Promise.allSettled([renderAdminVideos(), renderVideoGrid()]);
                 } catch (err) {
-                    console.error('Video publish error:', err);
-                    const detail = err?.message || t('videoSaveError');
-                    toast(detail, 'error');
-                    if ($('videoUploadMessage')) $('videoUploadMessage').textContent =
-                        'Upload18 upload failed — check the message above';
+                    console.error('Video publish error:', err); toast(err?.message || t('videoSaveError'), 'error'); if ($('videoUploadMessage')) $('videoUploadMessage').textContent = err?.message || 'Upload18 upload failed';
                 } finally {
-                    hideLoader();
-                    if (submitBtn) { submitBtn.disabled = false;
-                        submitBtn.innerHTML = submitBtn.dataset.originalText ||
-                            '<i class="fas fa-save"></i> Publish Video'; }
+                    hideLoader(); if (submitBtn) { submitBtn.disabled=false; submitBtn.innerHTML=submitBtn.dataset.originalText || '<i class="fas fa-save"></i> Publish Video'; }
                 }
             });
 
             const refreshAdmin = async () => {
                 if (!state.user || state.user.role !== 'admin') { navigate('gallery'); return; }
                 await loadSettings();
+                await loadCategories();
                 if (state.adminTab === 'videos') await renderAdminVideos();
                 else if (state.adminTab === 'users') await renderAdminUsers();
                 else if (state.adminTab === 'payments') await renderAdminPayments();
+                else if (state.adminTab === 'settings') await renderAdminCategories();
             };
 
             // ===== ADMIN TAB FILTERING =====
@@ -7147,7 +7312,8 @@
                 if (b.dataset.tab === 'videos') renderAdminVideos();
                 if (b.dataset.tab === 'users') renderAdminUsers();
                 if (b.dataset.tab === 'payments') renderAdminPayments();
-                else if (typeof stopAdminPaymentsListener === 'function') stopAdminPaymentsListener();
+                if (b.dataset.tab === 'settings') { loadCategories().then(renderAdminCategories); }
+                if (typeof stopAdminPaymentsListener === 'function') stopAdminPaymentsListener();
             }));
 
             async function loadSettings() {
@@ -7241,6 +7407,9 @@
                 clearInterval(heroAutoCycle);
                 heroAutoCycle = setInterval(() => renderHeroIcon(1), 4200);
             }, { passive: true });
+
+            // ===== LOAD SHARED CATEGORIES =====
+            loadCategories();
 
             // ===== AUTH STATE =====
             auth.onAuthStateChanged(async fu => {

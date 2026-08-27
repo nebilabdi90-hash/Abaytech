@@ -136,71 +136,125 @@
             border-radius: 20px;
         }
 
-        /* ===== CLEAN EXCHANGE-STYLE LOADER ===== */
+        /* ===== LOADER ===== */
         .loader-overlay {
             position: fixed;
-            left: 0; right: 0; bottom: 0;
-            height: 0;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding: 0 16px calc(16px + env(safe-area-inset-bottom, 0px));
-            background: transparent;
-            z-index: 99999;
-            pointer-events: none;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity .18s ease, visibility .18s ease;
-        }
-        .loader-overlay.active { opacity: 1; visibility: visible; }
-        .loader-card {
-            width: min(260px, calc(100vw - 32px));
-            min-height: 48px;
-            box-sizing: border-box;
-            display: flex;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
             align-items: center;
-            gap: 10px;
-            padding: 8px 13px 8px 10px;
-            border: 1px solid rgba(212,160,23,.22);
-            border-radius: 12px;
-            background: rgba(24,24,24,.94);
-            box-shadow: 0 10px 28px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.06);
-            transform: translateY(12px);
-            opacity: 0;
-            transition: transform .2s ease, opacity .2s ease;
+            justify-content: center;
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: opacity 0.3s ease;
         }
-        .loader-overlay.active .loader-card { transform: translateY(0); opacity: 1; }
+        .loader-overlay.active {
+            display: flex;
+        }
         .loader-sparkle {
             position: relative;
-            flex: 0 0 27px;
-            width: 27px; height: 27px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 8px;
-            background: rgba(212,160,23,.12);
-            border: 1px solid rgba(212,160,23,.22);
-            overflow: hidden;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: loaderFloat 1.8s ease-in-out infinite;
         }
-        .loader-sparkle .sparkle-core {
-            width: 9px; height: 9px;
-            background: var(--gold);
-            clip-path: polygon(50% 0%,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0% 50%,38% 38%);
-            animation: loaderCore .9s ease-in-out infinite;
+        .loader-sparkle::before,
+        .loader-sparkle::after {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(212, 160, 23, 0.25);
+            border-radius: 50%;
+            animation: loaderPulse 1.8s ease-out infinite;
         }
         .loader-sparkle::after {
-            content: ''; position: absolute; top: 0; bottom: 0; left: -35%; width: 28%;
-            background: rgba(255,255,255,.16); transform: skewX(-18deg);
-            animation: loaderSweep 1.4s ease-in-out infinite;
+            inset: 18px;
+            animation-delay: 0.6s;
         }
-        .loader-sparkle::before, .loader-sparkle .sparkle-dot { display:none; }
-        .loader-copy {
-            flex: 1; min-width: 0;
-            font-size: 12px; line-height: 16px; font-weight: 600;
-            color: rgba(255,255,255,.92); white-space: nowrap; overflow:hidden; text-overflow:ellipsis;
+        .loader-sparkle .sparkle-core {
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+            clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+            filter: drop-shadow(0 0 8px var(--gold-glow)) drop-shadow(0 0 18px var(--gold-glow));
+            animation: loaderCore 1.15s ease-in-out infinite;
         }
-        .loader-dots { display:inline-block; width:14px; overflow:hidden; color:var(--gold); }
-        @keyframes loaderCore { 0%,100%{transform:scale(.72) rotate(0);opacity:.65} 50%{transform:scale(1.08) rotate(45deg);opacity:1} }
-        @keyframes loaderSweep { 0%{left:-35%} 60%,100%{left:125%} }
-        @media (prefers-reduced-motion: reduce) { .loader-card,.loader-sparkle .sparkle-core,.loader-sparkle::after { animation:none!important; transition:none!important; } }
+        .loader-sparkle .sparkle-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 8px var(--gold-glow);
+            animation: loaderOrbit 1.8s linear infinite;
+        }
+        .loader-sparkle .dot-1 {
+            animation-delay: 0s;
+        }
+        .loader-sparkle .dot-2 {
+            animation-delay: -0.6s;
+        }
+        .loader-sparkle .dot-3 {
+            animation-delay: -1.2s;
+        }
+        @keyframes loaderFloat {
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-3px) scale(1.03);
+            }
+        }
+        @keyframes loaderCore {
+            0%,
+            100% {
+                transform: rotate(0deg) scale(0.82);
+                opacity: 0.72;
+            }
+            50% {
+                transform: rotate(45deg) scale(1.18);
+                opacity: 1;
+            }
+        }
+        @keyframes loaderPulse {
+            0% {
+                transform: scale(0.55);
+                opacity: 0;
+            }
+            25% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.55);
+                opacity: 0;
+            }
+        }
+        @keyframes loaderOrbit {
+            0% {
+                transform: rotate(0deg) translateX(27px) scale(0.7);
+                opacity: 0.25;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(360deg) translateX(27px) scale(0.7);
+                opacity: 0.25;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .loader-sparkle,
+            .loader-sparkle::before,
+            .loader-sparkle::after,
+            .loader-sparkle .sparkle-core,
+            .loader-sparkle .sparkle-dot {
+                animation-duration: 2.5s;
+            }
+        }
 
         /* ===== HERO ===== */
         .hero-icon-switch {
@@ -1650,79 +1704,7 @@
             transition: filter 0.4s ease, opacity 0.4s ease;
         }
         .video-card .thumb.locked {
-            filter: none;
-            overflow: hidden;
-            transform: scale(1.015);
-            background: var(--bg-input);
-        }
-        /* Locked cards show a blurred preview from the ACTUAL hosted video,
-           rather than a generic/placeholder image. */
-        .video-card .thumb.locked .locked-preview-media {
-            position: absolute;
-            inset: -12px;
-            width: calc(100% + 24px);
-            height: calc(100% + 24px);
-            display: block;
-            border: 0;
-            object-fit: cover;
-            filter: blur(10px) brightness(.70) saturate(.82);
-            transform: scale(1.08);
-            transform-origin: center;
-            z-index: 0;
-            pointer-events: none;
-            user-select: none;
-        }
-        .video-card .thumb.locked iframe.locked-preview-media {
-            overflow: hidden;
-        }
-        .video-card .thumb.locked .locked-preview-shade {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            background: linear-gradient(180deg, rgba(6,8,7,.10), rgba(6,8,7,.42));
-            pointer-events: none;
-        }
-        .video-card .locked-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            z-index: 2;
-            background: linear-gradient(180deg, rgba(8,10,9,.10), rgba(8,10,9,.38));
-            color: #fff;
-            text-align: center;
-            pointer-events: none;
-            filter: none;
-        }
-        .video-card .locked-overlay .lock-badge {
-            width: 38px;
-            height: 38px;
-            display: grid;
-            place-items: center;
-            border-radius: 50%;
-            background: rgba(10,12,11,.72);
-            border: 1px solid rgba(255,255,255,.25);
-            box-shadow: 0 8px 22px rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.12);
-            color: var(--gold);
-            font-size: 15px;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-        .video-card .locked-overlay .lock-label {
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .02em;
-            text-shadow: 0 2px 8px rgba(0,0,0,.65);
-        }
-        .video-card .locked-overlay .lock-desc {
-            max-width: 86%;
-            font-size: 9px;
-            line-height: 1.3;
-            opacity: .92;
-            text-shadow: 0 2px 7px rgba(0,0,0,.65);
+            filter: blur(5px) brightness(0.6);
         }
         .video-card .thumb .play-overlay {
             position: absolute;
@@ -2571,7 +2553,7 @@
             color: var(--gold);
         }
         .payment-section .section-desc {
-            font-size: 11px;
+            font-size: 13px;
             color: var(--text-muted);
             margin-bottom: 8px;
         }
@@ -2583,7 +2565,7 @@
             margin-bottom: 0;
         }
         .payment-section .payment-info-box p {
-            font-size: 11px;
+            font-size: 13px;
             margin-bottom: 2px;
             display: flex;
             align-items: center;
@@ -2621,7 +2603,7 @@
             box-shadow: none !important;
         }
         .payment-section .payment-form label {
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
             margin-bottom: 3px;
             color: var(--text-muted);
@@ -3731,7 +3713,42 @@
                 font-size: 13px;
             }
         }
-    </style>
+    
+        /* Clean compact loading system */
+        .loader-overlay {
+            position: fixed !important;
+            left: 50% !important;
+            right: auto !important;
+            top: auto !important;
+            bottom: 18px !important;
+            inset: auto !important;
+            transform: translateX(-50%) translateY(16px) !important;
+            width: min(320px, calc(100vw - 28px)) !important;
+            min-height: 54px !important;
+            padding: 9px 13px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 11px !important;
+            background: rgba(18,18,18,.86) !important;
+            border: 1px solid rgba(212,175,55,.20) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 12px 34px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.06) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            transition: opacity .22s ease, transform .22s ease, visibility .22s ease !important;
+        }
+        .loader-overlay.active { display:flex !important; opacity:1 !important; visibility:visible !important; transform:translateX(-50%) translateY(0) !important; }
+        .loader-sparkle { width:24px !important; height:24px !important; flex:0 0 24px !important; animation: loaderFloat 1.5s ease-in-out infinite !important; }
+        .loader-sparkle::before { inset:2px !important; border-color:rgba(212,160,23,.20) !important; }
+        .loader-sparkle::after { inset:7px !important; border-color:rgba(212,160,23,.14) !important; }
+        .loader-sparkle .sparkle-core { width:11px !important; height:11px !important; filter:drop-shadow(0 0 5px var(--gold-glow)) !important; }
+        .loader-sparkle .sparkle-dot { width:2px !important; height:2px !important; }
+        @media (prefers-reduced-motion: reduce) { .loader-overlay, .loader-sparkle { transition:none !important; animation:none !important; } }
+</style>
 
     <style id="locked-video-ui-polish">
         .video-card .thumb.locked {
@@ -4642,91 +4659,744 @@
         }
     </style>
 
+<style id="ethio-payment-ui-fix">
+#tierSelection .tier-card { position:relative !important; overflow:hidden !important; padding:18px !important; min-height:154px; display:block; }
+#tierSelection .tier-card::after { content:none !important; display:none !important; }
+#tierSelection .tier-card .plan-selected-mark { position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(135deg,var(--gold-light),var(--gold)); color:#0a0f0e; border:1px solid rgba(255,255,255,.38); box-shadow:0 7px 18px var(--gold-glow),inset 0 1px 0 rgba(255,255,255,.42); z-index:5; opacity:0; transform:scale(.72) rotate(-10deg); transition:opacity .22s ease,transform .34s cubic-bezier(.22,1.35,.36,1); pointer-events:none; }
+#tierSelection .tier-card.selected .plan-selected-mark { opacity:1; transform:scale(1) rotate(0); }
+#tierSelection .tier-card .plan-selected-mark i { font-size:12px; }
+#tierSelection .tier-card > div:first-of-type { width:100%; min-width:0; }
+#tierSelection .tier-card > div:first-of-type > div:first-child { min-width:0; padding-right:42px; }
+#tierSelection .tier-card h4 { margin-right:0 !important; overflow-wrap:anywhere; }
+#tierSelection .tier-card .feature-list { padding-right:2px; }
+.payment-step-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px; }
+.payment-step-title { min-width:0; }
+.payment-step-kicker { display:flex; align-items:center; gap:7px; color:var(--text-muted); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:3px; }
+.step-dot { width:20px; height:20px; border-radius:50%; display:inline-grid; place-items:center; background:var(--gold); color:#0a0f0e; font-size:10px; font-weight:900; }
+.payment-step-title h4 { font-size:18px !important; line-height:1.2; margin:0 !important; }
+.payment-selected-line { display:flex; align-items:center; gap:7px; margin-top:5px; font-size:11px; color:var(--text-muted); }
+.payment-selected-line strong { color:var(--gold); font-size:12px; }
+.payment-timer { flex:0 0 auto; min-width:92px; padding:8px 11px; border-radius:13px; text-align:center; background:linear-gradient(145deg,rgba(212,160,23,.12),rgba(255,255,255,.035)); border:1px solid rgba(212,160,23,.22); }
+.payment-timer span { display:block; color:var(--text-muted); font-size:8px; text-transform:uppercase; letter-spacing:.07em; }
+.payment-timer strong { display:block; margin-top:2px; color:var(--gold); font-size:17px; line-height:1.1; font-variant-numeric:tabular-nums; }
+.payment-submit-container { padding:14px !important; border-radius:22px !important; background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),var(--bg-app) !important; box-shadow:0 16px 42px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.06) !important; }
+.payment-asymmetric-grid { grid-template-columns:minmax(0,1.32fr) minmax(235px,.78fr) !important; gap:12px !important; align-items:start; }
+.payment-asymmetric-grid > div { min-width:0; }
+.payment-section { padding:15px !important; border-radius:16px !important; background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),var(--bg-glass) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.055); }
+.payment-section h4 { font-size:13px !important; margin-bottom:5px !important; }
+.payment-section .section-desc { font-size:10px !important; line-height:1.45; margin-bottom:9px !important; }
+.payment-section .payment-info-box { border:1px solid var(--border-color); border-left:0; padding:7px !important; background:var(--bg-input); overflow:hidden; }
+.payment-section .payment-info-box p { min-height:34px; padding:6px 8px; margin:0 !important; border-radius:10px; background:rgba(255,255,255,.025); gap:7px !important; line-height:1.35; }
+.payment-section .payment-info-box p + p { margin-top:5px !important; }
+.payment-section .payment-info-box p i { flex:0 0 18px; }
+.payment-section .payment-info-box strong { margin-left:auto; color:var(--text-main); font-variant-numeric:tabular-nums; letter-spacing:.02em; white-space:nowrap; }
+#paymentMethods { grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:7px !important; }
+#paymentMethods .payment-method { position:relative !important; min-height:72px !important; padding:10px 7px !important; gap:5px !important; border-radius:14px !important; overflow:hidden !important; }
+#paymentMethods .payment-method .icon { width:28px !important; height:28px; display:grid; place-items:center; border-radius:9px; background:rgba(212,160,23,.08); font-size:14px !important; }
+#paymentMethods .payment-method .info .name { font-size:10px !important; line-height:1.2; }
+#paymentMethods .payment-method.selected { border-color:var(--gold) !important; box-shadow:inset 0 0 0 1px var(--gold),0 8px 20px var(--gold-glow) !important; }
+#paymentMethods .payment-method.selected::after { content:"✓"; position:absolute; top:6px; right:6px; width:17px; height:17px; display:grid; place-items:center; border-radius:50%; background:var(--gold); color:#0a0f0e; font-size:9px; font-weight:900; box-shadow:0 3px 8px var(--gold-glow); }
+.payment-section .payment-form input,.payment-section .payment-form textarea { min-height:42px !important; padding:10px 12px !important; margin-bottom:9px !important; border-radius:12px !important; }
+.payment-section .payment-form textarea { min-height:70px !important; }
+.payment-section .payment-form .file-upload { min-height:94px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:13px !important; margin-bottom:9px !important; border-radius:14px !important; border-style:dashed !important; background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),var(--bg-input); }
+.payment-section .payment-form .file-upload i { width:34px; height:34px; display:grid; place-items:center; border-radius:11px; background:rgba(212,160,23,.08); font-size:15px !important; margin:0 !important; }
+.payment-section .payment-form .file-upload p { margin:0 !important; line-height:1.35; }
+.payment-section .payment-form .file-upload .filename { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.payment-section .btn-primary { min-height:42px !important; border-radius:12px !important; margin-top:2px !important; }
+#backToPlanBtn { min-height:38px !important; border-radius:12px !important; margin-top:12px !important; padding:8px 14px !important; }
+@media (max-width:700px) { .payment-asymmetric-grid { grid-template-columns:1fr !important; } }
+@media (max-width:600px) { #tierSelection .tier-card { min-height:0; padding:15px !important; } #tierSelection .tier-card > div:first-of-type > div:first-child { padding-right:40px; } #tierSelection .tier-card .plan-selected-mark { top:12px; right:12px; width:27px; height:27px; } .payment-step-heading { align-items:flex-start; } .payment-timer { min-width:82px; } .payment-submit-container { padding:9px !important; } .payment-section { padding:13px !important; } }
+@media (prefers-reduced-motion:reduce) { #tierSelection .tier-card .plan-selected-mark { transition:none !important; transform:none !important; } }
+</style>
 
-<style id="ethiohub-header-final-fix">
-/* ===== ETHIO HUB HEADER — FINAL POLISH ONLY ===== */
-.app-header {
-    position: sticky !important;
-    top: 10px !important;
-    z-index: 5000 !important;
-    isolation: isolate;
-    flex-shrink: 0;
-    overflow: visible !important;
-    background: color-mix(in srgb, var(--bg-glass) 88%, transparent) !important;
-    border: 1px solid color-mix(in srgb, var(--gold) 18%, var(--border-color)) !important;
-    box-shadow:
-        0 12px 32px rgba(0,0,0,.13),
-        0 2px 10px rgba(0,0,0,.08),
-        inset 0 1px 0 rgba(255,255,255,.28) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(145%);
-    backdrop-filter: blur(18px) saturate(145%);
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    will-change: transform, box-shadow, background-color;
+<style id="ethio-floating-glass-shell">
+        /* ============================================================
+           ETHIO HUB — FLOATING GLASS SHELL / SCROLL POLISH
+           Keeps the existing design language, but gives the header and
+           dashboard a premium, stable glass surface while scrolling.
+           ============================================================ */
+        .app-header {
+            position: sticky !important;
+            top: 10px !important;
+            z-index: 1000 !important;
+            isolation: isolate;
+            overflow: visible !important;
+            background: color-mix(in srgb, var(--bg-glass) 82%, transparent) !important;
+            border: 1px solid color-mix(in srgb, var(--gold) 16%, var(--border-color)) !important;
+            box-shadow:
+                0 18px 48px rgba(0,0,0,.13),
+                0 5px 18px rgba(0,0,0,.07),
+                inset 0 1px 0 rgba(255,255,255,.28) !important;
+            backdrop-filter: blur(22px) saturate(145%) !important;
+            -webkit-backdrop-filter: blur(22px) saturate(145%) !important;
+            transform: translate3d(0,0,0);
+            backface-visibility: hidden;
+            will-change: box-shadow, background-color, transform;
+        }
+        .app-header::before {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: -1;
+            background: linear-gradient(110deg, rgba(255,255,255,.14), transparent 38%, rgba(212,160,23,.045));
+        }
+        .app-header.is-scrolled {
+            top: 8px !important;
+            background: color-mix(in srgb, var(--bg-glass) 92%, transparent) !important;
+            border-color: color-mix(in srgb, var(--gold) 26%, var(--border-color)) !important;
+            box-shadow:
+                0 22px 58px rgba(0,0,0,.19),
+                0 7px 20px rgba(0,0,0,.09),
+                inset 0 1px 0 rgba(255,255,255,.22) !important;
+        }
+        .app-header .icon-btn,
+        .app-header .lang-btn,
+        .app-header .user-badge,
+        .app-header .back-btn {
+            position: relative;
+            z-index: 1;
+            transition: transform .25s cubic-bezier(.22,1,.36,1),
+                        background-color .25s ease,
+                        border-color .25s ease,
+                        box-shadow .25s ease;
+        }
+        .app-header .icon-btn:hover,
+        .app-header .lang-btn:hover,
+        .app-header .user-badge:hover,
+        .app-header .back-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Dashboard itself: clean floating workspace instead of a flat block. */
+        #page-admin {
+            position: relative;
+            isolation: isolate;
+        }
+        #page-admin .admin-tabs {
+            position: sticky !important;
+            top: 82px !important;
+            z-index: 900 !important;
+            margin-bottom: 18px;
+            background: color-mix(in srgb, var(--bg-glass) 86%, transparent) !important;
+            border: 1px solid color-mix(in srgb, var(--gold) 14%, var(--border-color)) !important;
+            border-radius: 18px !important;
+            box-shadow:
+                0 16px 42px rgba(0,0,0,.10),
+                inset 0 1px 0 rgba(255,255,255,.20) !important;
+            backdrop-filter: blur(20px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+            transform: translate3d(0,0,0);
+            backface-visibility: hidden;
+        }
+        #page-admin .admin-tabs.is-stuck {
+            box-shadow:
+                0 20px 48px rgba(0,0,0,.15),
+                0 4px 14px rgba(0,0,0,.07),
+                inset 0 1px 0 rgba(255,255,255,.18) !important;
+            border-color: color-mix(in srgb, var(--gold) 22%, var(--border-color)) !important;
+        }
+        #page-admin .admin-panel {
+            position: relative;
+            isolation: isolate;
+        }
+        #page-admin .admin-panel > h3,
+        #page-admin .admin-panel > .flex-between {
+            position: relative;
+            z-index: 2;
+        }
+        #page-admin .admin-form,
+        #page-admin .admin-table-wrap,
+        #page-admin .stat-card,
+        #page-admin .dashboard-card {
+            border: 1px solid color-mix(in srgb, var(--gold) 9%, var(--border-color));
+            box-shadow:
+                0 14px 38px rgba(0,0,0,.07),
+                inset 0 1px 0 rgba(255,255,255,.16);
+            backdrop-filter: blur(12px) saturate(125%);
+            -webkit-backdrop-filter: blur(12px) saturate(125%);
+        }
+        #page-admin .admin-table-wrap {
+            overflow: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold) transparent;
+        }
+
+        /* Prevent the sticky glass surfaces from becoming oversized on phones. */
+        @media (max-width: 700px) {
+            .app-header {
+                top: 7px !important;
+                margin-bottom: 16px !important;
+                border-radius: 24px !important;
+                backdrop-filter: blur(18px) saturate(135%) !important;
+                -webkit-backdrop-filter: blur(18px) saturate(135%) !important;
+            }
+            #page-admin .admin-tabs {
+                top: 64px !important;
+                border-radius: 15px !important;
+                overflow-x: auto;
+                scrollbar-width: none;
+            }
+            #page-admin .admin-tabs::-webkit-scrollbar { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .app-header,
+            #page-admin .admin-tabs {
+                transition: none !important;
+            }
+        }
+
+</style>
+
+<style id="ethio-admin-rebuild">
+/* ============================================================
+   ETHIO HUB — ADMIN DASHBOARD REBUILD
+   UI only: keeps existing IDs/classes and JavaScript behavior.
+   ============================================================ */
+#page-admin {
+    --admin-card: color-mix(in srgb, var(--bg-glass) 88%, transparent);
+    --admin-line: color-mix(in srgb, var(--border-color) 82%, var(--gold));
+    --admin-soft: color-mix(in srgb, var(--gold) 7%, var(--bg-input));
+    padding: 6px 0 28px;
 }
-.app-header::before {
-    content: "";
-    position: absolute;
-    inset: 1px;
-    border-radius: inherit;
-    pointer-events: none;
-    z-index: -1;
-    background: linear-gradient(105deg, rgba(255,255,255,.10), transparent 38%, rgba(212,160,23,.06));
+
+#page-admin::before { display:none; }
+
+#page-admin .admin-tabs {
+    position: sticky;
+    top: 10px;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin: 0 0 22px;
+    padding: 6px;
+    border: 1px solid color-mix(in srgb, var(--border-color) 82%, var(--gold));
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--bg-glass) 90%, transparent);
+    box-shadow: 0 12px 32px rgba(0,0,0,.07), inset 0 1px 0 rgba(255,255,255,.42);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    transition: box-shadow .25s ease, background .25s ease, border-color .25s ease, transform .25s ease;
 }
-.app-header .header-left,
-.app-header .header-actions {
-    min-height: 44px;
+#page-admin .admin-tabs.is-stuck {
+    background: color-mix(in srgb, var(--bg-glass) 96%, transparent);
+    border-color: color-mix(in srgb, var(--gold) 28%, var(--border-color));
+    box-shadow: 0 14px 38px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.35);
 }
-.app-header .logo-area {
-    min-width: 0;
+#page-admin .admin-tabs button {
+    min-height: 48px;
+    padding: 9px 14px;
+    border: 1px solid transparent;
+    border-radius: 13px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 750;
+    letter-spacing: .01em;
+    box-shadow: none;
+    transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
-.app-header .logo-area h1 {
-    margin: 0;
+#page-admin .admin-tabs button i { margin-right: 7px; opacity: .82; }
+#page-admin .admin-tabs button.active {
+    color: #0a0f0e;
+    background: linear-gradient(135deg, var(--gold), color-mix(in srgb, var(--gold) 72%, #fff));
+    border-color: color-mix(in srgb, var(--gold) 80%, #fff);
+    box-shadow: 0 7px 18px rgba(212,160,23,.20), inset 0 1px 0 rgba(255,255,255,.42);
 }
-.app-header .icon-btn,
-.app-header .lang-btn,
-.app-header .user-badge,
-.app-header .back-btn {
-    position: relative;
-    z-index: 2;
-}
-.app-header .icon-btn:hover,
-.app-header .lang-btn:hover,
-.app-header .user-badge:hover {
+#page-admin .admin-tabs button:hover:not(.active) {
+    color: var(--text-main);
+    background: color-mix(in srgb, var(--gold) 6%, var(--bg-input));
+    border-color: color-mix(in srgb, var(--gold) 18%, var(--border-color));
     transform: translateY(-1px);
 }
-@media (max-width: 600px) {
-    .app-header {
-        top: 7px !important;
-        margin-bottom: 16px !important;
-        padding: 4px 5px 4px 10px !important;
-        border-radius: 40px !important;
-    }
-    .app-header .header-left,
-    .app-header .header-actions {
-        min-height: 42px;
-    }
+#page-admin .admin-tabs button:active { transform: scale(.98); }
+
+#page-admin .admin-panel.active {
+    animation: adminRebuildIn .28s cubic-bezier(.22,1,.36,1) both;
 }
+@keyframes adminRebuildIn {
+    from { opacity: 0; transform: translateY(7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Panel heading becomes a compact dashboard toolbar. */
+#page-admin .admin-panel > .flex-between,
+#page-admin .admin-panel > h3 {
+    margin: 0 0 14px;
+    padding: 2px 2px 0;
+}
+#page-admin .admin-panel > h3,
+#page-admin .admin-panel > .flex-between h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 17px;
+    line-height: 1.2;
+    letter-spacing: -.025em;
+    color: var(--text-main);
+}
+#page-admin .admin-panel > h3 i,
+#page-admin .admin-panel > .flex-between h3 i { font-size: 14px; }
+
+#page-admin .admin-form {
+    width: 100%;
+    max-width: none;
+    padding: 22px;
+    border: 1px solid color-mix(in srgb, var(--border-color) 88%, var(--gold));
+    border-radius: 20px;
+    background: var(--admin-card);
+    box-shadow: 0 16px 44px rgba(0,0,0,.065), inset 0 1px 0 rgba(255,255,255,.34);
+    backdrop-filter: blur(16px) saturate(125%);
+    -webkit-backdrop-filter: blur(16px) saturate(125%);
+}
+#page-admin .admin-form h4 {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin: 0 0 16px !important;
+    font-size: 14px;
+    color: var(--text-main);
+}
+#page-admin .admin-form label {
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+#page-admin .admin-form input,
+#page-admin .admin-form select,
+#page-admin .admin-form textarea {
+    margin-bottom: 14px;
+    min-height: 45px;
+    padding: 10px 13px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--bg-input) 90%, transparent);
+    border-color: color-mix(in srgb, var(--border-color) 90%, transparent);
+    font-size: 13px;
+}
+#page-admin .admin-form textarea { min-height: 92px; }
+#page-admin .admin-form input:hover,
+#page-admin .admin-form select:hover,
+#page-admin .admin-form textarea:hover {
+    border-color: color-mix(in srgb, var(--gold) 24%, var(--border-color));
+}
+#page-admin .admin-form input:focus,
+#page-admin .admin-form select:focus,
+#page-admin .admin-form textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212,160,23,.10), 0 5px 18px rgba(0,0,0,.04);
+}
+#page-admin .admin-form .checkbox-group {
+    margin: 0 0 15px;
+    min-height: 44px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--bg-input) 82%, transparent);
+}
+#page-admin .admin-form .btn-primary {
+    min-height: 45px;
+    border-radius: 12px;
+    font-weight: 800;
+}
+
+/* Upload area */
+#page-admin .file-input-group {
+    margin: 4px 0 15px;
+    padding: 15px;
+    gap: 10px;
+    border: 1px dashed color-mix(in srgb, var(--gold) 30%, var(--border-color));
+    border-radius: 15px;
+    background: color-mix(in srgb, var(--gold) 3%, var(--bg-input));
+}
+#page-admin .file-input-group label { font-size: 12px; }
+#page-admin .file-picker {
+    min-height: 48px;
+    padding: 6px 8px;
+    border-radius: 12px;
+    background: var(--bg-app);
+}
+#page-admin .upload-status { padding-top: 2px; }
+
+/* Tables: clean data surface with less visual noise. */
+#page-admin .admin-table-wrap {
+    overflow-x: auto;
+    border: 1px solid color-mix(in srgb, var(--border-color) 88%, var(--gold));
+    border-radius: 18px;
+    background: var(--admin-card);
+    box-shadow: 0 14px 38px rgba(0,0,0,.055), inset 0 1px 0 rgba(255,255,255,.28);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+#page-admin .admin-table {
+    width: 100%;
+    min-width: 680px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+#page-admin .admin-table th {
+    padding: 13px 14px;
+    background: color-mix(in srgb, var(--gold) 5%, var(--bg-input));
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+#page-admin .admin-table td {
+    padding: 13px 14px;
+    border-bottom: 1px solid color-mix(in srgb, var(--border-color) 68%, transparent);
+    color: var(--text-main);
+    font-size: 12px;
+    vertical-align: middle;
+}
+#page-admin .admin-table tbody tr:last-child td { border-bottom: 0; }
+#page-admin .admin-table tbody tr { transition: background .18s ease; }
+#page-admin .admin-table tbody tr:hover { background: color-mix(in srgb, var(--gold) 4%, transparent); }
+#page-admin .admin-table .status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 26px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+}
+#page-admin .admin-table .actions { white-space: nowrap; }
+#page-admin .admin-table .actions button {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+#page-admin .admin-table .actions button:hover {
+    transform: translateY(-1px);
+    border-color: var(--gold);
+    box-shadow: 0 5px 14px rgba(0,0,0,.08);
+}
+
+/* Settings becomes a focused compact card rather than a stretched form. */
+#page-admin #panel-settings .admin-form { max-width: 620px !important; }
+#page-admin #panel-settings .admin-form form { display: grid; }
+#page-admin #panel-settings .admin-form label { margin-top: 2px; }
+
+@media (max-width: 700px) {
+    #page-admin { padding-top: 2px; }
+    #page-admin .admin-tabs {
+        top: 7px;
+        grid-template-columns: repeat(4, minmax(112px, 1fr));
+        overflow-x: auto;
+        justify-content: start;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    #page-admin .admin-tabs::-webkit-scrollbar { display:none; }
+    #page-admin .admin-tabs button { min-width: 112px; min-height: 45px; }
+    #page-admin .admin-form { padding: 17px; border-radius: 17px; }
+    #page-admin .admin-table-wrap { border-radius: 15px; }
+    #page-admin .admin-panel > .flex-between { align-items: center; gap: 10px; }
+    #page-admin .admin-panel > .flex-between h3 { font-size: 15px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .app-header { will-change: auto; }
+    #page-admin .admin-panel.active,
+    #page-admin .admin-tabs button,
+    #page-admin .admin-table tbody tr,
+    #page-admin .admin-table .actions button { animation:none !important; transition:none !important; }
 }
 </style>
 
+
+<style id="admin-hq-design-system">
+/* ============================================================
+   ETHIO HUB — ADMIN HQ DESIGN SYSTEM
+   Visual-only layer: preserves all existing IDs, DOM hooks and JS.
+   Inspired by restrained enterprise systems: 14px base, 8px rhythm,
+   clear hierarchy, consistent icon sizing and high-contrast states.
+   ============================================================ */
+#page-admin {
+    --admin-space-1: 4px;
+    --admin-space-2: 8px;
+    --admin-space-3: 12px;
+    --admin-space-4: 16px;
+    --admin-space-5: 24px;
+    --admin-space-6: 32px;
+    --admin-control: 42px;
+    --admin-radius: 16px;
+    --admin-radius-sm: 12px;
+    --admin-shadow: 0 18px 50px rgba(0,0,0,.08);
+    --admin-shadow-hover: 0 22px 60px rgba(0,0,0,.12);
+    font-size: 14px;
+    line-height: 1.57;
+}
+
+#page-admin .admin-tabs {
+    position: sticky;
+    top: 76px;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 6px;
+    padding: 7px;
+    margin: 0 0 20px;
+    border: 1px solid color-mix(in srgb, var(--border-color) 80%, transparent);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--bg-glass) 88%, transparent);
+    backdrop-filter: blur(18px) saturate(145%);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    box-shadow: 0 12px 38px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.45);
+}
+
+#page-admin .admin-tabs button {
+    min-height: 44px;
+    padding: 9px 14px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .01em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+#page-admin .admin-tabs button i {
+    width: 18px;
+    font-size: 15px;
+    text-align: center;
+    flex: 0 0 18px;
+}
+#page-admin .admin-tabs button:hover:not(.active) {
+    color: var(--text-main);
+    background: color-mix(in srgb, var(--bg-input) 72%, transparent);
+    transform: translateY(-1px);
+}
+#page-admin .admin-tabs button.active {
+    color: var(--text-main);
+    background: color-mix(in srgb, var(--gold) 12%, var(--bg-input));
+    border-color: color-mix(in srgb, var(--gold) 38%, var(--border-color));
+    box-shadow: 0 7px 20px rgba(212,160,23,.10), inset 0 1px 0 rgba(255,255,255,.38);
+}
+#page-admin .admin-tabs button.active i { color: var(--gold); }
+
+#page-admin .admin-panel {
+    padding: 24px;
+    border: 1px solid color-mix(in srgb, var(--border-color) 86%, transparent);
+    border-radius: var(--admin-radius);
+    background: color-mix(in srgb, var(--bg-glass) 92%, transparent);
+    box-shadow: var(--admin-shadow);
+    backdrop-filter: blur(14px) saturate(125%);
+    -webkit-backdrop-filter: blur(14px) saturate(125%);
+}
+#page-admin .admin-panel + .admin-panel { margin-top: 16px; }
+#page-admin .admin-panel > h3,
+#page-admin .admin-panel > .flex-between h3 {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.35;
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+#page-admin .admin-panel > h3 i,
+#page-admin .admin-panel > .flex-between h3 i { margin-right: 8px; font-size: 16px; }
+
+#page-admin .admin-form {
+    max-width: none;
+    margin-top: 18px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--admin-radius);
+    background: color-mix(in srgb, var(--bg-input) 62%, transparent);
+    box-shadow: 0 10px 30px rgba(0,0,0,.055);
+}
+#page-admin .admin-form h4 {
+    font-size: 16px !important;
+    line-height: 1.4;
+    font-weight: 700;
+    margin-bottom: 18px !important;
+}
+#page-admin .admin-form label {
+    display: block;
+    margin: 14px 0 7px;
+    color: var(--text-main);
+    font-size: 12.5px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+#page-admin .admin-form input,
+#page-admin .admin-form select,
+#page-admin .admin-form textarea {
+    min-height: var(--admin-control);
+    padding: 10px 13px;
+    border-radius: 11px;
+    font-size: 14px;
+    line-height: 1.5;
+    border: 1px solid var(--border-color);
+    background: color-mix(in srgb, var(--bg-app) 70%, var(--bg-input));
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+#page-admin .admin-form textarea { min-height: 100px; resize: vertical; }
+#page-admin .admin-form input:focus,
+#page-admin .admin-form select:focus,
+#page-admin .admin-form textarea:focus {
+    border-color: color-mix(in srgb, var(--gold) 72%, var(--border-color));
+    box-shadow: 0 0 0 3px rgba(212,160,23,.10);
+    outline: none;
+}
+
+#page-admin .file-input-group {
+    margin: 18px 0;
+    padding: 16px;
+    border: 1px dashed color-mix(in srgb, var(--gold) 42%, var(--border-color));
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--gold) 4%, var(--bg-input));
+}
+#page-admin .file-input-group > label { margin-top: 0; font-size: 13px; }
+#page-admin .upload-hint { display:block; margin-top:4px; font-size:11px; font-weight:400; color:var(--text-muted); }
+#page-admin .file-picker {
+    min-height: 48px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:7px 10px;
+    border:1px solid var(--border-color);
+    border-radius:11px;
+    background:var(--bg-app);
+}
+
+#page-admin .admin-table-wrap {
+    margin-top: 18px;
+    overflow: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--bg-input) 48%, transparent);
+    box-shadow: 0 8px 24px rgba(0,0,0,.045);
+    scrollbar-width: thin;
+}
+#page-admin .admin-table {
+    width:100%;
+    min-width:720px;
+    border-collapse:separate;
+    border-spacing:0;
+    font-size:13px;
+}
+#page-admin .admin-table th {
+    position:sticky;
+    top:0;
+    z-index:2;
+    padding:12px 14px;
+    background:color-mix(in srgb, var(--bg-app) 92%, transparent);
+    color:var(--text-muted);
+    font-size:11px;
+    line-height:1.3;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--border-color);
+    white-space:nowrap;
+}
+#page-admin .admin-table td {
+    padding:13px 14px;
+    color:var(--text-main);
+    font-size:13px;
+    line-height:1.45;
+    border-bottom:1px solid color-mix(in srgb, var(--border-color) 70%, transparent);
+    vertical-align:middle;
+}
+#page-admin .admin-table tbody tr { transition:background .16s ease; }
+#page-admin .admin-table tbody tr:hover { background:color-mix(in srgb, var(--gold) 5%, transparent); }
+#page-admin .admin-table tbody tr:last-child td { border-bottom:0; }
+#page-admin .admin-table .status {
+    display:inline-flex;
+    align-items:center;
+    min-height:26px;
+    padding:4px 9px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:700;
+    line-height:1;
+}
+#page-admin .admin-table .actions { white-space:nowrap; }
+#page-admin .admin-table .actions button {
+    width:34px;
+    height:34px;
+    display:inline-grid;
+    place-items:center;
+    padding:0;
+    border-radius:10px;
+    border:1px solid var(--border-color);
+    background:var(--bg-input);
+    color:var(--text-muted);
+    transition:transform .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+#page-admin .admin-table .actions button:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.08); }
+#page-admin .admin-table .actions button i { font-size:13px; }
+
+#page-admin .btn-primary {
+    min-height:42px;
+    padding:10px 17px;
+    border-radius:11px;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.005em;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+#page-admin .btn-primary i { font-size:14px; width:16px; text-align:center; }
+
+#page-admin .checkbox-group {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:16px 0;
+    padding:11px 12px;
+    border:1px solid var(--border-color);
+    border-radius:11px;
+    background:color-mix(in srgb, var(--bg-app) 55%, transparent);
+}
+#page-admin .checkbox-group label { margin:0; font-size:13px; font-weight:500; }
+
+@media (max-width: 760px) {
+    #page-admin .admin-tabs { top:64px; grid-template-columns:repeat(4,minmax(110px,1fr)); overflow-x:auto; justify-content:start; }
+    #page-admin .admin-tabs button { min-width:110px; }
+    #page-admin .admin-panel { padding:16px; border-radius:14px; }
+    #page-admin .admin-panel > h3,
+    #page-admin .admin-panel > .flex-between h3 { font-size:17px; }
+    #page-admin .admin-form { padding:15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #page-admin .admin-tabs button,
+    #page-admin .admin-form input,
+    #page-admin .admin-form select,
+    #page-admin .admin-form textarea,
+    #page-admin .admin-table tbody tr,
+    #page-admin .admin-table .actions button { transition:none !important; }
+}
+</style>
 </head>
 <body>
 
     <!-- ===== CANVAS BACKGROUND ===== -->
     <canvas id="bgCanvas"></canvas>
 
-    <div class="loader-overlay" id="globalLoader" aria-hidden="true">
-        <div class="loader-card" role="status" aria-live="polite">
-            <span class="loader-sparkle" aria-hidden="true">
-                <span class="sparkle-core"></span>
-                <span class="sparkle-dot dot-1"></span>
-                <span class="sparkle-dot dot-2"></span>
-                <span class="sparkle-dot dot-3"></span>
-            </span>
-            <span class="loader-copy">Working<span class="loader-dots" aria-hidden="true">...</span></span>
+    <div class="loader-overlay" id="globalLoader">
+        <div class="loader-sparkle" aria-label="Loading" role="status">
+            <span class="sparkle-core"></span>
+            <span class="sparkle-dot dot-1"></span>
+            <span class="sparkle-dot dot-2"></span>
+            <span class="sparkle-dot dot-3"></span>
         </div>
     </div>
     <div id="toast"><i class="fas fa-info-circle"></i><span class="msg">Message</span></div>
@@ -4969,6 +5639,7 @@
                         <div id="tierSelection" style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
                             <!-- BASIC – unlimited viewing now -->
                             <div class="tier-card selected" data-plan="basic">
+                                <span class="plan-selected-mark" aria-hidden="true"><i class="fas fa-check"></i></span>
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
                                     <div>
                                         <div style="display:flex; align-items:center; gap:6px;">
@@ -4991,6 +5662,7 @@
 
                             <!-- PREMIUM -->
                             <div class="tier-card" data-plan="premium">
+                                <span class="plan-selected-mark" aria-hidden="true"><i class="fas fa-check"></i></span>
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
                                     <div>
                                         <div style="display:flex; align-items:center; gap:6px;">
@@ -5019,16 +5691,18 @@
 
                     <!-- STEP 2: PAYMENT SUBMISSION – asymmetric grid -->
                     <div id="paymentStep2" style="display:none;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-                            <div>
-                                <h4 style="font-size:16px; margin:0;">Submit Payment</h4>
-                                <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">
-                                    Selected Plan: <strong id="selectedPlanDisplay" style="color:var(--gold);">Basic</strong>
+                        <div class="payment-step-heading">
+                            <div class="payment-step-title">
+                                <div class="payment-step-kicker"><span class="step-dot">2</span> Payment submission</div>
+                                <h4>Confirm &amp; Submit</h4>
+                                <div class="payment-selected-line">
+                                    <span>Selected plan</span>
+                                    <strong id="selectedPlanDisplay">Basic</strong>
                                 </div>
                             </div>
-                            <div style="text-align:center; background:var(--bg-input); padding:6px 12px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
-                                <div style="font-size:9px; color:var(--text-muted);">Time Remaining</div>
-                                <div id="countdownTimer" style="font-size:18px; font-weight:700; color:var(--gold); min-width:70px;">60:00</div>
+                            <div class="payment-timer" aria-live="polite">
+                                <span>Time remaining</span>
+                                <strong id="countdownTimer">60:00</strong>
                             </div>
                         </div>
 
@@ -5046,6 +5720,29 @@
                                             <p><i class="fas fa-building-columns"></i> CBE: <strong>1000392469657</strong></p>
                                         </div>
                                     </div>
+                                    <!-- PAYMENT METHOD: placed above payment details -->
+                                    <div class="payment-section">
+                                        <h4><i class="fas fa-credit-card"></i> Payment Method</h4>
+                                        <div class="section-desc">Choose your preferred method</div>
+                                        <div id="paymentMethods" style="display:flex; flex-direction:column; gap:6px;">
+                                            <div class="payment-method selected" data-method="telebirr" style="margin:0; padding:10px 12px; min-height:48px;">
+                                                <div class="icon" style="font-size:16px; width:24px;"><i class="fas fa-mobile-screen-button"></i></div>
+                                                <div class="info"><div class="name" style="font-size:13px;">Telebirr</div></div>
+                                                <div class="check"><i class="fas fa-check-circle"></i></div>
+                                            </div>
+                                            <div class="payment-method" data-method="cbe" style="margin:0; padding:10px 12px; min-height:48px;">
+                                                <div class="icon" style="font-size:16px; width:24px;"><i class="fas fa-building-columns"></i></div>
+                                                <div class="info"><div class="name" style="font-size:13px;">CBE</div></div>
+                                                <div class="check"><i class="fas fa-check-circle"></i></div>
+                                            </div>
+                                            <div class="payment-method" data-method="ebirr" style="margin:0; padding:10px 12px; min-height:48px;">
+                                                <div class="icon" style="font-size:16px; width:24px;"><i class="fas fa-wallet"></i></div>
+                                                <div class="info"><div class="name" style="font-size:13px;">eBirr</div></div>
+                                                <div class="check"><i class="fas fa-check-circle"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- Payment Details (form) -->
                                     <div class="payment-section">
                                         <h4><i class="fas fa-file-invoice"></i> Payment Details</h4>
@@ -5069,28 +5766,6 @@
                                     </div>
                                 </div>
 
-                                <!-- RIGHT COLUMN: Payment Method -->
-                                <div class="payment-section">
-                                    <h4><i class="fas fa-credit-card"></i> Payment Method</h4>
-                                    <div class="section-desc">Choose your preferred method</div>
-                                    <div id="paymentMethods" style="display:flex; flex-direction:column; gap:6px;">
-                                        <div class="payment-method selected" data-method="telebirr" style="margin:0; padding:10px 12px; min-height:48px;">
-                                            <div class="icon" style="font-size:16px; width:24px;"><i class="fas fa-mobile-screen-button"></i></div>
-                                            <div class="info"><div class="name" style="font-size:12px;">Telebirr</div></div>
-                                            <div class="check"><i class="fas fa-check-circle"></i></div>
-                                        </div>
-                                        <div class="payment-method" data-method="cbe" style="margin:0; padding:10px 12px; min-height:48px;">
-                                            <div class="icon" style="font-size:16px; width:24px;"><i class="fas fa-building-columns"></i></div>
-                                            <div class="info"><div class="name" style="font-size:12px;">CBE</div></div>
-                                            <div class="check"><i class="fas fa-check-circle"></i></div>
-                                        </div>
-                                        <div class="payment-method" data-method="ebirr" style="margin:0; padding:10px 12px; min-height:48px;">
-                                            <div class="icon" style="font-size:16px; width:24px;"><i class="fas fa-wallet"></i></div>
-                                            <div class="info"><div class="name" style="font-size:12px;">eBirr</div></div>
-                                            <div class="check"><i class="fas fa-check-circle"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -5137,20 +5812,18 @@
                     <div class="admin-form">
                         <h4 style="margin-bottom:14px;"><span class="lang-en">Add New Premium Video</span><span class="lang-am">አዲስ ቪዲዮ ጨምር</span><span class="lang-ar">إضافة فيديو مميز جديد</span></h4>
                         <form id="addVideoForm">
-                            <label><span class="lang-en">Video Title</span><span class="lang-am">የቪዲዮ ርዕስ</span><span class="lang-ar">عنوان الفيديو</span></label><input type="text" id="videoTitle" placeholder="Optional — titles are generated automatically for uploads" />
+                            <label><span class="lang-en">Video Title</span><span class="lang-am">የቪዲዮ ርዕስ</span><span class="lang-ar">عنوان الفيديو</span></label><input type="text" id="videoTitle" placeholder="Enter title" required />
                             <label><span class="lang-en">Description</span><span class="lang-am">መግለጫ</span><span class="lang-ar">الوصف</span></label><textarea id="videoDesc" placeholder="Describe this content..."></textarea>
                             <label><span class="lang-en">Category</span><span class="lang-am">ምድብ</span><span class="lang-ar">الفئة</span></label><select id="videoCategory"><option value="exclusive">Exclusive Hub</option><option value="training">Training</option></select>
 
                             <div class="file-input-group">
-                                <label for="videoFile"><i class="fas fa-cloud-arrow-up"></i> <span class="lang-en">Upload Video Directly to Upload18</span><span class="lang-am">ቪዲዮን በቀጥታ ወደ Upload18 ስቀል</span><span class="lang-ar">رفع الفيديو مباشرة إلى Upload18</span><small class="upload-hint">Up to 5GB • Upload18 handles large files in secure parts</small></label>
+                                <label for="videoFile"><i class="fas fa-cloud-arrow-up"></i> <span class="lang-en">Upload Video File</span><span class="lang-am">የቪዲዮ ፋይል ስቀል</span><span class="lang-ar">رفع ملف الفيديو</span><small class="upload-hint">Up to 50 videos • each video uploads safely one-by-one</small></label>
                                 <div class="file-picker">
                                     <input type="file" id="videoFile" accept="video/*" multiple />
                                     <span id="videoFileName" class="file-name">No files selected</span>
                                 </div>
-                                <div id="videoBatchList" class="upload-batch-list" aria-live="polite"></div>
-                                <div class="upload-hint" style="margin-top:8px;">Select up to 50 videos at once. Titles and descriptions are generated automatically from each filename.</div>
                                 <div id="videoUploadStatus" class="upload-status" aria-live="polite">
-                                    <div class="upload-status-head"><span id="videoUploadMessage">Ready for Upload18</span><strong id="videoUploadPercent">0%</strong></div>
+                                    <div class="upload-status-head"><span id="videoUploadMessage">Ready to upload</span><strong id="videoUploadPercent">0%</strong></div>
                                     <div class="upload-progress"><span id="videoUploadProgress"></span></div>
                                 </div>
                             </div>
@@ -5198,20 +5871,6 @@
                         <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span class="lang-en">Save Settings</span><span class="lang-am">ቅንብሮችን አስቀምጥ</span><span class="lang-ar">حفظ الإعدادات</span></button>
                     </form>
                 </div>
-                <div class="admin-form" style="max-width:600px;margin-top:16px;">
-                    <div class="flex-between" style="gap:10px;align-items:center;">
-                        <h4 style="margin:0;"><i class="fas fa-layer-group text-gold"></i> Content Categories</h4>
-                        <span class="upload-hint">Shared with the user gallery</span>
-                    </div>
-                    <form id="categoryForm" style="margin-top:14px;">
-                        <label>Category name</label>
-                        <input type="text" id="newCategoryName" placeholder="e.g. New Releases" maxlength="40" required />
-                        <label>Icon (optional Font Awesome class)</label>
-                        <input type="text" id="newCategoryIcon" placeholder="fas fa-folder" maxlength="40" />
-                        <button type="submit" class="btn-primary"><i class="fas fa-plus"></i> Add Category</button>
-                    </form>
-                    <div id="adminCategoryList" class="admin-table-wrap" style="margin-top:14px;"></div>
-                </div>
             </div>
         </div>
 
@@ -5221,17 +5880,6 @@
         </div>
     </div>
 
-    <style>
-        .upload-batch-list{display:grid;gap:7px;margin-top:10px;max-height:240px;overflow:auto;}
-        .upload-batch-item{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:9px 10px;border:1px solid var(--border-color);border-radius:12px;background:var(--bg-input);font-size:12px;}
-        .upload-batch-item .batch-name{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .upload-batch-item .batch-state{font-weight:700;white-space:nowrap;}
-        .upload-batch-item.done .batch-state{color:var(--gold);}
-        .upload-batch-item.error{border-color:rgba(201,74,74,.32);}
-        .upload-batch-item.error .batch-state{color:#c94a4a;}
-        .upload-batch-item.done > i{color:var(--gold);}
-        .upload-batch-item.error > i{color:#c94a4a;}
-    </style>
     <script>
         // ============================================================
         // Lucide Icon initialisation
@@ -5468,9 +6116,11 @@
             const auth = firebase.auth();
             const db = firebase.firestore();
 
-            // ===== MEDIA STORAGE =====
-            // Videos are stored on Upload18. Payment proof screenshots are compressed
-            // locally and stored directly in Firestore, so no Cloudinary dependency is needed.
+            // ===== CLOUDINARY =====
+            const cloudinaryConfig = {
+                cloudName: 'qbisyz4q',
+                uploadPreset: 'ethio_hub_videos'
+            };
 
             const currentLang = () => localStorage.getItem('lang') || 'en';
             const t = (key, vars) => {
@@ -6163,10 +6813,19 @@
 
             // ===== PAYMENT =====
             document.querySelectorAll('.tier-card').forEach(card => {
-                card.addEventListener('click', () => {
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                const selectPlan = () => {
                     document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected');
                     state.selectedPlan = card.dataset.plan;
+                };
+                card.addEventListener('click', selectPlan);
+                card.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectPlan();
+                    }
                 });
             });
 
@@ -6267,13 +6926,28 @@
             async function preparePaymentProof(file) {
                 const dataUrl = await compressImage(file, 200);
                 if (!dataUrl || dataUrl.length > 300 * 1024) {
-                    throw new Error('Payment screenshot could not be prepared. Please choose a smaller image.');
+                    throw new Error('Payment screenshot could not be compressed enough.');
                 }
                 return dataUrl;
             }
 
-            // Payment proof is compressed locally and stored in Firestore.
-            // This keeps the payment flow independent from third-party image storage.
+            // ----- helper to upload screenshot via Cloudinary -----
+            async function uploadImageToCloudinary(file) {
+                if (!file) return null;
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', cloudinaryConfig.uploadPreset);
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.error?.message || `Upload failed (HTTP ${res.status})`);
+                }
+                const data = await res.json();
+                return data.secure_url;
+            }
 
             $('paymentForm').addEventListener('submit', async e => {
                 e.preventDefault();
@@ -6329,7 +7003,7 @@
 
                     if (state.pendingScreenshotFile) {
                         try {
-                            const screenshotUrl = await preparePaymentProof(state.pendingScreenshotFile);
+                            const screenshotUrl = await uploadImageToCloudinary(state.pendingScreenshotFile);
                             await paymentRef.update({ screenshotUrl });
                         } catch (uploadErr) {
                             console.warn(
@@ -6409,7 +7083,7 @@
                         const id = u.split('youtu.be/')[1]?.split('?')[0];
                         if (id) u = `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`;
                     }
-                    const isUpload18 = /(^|\.)upload18\.(?:net|org)(\/|$)/i.test(u);
+                    const isUpload18 = /(^|\.)upload18\.net(\/|$)/i.test(u);
                     const isVimeo = /(^|\.)vimeo\.com(\/|$)/i.test(u);
                     if (u.includes('youtube.com/embed/') || isUpload18 || isVimeo) {
                         const iframe = document.createElement('iframe');
@@ -6564,22 +7238,11 @@
             const renderVideoGrid = async (category = state.selectedCategory) => {
                 const c = $('videoGrid');
                 try {
-                    let snap;
-                    try {
-                        let q = db.collection('videos').orderBy('createdAt', 'desc');
-                        if (category !== 'all') q = q.where('category', '==', category);
-                        snap = await q.get();
-                    } catch (queryErr) {
-                        // Older records may not have createdAt or a composite index.
-                        // Fall back to an un-ordered query so the gallery still renders.
-                        console.warn('[Ethio Hub] Ordered video query failed; using fallback:', queryErr);
-                        let q = db.collection('videos');
-                        if (category !== 'all') q = q.where('category', '==', category);
-                        snap = await q.get();
-                    }
+                    let q = db.collection('videos').orderBy('createdAt', 'desc');
+                    if (category !== 'all') q = q.where('category', '==', category);
+                    const snap = await q.get();
                     const videos = [];
                     snap.forEach(d => videos.push({ id: d.id, ...d.data() }));
-                    videos.sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
                     if (!videos.length) {
                         c.innerHTML =
                             `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-film"></i><h3>${t('noContentTitle')}</h3><p>${t('noContentDesc')}</p></div>`;
@@ -6588,61 +7251,13 @@
                     const isAdmin = state.user?.role === 'admin';
                     const locked = !state.user || (!isAdmin && state.user.paymentStatus !== 'approved');
                     c.innerHTML = videos.map(v => {
-                        const thumb = v.thumbnail || '';
-                        const cat = appCategories.find(c => c.id === v.category)?.name || v.category || 'Uncategorized';
+                        const thumb = v.thumbnail ||
+                            `https://via.placeholder.com/640x360/0f3b2e/d4a017?text=${encodeURIComponent(v.title||'Ethio+Hub')}`;
+                        const cat = v.category === 'exclusive' ? t('catExclusive') : t('catTraining');
                         const liked = state.user && v.likes?.includes(state.user.id);
                         const isLocked = locked && !v.isFree;
-                        return `<article class="video-card" data-id="${v.id}" aria-label="${escapeHtml(v.title)}${isLocked ? ' — locked premium content' : ''}"><div class="thumb ${isLocked?'locked':''}" ${thumb ? `style="background-image:url('${escapeHtml(thumb)}')"` : ''}>${isLocked ? `<div class="locked-preview-slot" data-video-url="${escapeHtml(v.url || '')}" aria-hidden="true"></div><div class="locked-preview-shade"></div><div class="locked-overlay" aria-hidden="true"><span class="lock-badge"><i class="fas fa-lock"></i></span><span class="lock-label">🔒 Premium • 18+</span><span class="lock-desc">Pay to watch • አካውንትዎን ያረጋግጡ</span></div>` : `<div class="play-overlay"><i class="fas fa-circle-play"></i></div>`}</div><div class="body"><div class="title">${escapeHtml(v.title)}</div><div class="desc">${escapeHtml(v.description||t('noDescription'))}</div><div class="meta"><span class="cat">${escapeHtml(cat)}</span><div class="like-container" data-id="${v.id}"><i class="${liked?'fa-solid':'fa-regular'} fa-heart" style="${liked?'color:var(--gold)':''}"></i> ${v.likes?.length||0}</div></div></div></article>`;
+                        return `<article class="video-card" data-id="${v.id}" aria-label="${escapeHtml(v.title)}${isLocked ? ' — locked premium content' : ''}"><div class="thumb ${isLocked?'locked':''}" style="background-image:url('${escapeHtml(thumb)}')">${isLocked ? `<div class="locked-overlay" aria-hidden="true"><span class="lock-badge"><i class="fas fa-lock"></i></span><span class="lock-label">Premium</span></div>` : `<div class="play-overlay"><i class="fas fa-circle-play"></i></div>`}</div><div class="body"><div class="title">${escapeHtml(v.title)}</div><div class="desc">${escapeHtml(v.description||t('noDescription'))}</div><div class="meta"><span class="cat">${cat}</span><div class="like-container" data-id="${v.id}"><i class="${liked?'fa-solid':'fa-regular'} fa-heart" style="${liked?'color:var(--gold)':''}"></i> ${v.likes?.length||0}</div></div></div></article>`;
                     }).join('');
-
-                    // Use the real hosted video as the locked preview. Upload18 play URLs
-                    // are embedded; direct MP4/WebM sources use a muted looping video.
-                    const mountLockedPreview = slot => {
-                        if (!slot || slot.dataset.mounted === '1') return;
-                        const src = slot.dataset.videoUrl || '';
-                        if (!src) return;
-                        slot.dataset.mounted = '1';
-                        const isUpload18 = /(^|\.)upload18\.(?:net|org)(\/|$)/i.test(src);
-                        const isDirect = /\.(?:mp4|webm|ogg)(?:$|[?#])/i.test(src);
-                        if (isUpload18) {
-                            const iframe = document.createElement('iframe');
-                            iframe.className = 'locked-preview-media';
-                            iframe.src = src;
-                            iframe.loading = 'lazy';
-                            iframe.setAttribute('title', 'Premium video preview');
-                            iframe.setAttribute('aria-hidden', 'true');
-                            iframe.tabIndex = -1;
-                            iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
-                            iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-                            slot.replaceWith(iframe);
-                        } else if (isDirect) {
-                            const videoEl = document.createElement('video');
-                            videoEl.className = 'locked-preview-media';
-                            videoEl.src = src;
-                            videoEl.muted = true;
-                            videoEl.loop = true;
-                            videoEl.autoplay = true;
-                            videoEl.playsInline = true;
-                            videoEl.preload = 'metadata';
-                            videoEl.setAttribute('aria-hidden', 'true');
-                            videoEl.disablePictureInPicture = true;
-                            videoEl.play().catch(() => {});
-                            slot.replaceWith(videoEl);
-                        }
-                    };
-                    const previewObserver = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                mountLockedPreview(entry.target);
-                                previewObserver.unobserve(entry.target);
-                            }
-                        });
-                    }, { rootMargin: '120px 0px', threshold: 0.01 }) : null;
-                    c.querySelectorAll('.locked-preview-slot').forEach(slot => {
-                        if (previewObserver) previewObserver.observe(slot);
-                        else mountLockedPreview(slot);
-                    });
-
                     c.querySelectorAll('.video-card').forEach(card => card.addEventListener('click', e => {
                         if (e.target.closest('.like-container')) return;
                         const v = videos.find(x => x.id === card.dataset.id);
@@ -6692,24 +7307,20 @@
             updateCategoryFloat();
 
             // ===== ADMIN =====
+            // ===== UPLOAD18 VIDEO UPLOAD =====
             const UPLOAD18_CONFIG = {
-                apiKey: 'TPujbUM6nuF8GRB4mYYOQ5hz8RhqG',
                 baseUrl: 'https://upload18.org/api',
+                apiKey: 'TPujbUM6nuF8GRB4mYYOQ5hz8RhqG',
                 cid: '15',
                 fid: '18',
                 maxSize: 5 * 1024 * 1024 * 1024,
-                pollEveryMs: 10000,
-                maxPolls: 90
+                chunkSize: 50 * 1024 * 1024
             };
 
             const upload18Request = async (path, options = {}) => {
-                // Use the documented legacy `apikey` query parameter for browser GETs.
-                // This avoids a CORS preflight caused by custom X-API-Key headers.
-                const separator = path.includes('?') ? '&' : '?';
-                const url = `${UPLOAD18_CONFIG.baseUrl}${path}${separator}apikey=${encodeURIComponent(UPLOAD18_CONFIG.apiKey)}`;
-                const response = await fetch(url, { ...options, credentials: 'omit' });
+                const response = await fetch(`${UPLOAD18_CONFIG.baseUrl}${path}`, options);
                 const text = await response.text();
-                let data = null;
+                let data = {};
                 try { data = text ? JSON.parse(text) : {}; } catch (_) {
                     throw new Error(`Upload18 returned an invalid response (HTTP ${response.status}).`);
                 }
@@ -6720,33 +7331,17 @@
                 return data;
             };
 
-            const findUpload18Video = (payload, vid) => {
-                const wanted = String(vid);
-                const visit = value => {
-                    if (!value) return null;
-                    if (Array.isArray(value)) {
-                        for (const item of value) { const hit = visit(item); if (hit) return hit; }
-                        return null;
-                    }
-                    if (typeof value !== 'object') return null;
-                    const id = value.vid ?? value.id ?? value.video_id ?? value.videoId;
-                    if (id != null && String(id) === wanted) return value;
-                    for (const child of Object.values(value)) {
-                        if (child && typeof child === 'object') { const hit = visit(child); if (hit) return hit; }
-                    }
-                    return null;
-                };
-                return visit(payload);
-            };
-
-            const uploadVideoToUpload18 = async (file, progressOffset = 0, progressSpan = 100) => {
+            const uploadVideoToUpload18 = async (file) => {
                 if (!file) return null;
-                if (file.size > UPLOAD18_CONFIG.maxSize) throw new Error('This video is larger than the 5 GB Upload18 limit.');
+                if (file.size > UPLOAD18_CONFIG.maxSize) {
+                    throw new Error('This video is larger than the 5 GB Upload18 limit.');
+                }
 
                 const status = $('videoUploadStatus');
                 const message = $('videoUploadMessage');
                 const percent = $('videoUploadPercent');
                 const progress = $('videoUploadProgress');
+
                 const setProgress = (value, text) => {
                     const v = Math.max(0, Math.min(100, Math.round(value)));
                     if (status) status.classList.add('visible');
@@ -6754,158 +7349,97 @@
                     if (progress) progress.style.width = `${v}%`;
                     if (message && text) message.textContent = text;
                 };
-                const mapProgress = v => progressOffset + (v / 100) * progressSpan;
-                setProgress(mapProgress(2), `Preparing ${file.name}…`);
 
-                const postMultipart = (blob, fields, loadedPrefix, loadedSpan, filename) => new Promise((resolve, reject) => {
+                const postPart = (blob, fields, start, span, filename) => new Promise((resolve, reject) => {
                     const form = new FormData();
                     form.append('apikey', UPLOAD18_CONFIG.apiKey);
                     form.append('cid', UPLOAD18_CONFIG.cid);
                     form.append('fid', UPLOAD18_CONFIG.fid);
                     Object.entries(fields || {}).forEach(([k, v]) => form.append(k, String(v)));
                     form.append('video', blob, filename || file.name);
+
                     const xhr = new XMLHttpRequest();
-                    // Keep the POST a simple multipart request: the API key is already
-                    // included as the legacy `apikey` form field, avoiding CORS preflight.
                     xhr.open('POST', `${UPLOAD18_CONFIG.baseUrl}/upload`, true);
                     xhr.responseType = 'text';
-                    xhr.withCredentials = false;
                     xhr.timeout = 30 * 60 * 1000;
+
                     xhr.upload.onprogress = e => {
                         if (e.lengthComputable) {
-                            const pct = loadedPrefix + (e.loaded / e.total) * loadedSpan;
-                            setProgress(mapProgress(pct), 'Uploading to Upload18…');
+                            const p = start + (e.loaded / e.total) * span;
+                            setProgress(p, 'Uploading to Upload18…');
+                        } else {
+                            setProgress(start, 'Uploading to Upload18…');
                         }
                     };
+
                     xhr.onload = () => {
                         let data = {};
                         try { data = xhr.responseText ? JSON.parse(xhr.responseText) : {}; } catch (_) {
-                            reject(new Error(`Upload18 returned an invalid response (HTTP ${xhr.status}).`)); return;
+                            reject(new Error(`Upload18 returned an invalid response (HTTP ${xhr.status}).`));
+                            return;
                         }
-                        if (xhr.status >= 200 && xhr.status < 300 && data?.status !== 'error') resolve(data);
-                        else reject(new Error(data?.msg || data?.message || data?.error?.message || `Upload18 upload failed (HTTP ${xhr.status}).`));
+                        if (xhr.status >= 200 && xhr.status < 300 && data?.status !== 'error') {
+                            resolve(data);
+                        } else {
+                            reject(new Error(data?.msg || data?.message || data?.error?.message ||
+                                `Upload18 upload failed (HTTP ${xhr.status}).`));
+                        }
                     };
                     xhr.onerror = () => reject(new Error('Network error while uploading to Upload18.'));
-                    xhr.ontimeout = () => reject(new Error('Upload18 upload timed out. Please try again.'));
+                    xhr.ontimeout = () => reject(new Error('Upload18 upload timed out.'));
                     xhr.onabort = () => reject(new Error('Upload18 upload was cancelled.'));
                     xhr.send(form);
                 });
 
-                const extractVid = payload => {
-                    let found = null;
-                    const visit = value => {
-                        if (found || value == null) return;
-                        if (Array.isArray(value)) { value.forEach(visit); return; }
-                        if (typeof value !== 'object') return;
-                        for (const key of ['vid','video_id','videoId']) {
-                            if (value[key] != null && String(value[key]).trim()) { found = value[key]; return; }
-                        }
-                        Object.values(value).forEach(visit);
-                    };
-                    visit(payload);
-                    return found;
-                };
+                setProgress(2, 'Preparing Upload18…');
 
-                let uploadResponse = null;
-                const CHUNK_SIZE = 50 * 1024 * 1024;
-                if (file.size <= CHUNK_SIZE) {
-                    uploadResponse = await postMultipart(file, {}, 5, 80, file.name);
-                } else {
-                    const total = Math.ceil(file.size / CHUNK_SIZE);
-                    const uuid = `ethiohub-${Date.now()}-${crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2)}`;
-                    for (let index = 0; index < total; index++) {
-                        const startByte = index * CHUNK_SIZE;
-                        const endByte = Math.min(file.size, startByte + CHUNK_SIZE);
-                        const chunk = file.slice(startByte, endByte);
-                        let attempt = 0, response = null;
-                        while (attempt < 3) {
-                            attempt++;
-                            try {
-                                response = await postMultipart(chunk, {
-                                    dzuuid: uuid,
-                                    dzchunkindex: index,
-                                    dztotalchunkcount: total,
-                                    dzchunksize: chunk.size,
-                                    dztotalfilesize: file.size,
-                                    dzchunkbyteoffset: startByte
-                                }, 5 + (index / total) * 80, (1 / total) * 80, file.name);
-                                break;
-                            } catch (err) {
-                                if (attempt >= 3) throw err;
-                                setProgress(mapProgress(5 + (index / total) * 80), `Retrying Upload18 part ${index + 1}/${total}…`);
-                                await new Promise(r => setTimeout(r, 1500 * attempt));
-                            }
+                // Small/normal file: use one multipart request, exactly like Upload18's documented upload.
+                if (file.size <= UPLOAD18_CONFIG.chunkSize) {
+                    const response = await postPart(file, {}, 5, 90, file.name);
+                    const vid = response?.vid ?? response?.data?.vid ?? response?.video?.vid;
+                    if (!vid) throw new Error('Upload18 accepted the upload but did not return a video ID.');
+                    setProgress(100, 'Upload18 upload complete');
+                    return `https://upload18.org/play/index/${encodeURIComponent(vid)}`;
+                }
+
+                // Large file: Upload18-compatible chunked upload.
+                const uuid = (crypto.randomUUID ? crypto.randomUUID() :
+                    `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+                const total = Math.ceil(file.size / UPLOAD18_CONFIG.chunkSize);
+                let lastResponse = null;
+
+                for (let index = 0; index < total; index++) {
+                    const startByte = index * UPLOAD18_CONFIG.chunkSize;
+                    const endExclusive = Math.min(startByte + UPLOAD18_CONFIG.chunkSize, file.size);
+                    const chunk = file.slice(startByte, endExclusive);
+
+                    let attempt = 0;
+                    while (attempt < 3) {
+                        attempt++;
+                        try {
+                            lastResponse = await postPart(chunk, {
+                                dzuuid: uuid,
+                                dzchunkindex: index,
+                                dztotalchunkcount: total,
+                                dzchunksize: UPLOAD18_CONFIG.chunkSize,
+                                dztotalfilesize: file.size,
+                                dzchunkbyteoffset: startByte
+                            }, 5 + (index / total) * 90, 90 / total, file.name);
+                            break;
+                        } catch (err) {
+                            if (attempt >= 3) throw err;
+                            setProgress(5 + (index / total) * 90,
+                                `Retrying part ${index + 1}/${total}…`);
+                            await new Promise(r => setTimeout(r, 1500));
                         }
-                        uploadResponse = response || uploadResponse;
                     }
                 }
 
-                const vid = extractVid(uploadResponse);
+                const vid = lastResponse?.vid ?? lastResponse?.data?.vid ?? lastResponse?.video?.vid;
                 if (!vid) throw new Error('Upload18 accepted the upload but did not return a video ID.');
-                setProgress(mapProgress(88), 'Upload complete • processing video…');
 
-                for (let attempt = 0; attempt < UPLOAD18_CONFIG.maxPolls; attempt++) {
-                    const poll = await upload18Request('/myvideo?per_page=100');
-                    const item = findUpload18Video(poll, vid);
-                    const zt = Number(item?.zt ?? item?.status_code ?? item?.processing_status ?? -1);
-                    const local = Math.min(98, 88 + Math.round(((attempt + 1) / UPLOAD18_CONFIG.maxPolls) * 10));
-                    if (zt === 2) {
-                        setProgress(mapProgress(100), 'Upload18 video ready');
-                        return item?.play_url || item?.playUrl || item?.embed_url || item?.embedUrl || item?.url || item?.link || `https://upload18.org/play/index/${encodeURIComponent(vid)}`;
-                    }
-                    setProgress(mapProgress(local), zt === 0 ? 'Upload18 queued…' : zt === 1 ? 'Upload18 transcoding…' : 'Waiting for Upload18 processing…');
-                    await new Promise(r => setTimeout(r, UPLOAD18_CONFIG.pollEveryMs));
-                }
-                setProgress(mapProgress(100), 'Upload18 upload accepted');
+                setProgress(100, 'Upload18 upload complete');
                 return `https://upload18.org/play/index/${encodeURIComponent(vid)}`;
-            };
-
-            const slugifyCategory = name => String(name || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 36);
-            const defaultCategories = [
-                { id:'exclusive', name:'18+', icon:'fas fa-folder', order:1, system:true },
-                { id:'training', name:'New Hub', icon:'fas fa-folder', order:2, system:true }
-            ];
-            let appCategories = [...defaultCategories];
-
-            const renderCategoryTabs = () => {
-                const tabs = $('categoryTabs'); if (!tabs) return;
-                tabs.innerHTML = `<button class="${state.selectedCategory==='all'?'active':''}" data-cat="all" aria-pressed="${state.selectedCategory==='all'}"><i class="fas fa-folder-open"></i><span>All</span></button>` +
-                    appCategories.map(c => `<button class="${state.selectedCategory===c.id?'active':''}" data-cat="${escapeHtml(c.id)}" aria-pressed="${state.selectedCategory===c.id}"><i class="${escapeHtml(c.icon || 'fas fa-folder')}"></i><span>${escapeHtml(c.name)}</span></button>`).join('');
-                tabs.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
-                    tabs.querySelectorAll('button').forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed','false'); });
-                    b.classList.add('active'); b.setAttribute('aria-pressed','true'); state.selectedCategory = b.dataset.cat; renderVideoGrid();
-                }));
-            };
-
-            const renderCategorySelect = () => {
-                const select = $('videoCategory'); if (!select) return;
-                select.innerHTML = appCategories.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
-                if (!select.value) select.value = appCategories[0]?.id || 'exclusive';
-            };
-
-            const loadCategories = async () => {
-                try {
-                    const snap = await db.collection('categories').get();
-                    const custom = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-                    const map = new Map(defaultCategories.map(c => [c.id, c]));
-                    custom.forEach(c => map.set(c.id, { ...map.get(c.id), ...c }));
-                    appCategories = Array.from(map.values()).sort((a,b) => Number(a.order||999) - Number(b.order||999));
-                    if (state.user?.role === 'admin') {
-                        await Promise.all(defaultCategories.map(c => db.collection('categories').doc(c.id).set(c, {merge:true})));
-                    }
-                } catch (e) { console.warn('[Ethio Hub] Categories load fallback:', e); appCategories = [...defaultCategories]; }
-                renderCategoryTabs(); renderCategorySelect();
-            };
-
-            const renderAdminCategories = async () => {
-                const c = $('adminCategoryList'); if (!c) return;
-                c.innerHTML = appCategories.map(cat => `<div class="upload-batch-item"><i class="${escapeHtml(cat.icon || 'fas fa-folder')}"></i><span class="batch-name"><strong>${escapeHtml(cat.name)}</strong><br><small>${escapeHtml(cat.id)}</small></span>${cat.system ? '<span class="batch-state">System</span>' : `<button class="del delete-category" data-id="${escapeHtml(cat.id)}" title="Delete category"><i class="fas fa-trash"></i></button>`}</div>`).join('');
-                c.querySelectorAll('.delete-category').forEach(btn => btn.addEventListener('click', async () => {
-                    const id = btn.dataset.id;
-                    if (!confirm('Delete this category? Existing videos will remain but will no longer appear under a matching category.')) return;
-                    try { await db.collection('categories').doc(id).delete(); await loadCategories(); await renderAdminCategories(); await renderVideoGrid(); toast('Category deleted.', 'success'); }
-                    catch(e){ toast('Could not delete category.', 'error'); }
-                }));
             };
 
             const renderAdminVideos = async () => {
@@ -6959,12 +7493,12 @@
                         const desc = prompt(t('promptEditDesc'), v.description || '');
                         if (desc === null) return;
 
-                        const categoryNames = appCategories.map(c => `${c.id} (${c.name})`).join(', ');
-                        const category = prompt(`Category ID (${categoryNames}):`, v.category || appCategories[0]?.id || 'exclusive');
+                        const category = prompt('Category (exclusive/training):', v.category || 'exclusive');
                         if (category === null) return;
-                        const normalizedCategory = slugifyCategory(category);
-                        if (!appCategories.some(c => c.id === normalizedCategory)) {
-                            toast('Choose an existing category ID from the list.', 'error'); return;
+                        const normalizedCategory = category.trim().toLowerCase();
+                        if (!['exclusive', 'training'].includes(normalizedCategory)) {
+                            toast('Category must be exclusive or training.', 'error');
+                            return;
                         }
 
                         const freeAnswer = prompt('Free to watch? (yes/no):', v.isFree ? 'yes' : 'no');
@@ -7260,152 +7794,150 @@
 
             $('showAddVideoForm').addEventListener('click', () => $('addVideoFormWrap').classList.toggle('hidden'));
 
-            const makeGeneratedTitle = (file, index = 0) => {
-                return `Habesha 18+ Video ${String(index + 1).padStart(2, '0')}`;
-            };
-            const makeGeneratedDescription = (title, categoryName, index = 0) => {
-                const variants = [
-                    `ለአባላት ብቻ — Pay to watch and enjoy ${title}. Verify your account and unlock the full premium video.`,
-                    `አዲስ የHabesha 18+ ይዘት። Pay to watch ${title}, verify your account, and get full access to premium content.`,
-                    `Premium ${categoryName} content for verified members. ክፍያዎን ያረጋግጡ — then unlock ${title} and watch in full.`,
-                    `Your premium viewing starts here. አካውንትዎን ያረጋግጡ እና ይክፈሉ — then watch ${title} in full.`,
-                    `Exclusive Habesha 18+ experience. Pay to watch, verify your account, and unlock ${title} instantly after approval.`
-                ];
-                return variants[index % variants.length];
-            };
-
             $('videoFile').addEventListener('change', () => {
                 const files = Array.from($('videoFile').files || []);
-                const name = $('videoFileName'), status = $('videoUploadStatus'), message = $('videoUploadMessage'), percent = $('videoUploadPercent'), progress = $('videoUploadProgress'), list = $('videoBatchList');
-                if (files.length > 50) { toast('You can select up to 50 videos at once.', 'error'); $('videoFile').value = ''; return; }
+                const name = $('videoFileName');
+                const status = $('videoUploadStatus');
+                const message = $('videoUploadMessage');
+                const percent = $('videoUploadPercent');
+                const progress = $('videoUploadProgress');
                 if (files.length) {
-                    if (name) name.textContent = `${files.length} video${files.length > 1 ? 's' : ''} selected`;
-                    if (status) status.classList.add('visible'); if (message) message.textContent = files.length > 1 ? `Ready to upload ${files.length} videos` : 'Ready to upload';
-                    if (percent) percent.textContent = '0%'; if (progress) progress.style.width = '0%';
-                    if (list) list.innerHTML = files.map((f,i) => `<div class="upload-batch-item" data-index="${i}"><i class="fas fa-circle-play"></i><span class="batch-name">${escapeHtml(f.name)}</span><span class="batch-state">Queued</span></div>`).join('');
+                    const totalMb = files.reduce((sum, f) => sum + f.size, 0) / 1024 / 1024;
+                    if (name) name.textContent = files.length === 1
+                        ? `${files[0].name} • ${(files[0].size / 1024 / 1024).toFixed(1)} MB`
+                        : `${files.length} videos selected • ${totalMb.toFixed(1)} MB total`;
+                    if (status) status.classList.add('visible');
+                    if (message) message.textContent = `${files.length} video${files.length === 1 ? '' : 's'} ready to upload`;
+                    if (percent) percent.textContent = '0%';
+                    if (progress) progress.style.width = '0%';
                 } else {
-                    if (name) name.textContent = 'No files selected'; if (status) status.classList.remove('visible'); if (list) list.innerHTML = '';
+                    if (name) name.textContent = 'No files selected';
+                    if (status) status.classList.remove('visible');
                 }
-            });
-
-            $('categoryForm')?.addEventListener('submit', async e => {
-                e.preventDefault(); if (!state.user || state.user.role !== 'admin') return;
-                const name = $('newCategoryName').value.trim(); const id = slugifyCategory(name);
-                if (!id || id.length < 2) { toast('Enter a valid category name.', 'error'); return; }
-                if (appCategories.some(c => c.id === id)) { toast('That category already exists.', 'error'); return; }
-                try {
-                    await db.collection('categories').doc(id).set({ id, name, icon: $('newCategoryIcon').value.trim() || 'fas fa-folder', order: appCategories.length + 1, system: false, createdAt: Date.now() });
-                    $('categoryForm').reset(); await loadCategories(); await renderAdminCategories(); toast('Category added.', 'success');
-                } catch (e) { console.error(e); toast('Could not add category.', 'error'); }
             });
 
             $('addVideoForm').addEventListener('submit', async e => {
                 e.preventDefault();
                 if (!state.user || state.user.role !== 'admin') { toast('Admin access required', 'error'); return; }
-                const files = Array.from($('videoFile').files || []);
-                const title = $('videoTitle').value.trim(); const url = $('videoUrl').value.trim();
-                if (files.length > 50) { toast('Maximum 50 videos per batch.', 'error'); return; }
-                if (!files.length && !url) { toast(t('provideFileOrUrl'), 'error'); return; }
-                if (!files.length && !title) { toast(t('titleRequired'), 'error'); return; }
-                // File uploads do not require a title: each uploaded file gets an
-                // automatic Habesha 18+ title below. This also prevents native
-                // browser validation from silently blocking multi-file uploads.
 
-                const submitBtn = $('addVideoForm').querySelector('button[type="submit"]'); if (submitBtn?.disabled) return;
-                if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.originalText = submitBtn.innerHTML; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing…'; }
+                const titleInput = $('videoTitle').value.trim();
+                const descriptionInput = $('videoDesc').value.trim();
+                const files = Array.from($('videoFile').files || []);
+                const url = $('videoUrl').value.trim();
+                const MAX_BATCH = 50;
+
+                if (files.length > MAX_BATCH) {
+                    toast(`Please select no more than ${MAX_BATCH} videos at once.`, 'error');
+                    return;
+                }
+                if (!files.length && !url) { toast(t('provideFileOrUrl'), 'error'); return; }
+
+                const submitBtn = $('addVideoForm').querySelector('button[type="submit"]');
+                if (submitBtn?.disabled) return;
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.dataset.originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-cloud-arrow-up"></i> Uploading…';
+                }
                 showLoader();
+
+                const makeTitle = (file, index) => {
+                    if (titleInput && files.length === 1) return titleInput;
+                    const clean = (file?.name || '').replace(/\.[^/.]+$/, '').replace(/[_-]+/g, ' ').trim();
+                    const number = String(index + 1).padStart(2, '0');
+                    return clean ? `Habesha 18+ Video ${number}` : `Habesha 18+ Video ${number}`;
+                };
+                const makeDescription = (file, index) => {
+                    if (descriptionInput && files.length === 1) return descriptionInput;
+                    const number = String(index + 1).padStart(2, '0');
+                    return `Premium Habesha 18+ content • Video ${number}. Pay to watch and verify your account to unlock full access. ክፍያ ያድርጉ እና መለያዎን ያረጋግጡ።`;
+                };
+
                 try {
-                    const categoryId = $('videoCategory').value; const categoryName = appCategories.find(c=>c.id===categoryId)?.name || categoryId;
-                    if (files.length > 1) {
-                        // Upload several videos concurrently. Upload18 explicitly supports
-                        // parallel submissions; a small concurrency limit keeps mobile
-                        // browsers responsive while allowing a real multi-upload batch.
-                        let completed = 0, failed = 0, nextIndex = 0;
-                        const failures = [];
-                        const concurrency = Math.min(3, files.length);
-                        const updateBatchProgress = (activeName = '') => {
-                            const overall = Math.round(((completed + Math.min(concurrency, files.length - nextIndex)) / files.length) * 100);
-                            if ($('videoUploadPercent')) $('videoUploadPercent').textContent = `${Math.min(99, overall)}%`;
-                            if ($('videoUploadProgress')) $('videoUploadProgress').style.width = `${Math.min(99, overall)}%`;
-                            if ($('videoUploadMessage')) $('videoUploadMessage').textContent = `Uploading ${Math.min(completed + 1, files.length)} of ${files.length}${activeName ? ` • ${activeName}` : ''}`;
-                        };
-                        const worker = async () => {
-                            while (true) {
-                                const i = nextIndex++;
-                                if (i >= files.length) return;
-                                const file = files[i];
-                                const item = document.querySelector(`.upload-batch-item[data-index="${i}"]`);
-                                const stateEl = item?.querySelector('.batch-state');
-                                if (stateEl) stateEl.textContent = 'Uploading…';
-                                updateBatchProgress(file.name);
-                                try {
-                                    // Do not let progress from one concurrent upload overwrite
-                                    // the batch status; the batch counter remains authoritative.
-                                    const videoUrl = await uploadVideoToUpload18(file, 0, 100);
-                                    const generatedTitle = makeGeneratedTitle(file, i);
-                                    const generatedDescription = makeGeneratedDescription(generatedTitle, categoryName, i);
-                                    const sec = await readVideoDuration(file);
-                                    await db.collection('videos').add({ title: generatedTitle, description: generatedDescription, category: categoryId, isFree: $('videoIsFree').checked, url: videoUrl, thumbnail: '', duration: formatDuration(sec), likes: [], source: 'upload18', sourceFileName: file.name, createdAt: Date.now(), updatedAt: Date.now() });
-                                    completed++;
-                                    if (item) item.classList.add('done');
-                                    if (stateEl) stateEl.textContent = 'Published';
-                                } catch (fileErr) {
-                                    failed++;
-                                    failures.push(`${file.name}: ${fileErr?.message || 'Upload failed'}`);
-                                    if (item) item.classList.add('error');
-                                    if (stateEl) stateEl.textContent = 'Failed';
-                                    console.error('[Ethio Hub] Batch item failed:', file.name, fileErr);
-                                }
-                                const donePercent = Math.round(((completed + failed) / files.length) * 100);
-                                if ($('videoUploadPercent')) $('videoUploadPercent').textContent = `${donePercent}%`;
-                                if ($('videoUploadProgress')) $('videoUploadProgress').style.width = `${donePercent}%`;
-                                if ($('videoUploadMessage')) $('videoUploadMessage').textContent = `Completed ${completed + failed} of ${files.length}`;
+                    // Keep the proven single-video Upload18 path intact. Multiple files are simply queued
+                    // through that same function, so every video gets the exact same reliable upload flow.
+                    if (files.length) {
+                        let completed = 0;
+                        const total = files.length;
+                        for (let i = 0; i < total; i++) {
+                            const file = files[i];
+                            const currentTitle = makeTitle(file, i);
+                            const currentDesc = makeDescription(file, i);
+                            if ($('videoUploadMessage')) $('videoUploadMessage').textContent = `Uploading ${i + 1} of ${total}: ${file.name}`;
+                            if ($('videoUploadPercent')) $('videoUploadPercent').textContent = `${Math.round((completed / total) * 100)}%`;
+                            if ($('videoUploadProgress')) $('videoUploadProgress').style.width = `${Math.round((completed / total) * 100)}%`;
+
+                            try {
+                                const videoUrl = await uploadVideoToUpload18(file);
+                                if (!videoUrl) throw new Error('Upload18 did not return a playable video URL.');
+                                const sec = await readVideoDuration(file);
+                                await db.collection('videos').add({
+                                    title: currentTitle,
+                                    description: currentDesc,
+                                    category: $('videoCategory').value,
+                                    isFree: $('videoIsFree').checked,
+                                    url: videoUrl,
+                                    thumbnail: $('videoThumb').value.trim(),
+                                    duration: formatDuration(sec),
+                                    likes: [],
+                                    createdAt: Date.now(),
+                                    updatedAt: Date.now()
+                                });
+                                completed++;
+                                const overall = Math.round((completed / total) * 100);
+                                if ($('videoUploadPercent')) $('videoUploadPercent').textContent = `${overall}%`;
+                                if ($('videoUploadProgress')) $('videoUploadProgress').style.width = `${overall}%`;
+                                if ($('videoUploadMessage')) $('videoUploadMessage').textContent = `${completed} of ${total} videos published`;
+                            } catch (fileError) {
+                                console.error(`Video ${i + 1} failed:`, fileError);
+                                toast(`${file.name}: ${fileError?.message || 'Upload failed.'}`, 'error');
+                                if ($('videoUploadMessage')) $('videoUploadMessage').textContent = `Failed: ${file.name} — continuing with the next video…`;
                             }
-                        };
-                        await Promise.all(Array.from({ length: concurrency }, () => worker()));
-                        if ($('videoUploadPercent')) $('videoUploadPercent').textContent = '100%';
-                        if ($('videoUploadProgress')) $('videoUploadProgress').style.width = '100%';
-                        if (failed) {
-                            toast(`Published ${completed}/${files.length}. ${failed} upload${failed > 1 ? 's' : ''} failed.`, 'error');
-                            if ($('videoUploadMessage')) $('videoUploadMessage').textContent = failures.slice(0, 2).join(' • ');
-                        } else {
-                            toast(`🎬 ${completed} videos published successfully!`, 'success');
                         }
+                        if (completed === total) toast(`${total} video${total === 1 ? '' : 's'} published successfully.`, 'success');
+                        else if (completed > 0) toast(`${completed} of ${total} videos published.`, 'info');
+                        else throw new Error('None of the selected videos could be uploaded.');
                     } else {
-                        let videoUrl = url;
-                        let finalTitle = title;
-                        let finalDesc = $('videoDesc').value.trim();
-                        let duration = '00:00';
-                        if (files.length === 1) {
-                            videoUrl = await uploadVideoToUpload18(files[0]);
-                            duration = formatDuration(await readVideoDuration(files[0]));
-                            if (!finalTitle) finalTitle = makeGeneratedTitle(files[0], 0);
-                            if (!finalDesc) finalDesc = makeGeneratedDescription(finalTitle, categoryName, 0);
-                        }
-                        if (!finalDesc) finalDesc = makeGeneratedDescription(finalTitle, categoryName, 0);
-                        await db.collection('videos').add({ title: finalTitle, description: finalDesc, category: categoryId, isFree: $('videoIsFree').checked, url: videoUrl, thumbnail: $('videoThumb').value.trim(), duration, likes: [], source: 'upload18', createdAt: Date.now(), updatedAt: Date.now() });
-                        toast(t('videoPublished', { title: finalTitle }), 'success');
+                        // URL upload remains the original single-video behavior.
+                        await db.collection('videos').add({
+                            title: titleInput || 'Habesha 18+ Video 01',
+                            description: descriptionInput || 'Premium Habesha 18+ content. Pay to watch and verify your account to unlock full access. ክፍያ ያድርጉ እና መለያዎን ያረጋግጡ።',
+                            category: $('videoCategory').value,
+                            isFree: $('videoIsFree').checked,
+                            url,
+                            thumbnail: $('videoThumb').value.trim(),
+                            duration: '00:00',
+                            likes: [],
+                            createdAt: Date.now(),
+                            updatedAt: Date.now()
+                        });
+                        toast(t('videoPublished', { title: titleInput || 'Habesha 18+ Video 01' }), 'success');
                     }
-                    const batchHadFailure = files.length > 1 && document.querySelector('.upload-batch-item.error');
-                    if (!batchHadFailure) {
-                        $('addVideoForm').reset(); $('videoFileName').textContent = 'No files selected'; $('videoBatchList').innerHTML=''; $('videoUploadStatus').classList.remove('visible'); $('addVideoFormWrap').classList.add('hidden');
-                    }
+
+                    $('addVideoForm').reset();
+                    $('videoFileName').textContent = 'No files selected';
+                    $('videoUploadStatus').classList.remove('visible');
+                    $('addVideoFormWrap').classList.add('hidden');
                     await Promise.allSettled([renderAdminVideos(), renderVideoGrid()]);
                 } catch (err) {
-                    console.error('Video publish error:', err); toast(err?.message || t('videoSaveError'), 'error'); if ($('videoUploadMessage')) $('videoUploadMessage').textContent = err?.message || 'Upload18 upload failed';
+                    console.error('Video publish error:', err);
+                    toast(err?.message || t('videoSaveError'), 'error');
+                    if ($('videoUploadMessage')) $('videoUploadMessage').textContent = 'Upload failed — check the message above';
                 } finally {
-                    hideLoader(); if (submitBtn) { submitBtn.disabled=false; submitBtn.innerHTML=submitBtn.dataset.originalText || '<i class="fas fa-save"></i> Publish Video'; }
+                    hideLoader();
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = submitBtn.dataset.originalText || '<i class="fas fa-save"></i> Publish Video';
+                    }
                 }
             });
 
             const refreshAdmin = async () => {
                 if (!state.user || state.user.role !== 'admin') { navigate('gallery'); return; }
                 await loadSettings();
-                await loadCategories();
                 if (state.adminTab === 'videos') await renderAdminVideos();
                 else if (state.adminTab === 'users') await renderAdminUsers();
                 else if (state.adminTab === 'payments') await renderAdminPayments();
-                else if (state.adminTab === 'settings') await renderAdminCategories();
             };
 
             // ===== ADMIN TAB FILTERING =====
@@ -7439,12 +7971,6 @@
                     if (typeof stopAdminPaymentsListener === 'function') stopAdminPaymentsListener();
                 }
                 originalNavigate(page);
-                if (page === 'gallery' && typeof renderVideoGrid === 'function') {
-                    // Always reload the gallery when it becomes visible so newly
-                    // published videos are present without requiring a hard refresh.
-                    renderCategoryTabs?.();
-                    renderVideoGrid(state.selectedCategory || 'all');
-                }
                 if (page === 'admin') {
                     filterAdminTabs();
                     refreshAdmin();
@@ -7461,8 +7987,7 @@
                 if (b.dataset.tab === 'videos') renderAdminVideos();
                 if (b.dataset.tab === 'users') renderAdminUsers();
                 if (b.dataset.tab === 'payments') renderAdminPayments();
-                if (b.dataset.tab === 'settings') { loadCategories().then(renderAdminCategories); }
-                if (typeof stopAdminPaymentsListener === 'function') stopAdminPaymentsListener();
+                else if (typeof stopAdminPaymentsListener === 'function') stopAdminPaymentsListener();
             }));
 
             async function loadSettings() {
@@ -7556,9 +8081,6 @@
                 clearInterval(heroAutoCycle);
                 heroAutoCycle = setInterval(() => renderHeroIcon(1), 4200);
             }, { passive: true });
-
-            // ===== LOAD SHARED CATEGORIES =====
-            loadCategories();
 
             // ===== AUTH STATE =====
             auth.onAuthStateChanged(async fu => {
@@ -7771,23 +8293,15 @@
 
 
     <script>
-        // ===== GALLERY LIFECYCLE / FAST REFRESH =====
+        /* Premium glass scroll state — visual only, no navigation/function changes. */
         (() => {
-            let refreshTimer = null;
-            const refreshGallerySafely = () => {
-                if (document.hidden) return;
-                const page = document.getElementById('page-gallery');
-                if (!page || !page.classList.contains('active') || typeof renderVideoGrid !== 'function') return;
-                clearTimeout(refreshTimer);
-                refreshTimer = setTimeout(() => {
-                    try { renderCategoryTabs?.(); } catch (_) {}
-                    try { renderVideoGrid(state.selectedCategory || 'all'); } catch (e) { console.warn(e); }
-                }, 60);
+            const updateGlassState = () => {
+                const header = document.querySelector('.app-header');
+                if (header) header.classList.toggle('is-scrolled', window.scrollY > 18);
             };
-            window.addEventListener('pageshow', refreshGallerySafely);
-            window.addEventListener('online', refreshGallerySafely);
-            window.addEventListener('ethio:pagechange', refreshGallerySafely);
-            document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshGallerySafely(); });
+            window.addEventListener('scroll', updateGlassState, {passive:true});
+            window.addEventListener('load', updateGlassState, {once:true});
+            updateGlassState();
         })();
     </script>
 

@@ -136,202 +136,71 @@
             border-radius: 20px;
         }
 
-        /* ===== LOADER ===== */
+        /* ===== CLEAN EXCHANGE-STYLE LOADER ===== */
         .loader-overlay {
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.10);
-            display: none;
+            left: 0; right: 0; bottom: 0;
+            height: 0;
+            display: flex;
             align-items: flex-end;
             justify-content: center;
-            padding: 0 0 calc(18px + env(safe-area-inset-bottom, 0px));
+            padding: 0 16px calc(16px + env(safe-area-inset-bottom, 0px));
+            background: transparent;
             z-index: 99999;
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
-            transition: opacity 0.22s ease;
             pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .18s ease, visibility .18s ease;
         }
-        .loader-overlay.active {
-            display: flex;
-        }
-        .loader-sparkle {
-            position: relative;
-            width: 38px;
-            height: 38px;
-            padding: 7px;
-            border-radius: 50%;
-            background: rgba(255,255,255,.72);
-            border: 1px solid rgba(212,160,23,.32);
-            box-shadow: 0 8px 24px rgba(0,0,0,.12);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: loaderFloat 1.8s ease-in-out infinite;
-        }
-        .loader-sparkle::before,
-        .loader-sparkle::after {
-            content: '';
-            position: absolute;
-            inset: 5px;
-            border: 1px solid rgba(212, 160, 23, 0.22);
-            border-radius: 50%;
-            animation: loaderPulse 1.8s ease-out infinite;
-        }
-        .loader-sparkle::after {
-            inset: 11px;
-            animation-delay: 0.6s;
-        }
-        .loader-sparkle .sparkle-core {
-            width: 12px;
-            height: 12px;
-            background: var(--gold);
-            clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
-            filter: drop-shadow(0 0 8px var(--gold-glow)) drop-shadow(0 0 18px var(--gold-glow));
-            animation: loaderCore 1.15s ease-in-out infinite;
-        }
-        .loader-sparkle .sparkle-dot {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            border-radius: 50%;
-            background: var(--gold);
-            box-shadow: 0 0 8px var(--gold-glow);
-            animation: loaderOrbit 1.8s linear infinite;
-        }
-        .loader-sparkle .dot-1 {
-            animation-delay: 0s;
-        }
-        .loader-sparkle .dot-2 {
-            animation-delay: -0.6s;
-        }
-        .loader-sparkle .dot-3 {
-            animation-delay: -1.2s;
-        }
-        @keyframes loaderFloat {
-            0%,
-            100% {
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                transform: translateY(-3px) scale(1.03);
-            }
-        }
-        @keyframes loaderCore {
-            0%,
-            100% {
-                transform: rotate(0deg) scale(0.82);
-                opacity: 0.72;
-            }
-            50% {
-                transform: rotate(45deg) scale(1.18);
-                opacity: 1;
-            }
-        }
-        @keyframes loaderPulse {
-            0% {
-                transform: scale(0.55);
-                opacity: 0;
-            }
-            25% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: scale(1.55);
-                opacity: 0;
-            }
-        }
-        @keyframes loaderOrbit {
-            0% {
-                transform: rotate(0deg) translateX(15px) scale(0.7);
-                opacity: 0.25;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                transform: rotate(360deg) translateX(15px) scale(0.7);
-                opacity: 0.25;
-            }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .loader-sparkle,
-            .loader-sparkle::before,
-            .loader-sparkle::after,
-            .loader-sparkle .sparkle-core,
-            .loader-sparkle .sparkle-dot {
-                animation-duration: 2.5s;
-            }
-        }
-
-        /* ===== COMPACT BOTTOM LOADER ===== */
-        .loader-overlay {
-            align-items: flex-end;
-            justify-content: center;
-            padding: 0 0 calc(14px + env(safe-area-inset-bottom, 0px));
-            background: rgba(0,0,0,.035);
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
-            pointer-events: none;
-        }
+        .loader-overlay.active { opacity: 1; visibility: visible; }
         .loader-card {
-            width: min(172px, calc(100vw - 32px));
-            min-height: 46px;
+            width: min(260px, calc(100vw - 32px));
+            min-height: 48px;
             box-sizing: border-box;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 9px;
-            padding: 8px 13px;
-            border-radius: 16px;
-            border: 1px solid rgba(212,160,23,.28);
-            background: color-mix(in srgb, var(--bg-glass) 86%, transparent);
-            box-shadow: 0 8px 24px rgba(0,0,0,.13), inset 0 1px 0 rgba(255,255,255,.18);
-            backdrop-filter: blur(8px) saturate(125%);
-            -webkit-backdrop-filter: blur(8px) saturate(125%);
-            transform: translateY(10px);
+            gap: 10px;
+            padding: 8px 13px 8px 10px;
+            border: 1px solid rgba(212,160,23,.22);
+            border-radius: 12px;
+            background: rgba(24,24,24,.94);
+            box-shadow: 0 10px 28px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.06);
+            transform: translateY(12px);
             opacity: 0;
-            transition: transform .22s ease, opacity .22s ease;
+            transition: transform .2s ease, opacity .2s ease;
         }
-        .loader-overlay.active .loader-card {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .loader-copy {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: .15px;
-            color: var(--text-primary);
-            white-space: nowrap;
-        }
-        .loader-dots {
-            display: inline-block;
-            width: 15px;
-            overflow: hidden;
-            vertical-align: bottom;
-            animation: loaderDots 1.15s steps(4,end) infinite;
-        }
-        @keyframes loaderDots {
-            0%,25% { width: 0; }
-            50% { width: 5px; }
-            75%,100% { width: 15px; }
-        }
+        .loader-overlay.active .loader-card { transform: translateY(0); opacity: 1; }
         .loader-sparkle {
-            flex: 0 0 25px;
-            width: 25px;
-            height: 25px;
-            padding: 4px;
-            border-radius: 10px;
-            animation: loaderFloat 1.8s ease-in-out infinite;
+            position: relative;
+            flex: 0 0 27px;
+            width: 27px; height: 27px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 8px;
+            background: rgba(212,160,23,.12);
+            border: 1px solid rgba(212,160,23,.22);
+            overflow: hidden;
         }
-        .loader-sparkle::before { inset: 4px; }
-        .loader-sparkle::after { inset: 8px; }
-        .loader-sparkle .sparkle-core { width: 9px; height: 9px; }
-        .loader-sparkle .sparkle-dot { width: 2px; height: 2px; }
-        @media (prefers-reduced-motion: reduce) {
-            .loader-card, .loader-dots { animation: none !important; transition: none !important; }
+        .loader-sparkle .sparkle-core {
+            width: 9px; height: 9px;
+            background: var(--gold);
+            clip-path: polygon(50% 0%,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0% 50%,38% 38%);
+            animation: loaderCore .9s ease-in-out infinite;
         }
+        .loader-sparkle::after {
+            content: ''; position: absolute; top: 0; bottom: 0; left: -35%; width: 28%;
+            background: rgba(255,255,255,.16); transform: skewX(-18deg);
+            animation: loaderSweep 1.4s ease-in-out infinite;
+        }
+        .loader-sparkle::before, .loader-sparkle .sparkle-dot { display:none; }
+        .loader-copy {
+            flex: 1; min-width: 0;
+            font-size: 12px; line-height: 16px; font-weight: 600;
+            color: rgba(255,255,255,.92); white-space: nowrap; overflow:hidden; text-overflow:ellipsis;
+        }
+        .loader-dots { display:inline-block; width:14px; overflow:hidden; color:var(--gold); }
+        @keyframes loaderCore { 0%,100%{transform:scale(.72) rotate(0);opacity:.65} 50%{transform:scale(1.08) rotate(45deg);opacity:1} }
+        @keyframes loaderSweep { 0%{left:-35%} 60%,100%{left:125%} }
+        @media (prefers-reduced-motion: reduce) { .loader-card,.loader-sparkle .sparkle-core,.loader-sparkle::after { animation:none!important; transition:none!important; } }
 
         /* ===== HERO ===== */
         .hero-icon-switch {
@@ -7448,26 +7317,54 @@
                 try {
                     const categoryId = $('videoCategory').value; const categoryName = appCategories.find(c=>c.id===categoryId)?.name || categoryId;
                     if (files.length > 1) {
-                        let completed = 0, failed = 0;
+                        // Upload several videos concurrently. Upload18 explicitly supports
+                        // parallel submissions; a small concurrency limit keeps mobile
+                        // browsers responsive while allowing a real multi-upload batch.
+                        let completed = 0, failed = 0, nextIndex = 0;
                         const failures = [];
-                        for (let i=0; i<files.length; i++) {
-                            const file = files[i]; const item = document.querySelector(`.upload-batch-item[data-index="${i}"]`); const stateEl = item?.querySelector('.batch-state');
-                            if (stateEl) stateEl.textContent = 'Uploading…';
-                            try {
-                                const videoUrl = await uploadVideoToUpload18(file, (i/files.length)*100, (1/files.length)*100);
-                                const generatedTitle = makeGeneratedTitle(file, i);
-                                const generatedDescription = makeGeneratedDescription(generatedTitle, categoryName, i);
-                                const sec = await readVideoDuration(file);
-                                await db.collection('videos').add({ title: generatedTitle, description: generatedDescription, category: categoryId, isFree: $('videoIsFree').checked, url: videoUrl, thumbnail: '', duration: formatDuration(sec), likes: [], source: 'upload18', sourceFileName: file.name, createdAt: Date.now(), updatedAt: Date.now() });
-                                completed++;
-                                if (item) item.classList.add('done'); if (stateEl) stateEl.textContent = 'Published';
-                            } catch (fileErr) {
-                                failed++;
-                                failures.push(`${file.name}: ${fileErr?.message || 'Upload failed'}`);
-                                if (item) item.classList.add('error'); if (stateEl) stateEl.textContent = 'Failed';
-                                console.error('[Ethio Hub] Batch item failed:', file.name, fileErr);
+                        const concurrency = Math.min(3, files.length);
+                        const updateBatchProgress = (activeName = '') => {
+                            const overall = Math.round(((completed + Math.min(concurrency, files.length - nextIndex)) / files.length) * 100);
+                            if ($('videoUploadPercent')) $('videoUploadPercent').textContent = `${Math.min(99, overall)}%`;
+                            if ($('videoUploadProgress')) $('videoUploadProgress').style.width = `${Math.min(99, overall)}%`;
+                            if ($('videoUploadMessage')) $('videoUploadMessage').textContent = `Uploading ${Math.min(completed + 1, files.length)} of ${files.length}${activeName ? ` • ${activeName}` : ''}`;
+                        };
+                        const worker = async () => {
+                            while (true) {
+                                const i = nextIndex++;
+                                if (i >= files.length) return;
+                                const file = files[i];
+                                const item = document.querySelector(`.upload-batch-item[data-index="${i}"]`);
+                                const stateEl = item?.querySelector('.batch-state');
+                                if (stateEl) stateEl.textContent = 'Uploading…';
+                                updateBatchProgress(file.name);
+                                try {
+                                    // Do not let progress from one concurrent upload overwrite
+                                    // the batch status; the batch counter remains authoritative.
+                                    const videoUrl = await uploadVideoToUpload18(file, 0, 100);
+                                    const generatedTitle = makeGeneratedTitle(file, i);
+                                    const generatedDescription = makeGeneratedDescription(generatedTitle, categoryName, i);
+                                    const sec = await readVideoDuration(file);
+                                    await db.collection('videos').add({ title: generatedTitle, description: generatedDescription, category: categoryId, isFree: $('videoIsFree').checked, url: videoUrl, thumbnail: '', duration: formatDuration(sec), likes: [], source: 'upload18', sourceFileName: file.name, createdAt: Date.now(), updatedAt: Date.now() });
+                                    completed++;
+                                    if (item) item.classList.add('done');
+                                    if (stateEl) stateEl.textContent = 'Published';
+                                } catch (fileErr) {
+                                    failed++;
+                                    failures.push(`${file.name}: ${fileErr?.message || 'Upload failed'}`);
+                                    if (item) item.classList.add('error');
+                                    if (stateEl) stateEl.textContent = 'Failed';
+                                    console.error('[Ethio Hub] Batch item failed:', file.name, fileErr);
+                                }
+                                const donePercent = Math.round(((completed + failed) / files.length) * 100);
+                                if ($('videoUploadPercent')) $('videoUploadPercent').textContent = `${donePercent}%`;
+                                if ($('videoUploadProgress')) $('videoUploadProgress').style.width = `${donePercent}%`;
+                                if ($('videoUploadMessage')) $('videoUploadMessage').textContent = `Completed ${completed + failed} of ${files.length}`;
                             }
-                        }
+                        };
+                        await Promise.all(Array.from({ length: concurrency }, () => worker()));
+                        if ($('videoUploadPercent')) $('videoUploadPercent').textContent = '100%';
+                        if ($('videoUploadProgress')) $('videoUploadProgress').style.width = '100%';
                         if (failed) {
                             toast(`Published ${completed}/${files.length}. ${failed} upload${failed > 1 ? 's' : ''} failed.`, 'error');
                             if ($('videoUploadMessage')) $('videoUploadMessage').textContent = failures.slice(0, 2).join(' • ');

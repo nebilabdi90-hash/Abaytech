@@ -5011,10 +5011,63 @@
 }
 #page-admin .file-input-group label { font-size: 12px; }
 #page-admin .file-picker {
-    min-height: 48px;
+    min-height: 52px;
     padding: 6px 8px;
-    border-radius: 12px;
+    border-radius: 14px;
     background: var(--bg-app);
+}
+#page-admin .upload-file-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+#page-admin .upload-file-picker input[type=file] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+#page-admin .add-more-videos {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--border-color));
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--gold) 10%, var(--bg-input));
+    color: var(--gold);
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+    touch-action: manipulation;
+}
+#page-admin .add-more-videos:hover {
+    transform: translateY(-1px);
+    background: color-mix(in srgb, var(--gold) 17%, var(--bg-input));
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+#page-admin .add-more-videos:active { transform: scale(.95); }
+#page-admin .file-selection-info {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+#page-admin .file-count {
+    flex: 0 0 auto;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--gold) 10%, var(--bg-input));
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
 }
 #page-admin .upload-status { padding-top: 2px; }
 
@@ -5818,9 +5871,15 @@
 
                             <div class="file-input-group">
                                 <label for="videoFile"><i class="fas fa-cloud-arrow-up"></i> <span class="lang-en">Upload Video File</span><span class="lang-am">የቪዲዮ ፋይል ስቀል</span><span class="lang-ar">رفع ملف الفيديو</span><small class="upload-hint">Up to 50 videos • each video uploads safely one-by-one</small></label>
-                                <div class="file-picker">
+                                <div class="file-picker upload-file-picker">
                                     <input type="file" id="videoFile" accept="video/*" multiple />
-                                    <span id="videoFileName" class="file-name">No files selected</span>
+                                    <button type="button" id="addMoreVideosBtn" class="add-more-videos" aria-label="Add more videos" title="Add more videos">
+                                        <i class="fas fa-plus" aria-hidden="true"></i>
+                                    </button>
+                                    <div class="file-selection-info">
+                                        <span id="videoFileName" class="file-name">No files selected</span>
+                                        <span id="videoFileCount" class="file-count">0 / 50</span>
+                                    </div>
                                 </div>
                                 <div id="videoUploadStatus" class="upload-status" aria-live="polite">
                                     <div class="upload-status-head"><span id="videoUploadMessage">Ready to upload</span><strong id="videoUploadPercent">0%</strong></div>
@@ -7794,13 +7853,19 @@
 
             $('showAddVideoForm').addEventListener('click', () => $('addVideoFormWrap').classList.toggle('hidden'));
 
-            $('videoFile').addEventListener('change', () => {
-                const files = Array.from($('videoFile').files || []);
+            // Keep a real queue of File objects so the + button can add more videos
+            // without replacing the files that were already selected.
+            let selectedUploadFiles = [];
+            const MAX_BATCH = 50;
+            const renderSelectedFiles = () => {
+                const files = selectedUploadFiles;
                 const name = $('videoFileName');
+                const count = $('videoFileCount');
                 const status = $('videoUploadStatus');
                 const message = $('videoUploadMessage');
                 const percent = $('videoUploadPercent');
                 const progress = $('videoUploadProgress');
+                if (count) count.textContent = `${files.length} / ${MAX_BATCH}`;
                 if (files.length) {
                     const totalMb = files.reduce((sum, f) => sum + f.size, 0) / 1024 / 1024;
                     if (name) name.textContent = files.length === 1
@@ -7814,6 +7879,31 @@
                     if (name) name.textContent = 'No files selected';
                     if (status) status.classList.remove('visible');
                 }
+            };
+
+            const addSelectedFiles = (fileList) => {
+                const incoming = Array.from(fileList || []).filter(f => f && f.type.startsWith('video/'));
+                if (!incoming.length) return;
+                const remaining = MAX_BATCH - selectedUploadFiles.length;
+                if (incoming.length > remaining) {
+                    toast(`You can add ${remaining} more video${remaining === 1 ? '' : 's'} (maximum ${MAX_BATCH}).`, 'error');
+                }
+                selectedUploadFiles.push(...incoming.slice(0, Math.max(0, remaining)));
+                renderSelectedFiles();
+            };
+
+            $('addMoreVideosBtn').addEventListener('click', () => {
+                if (selectedUploadFiles.length >= MAX_BATCH) {
+                    toast(`Maximum ${MAX_BATCH} videos reached.`, 'error');
+                    return;
+                }
+                $('videoFile').click();
+            });
+
+            $('videoFile').addEventListener('change', (e) => {
+                addSelectedFiles(e.target.files);
+                // Reset the native input so tapping + again can select the same file if needed.
+                e.target.value = '';
             });
 
             $('addVideoForm').addEventListener('submit', async e => {
@@ -7822,9 +7912,8 @@
 
                 const titleInput = $('videoTitle').value.trim();
                 const descriptionInput = $('videoDesc').value.trim();
-                const files = Array.from($('videoFile').files || []);
+                const files = [...selectedUploadFiles];
                 const url = $('videoUrl').value.trim();
-                const MAX_BATCH = 50;
 
                 if (files.length > MAX_BATCH) {
                     toast(`Please select no more than ${MAX_BATCH} videos at once.`, 'error');
@@ -7915,8 +8004,8 @@
                     }
 
                     $('addVideoForm').reset();
-                    $('videoFileName').textContent = 'No files selected';
-                    $('videoUploadStatus').classList.remove('visible');
+                    selectedUploadFiles = [];
+                    renderSelectedFiles();
                     $('addVideoFormWrap').classList.add('hidden');
                     await Promise.allSettled([renderAdminVideos(), renderVideoGrid()]);
                 } catch (err) {

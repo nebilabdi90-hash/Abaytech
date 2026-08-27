@@ -140,22 +140,31 @@
         .loader-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.10);
             display: none;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
+            padding: 0 0 calc(18px + env(safe-area-inset-bottom, 0px));
             z-index: 99999;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            transition: opacity 0.3s ease;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            transition: opacity 0.22s ease;
+            pointer-events: none;
         }
         .loader-overlay.active {
             display: flex;
         }
         .loader-sparkle {
             position: relative;
-            width: 64px;
-            height: 64px;
+            width: 38px;
+            height: 38px;
+            padding: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.72);
+            border: 1px solid rgba(212,160,23,.32);
+            box-shadow: 0 8px 24px rgba(0,0,0,.12);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -165,18 +174,18 @@
         .loader-sparkle::after {
             content: '';
             position: absolute;
-            inset: 8px;
-            border: 1px solid rgba(212, 160, 23, 0.25);
+            inset: 5px;
+            border: 1px solid rgba(212, 160, 23, 0.22);
             border-radius: 50%;
             animation: loaderPulse 1.8s ease-out infinite;
         }
         .loader-sparkle::after {
-            inset: 18px;
+            inset: 11px;
             animation-delay: 0.6s;
         }
         .loader-sparkle .sparkle-core {
-            width: 20px;
-            height: 20px;
+            width: 12px;
+            height: 12px;
             background: var(--gold);
             clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
             filter: drop-shadow(0 0 8px var(--gold-glow)) drop-shadow(0 0 18px var(--gold-glow));
@@ -184,8 +193,8 @@
         }
         .loader-sparkle .sparkle-dot {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 3px;
+            height: 3px;
             border-radius: 50%;
             background: var(--gold);
             box-shadow: 0 0 8px var(--gold-glow);
@@ -235,14 +244,14 @@
         }
         @keyframes loaderOrbit {
             0% {
-                transform: rotate(0deg) translateX(27px) scale(0.7);
+                transform: rotate(0deg) translateX(15px) scale(0.7);
                 opacity: 0.25;
             }
             50% {
                 opacity: 1;
             }
             100% {
-                transform: rotate(360deg) translateX(27px) scale(0.7);
+                transform: rotate(360deg) translateX(15px) scale(0.7);
                 opacity: 0.25;
             }
         }
@@ -254,6 +263,74 @@
             .loader-sparkle .sparkle-dot {
                 animation-duration: 2.5s;
             }
+        }
+
+        /* ===== COMPACT BOTTOM LOADER ===== */
+        .loader-overlay {
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0 0 calc(14px + env(safe-area-inset-bottom, 0px));
+            background: rgba(0,0,0,.035);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            pointer-events: none;
+        }
+        .loader-card {
+            width: min(172px, calc(100vw - 32px));
+            min-height: 46px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 8px 13px;
+            border-radius: 16px;
+            border: 1px solid rgba(212,160,23,.28);
+            background: color-mix(in srgb, var(--bg-glass) 86%, transparent);
+            box-shadow: 0 8px 24px rgba(0,0,0,.13), inset 0 1px 0 rgba(255,255,255,.18);
+            backdrop-filter: blur(8px) saturate(125%);
+            -webkit-backdrop-filter: blur(8px) saturate(125%);
+            transform: translateY(10px);
+            opacity: 0;
+            transition: transform .22s ease, opacity .22s ease;
+        }
+        .loader-overlay.active .loader-card {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .loader-copy {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .15px;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+        .loader-dots {
+            display: inline-block;
+            width: 15px;
+            overflow: hidden;
+            vertical-align: bottom;
+            animation: loaderDots 1.15s steps(4,end) infinite;
+        }
+        @keyframes loaderDots {
+            0%,25% { width: 0; }
+            50% { width: 5px; }
+            75%,100% { width: 15px; }
+        }
+        .loader-sparkle {
+            flex: 0 0 25px;
+            width: 25px;
+            height: 25px;
+            padding: 4px;
+            border-radius: 10px;
+            animation: loaderFloat 1.8s ease-in-out infinite;
+        }
+        .loader-sparkle::before { inset: 4px; }
+        .loader-sparkle::after { inset: 8px; }
+        .loader-sparkle .sparkle-core { width: 9px; height: 9px; }
+        .loader-sparkle .sparkle-dot { width: 2px; height: 2px; }
+        @media (prefers-reduced-motion: reduce) {
+            .loader-card, .loader-dots { animation: none !important; transition: none !important; }
         }
 
         /* ===== HERO ===== */
@@ -1704,7 +1781,79 @@
             transition: filter 0.4s ease, opacity 0.4s ease;
         }
         .video-card .thumb.locked {
-            filter: blur(5px) brightness(0.6);
+            filter: none;
+            overflow: hidden;
+            transform: scale(1.015);
+            background: var(--bg-input);
+        }
+        /* Locked cards show a blurred preview from the ACTUAL hosted video,
+           rather than a generic/placeholder image. */
+        .video-card .thumb.locked .locked-preview-media {
+            position: absolute;
+            inset: -12px;
+            width: calc(100% + 24px);
+            height: calc(100% + 24px);
+            display: block;
+            border: 0;
+            object-fit: cover;
+            filter: blur(10px) brightness(.70) saturate(.82);
+            transform: scale(1.08);
+            transform-origin: center;
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+        .video-card .thumb.locked iframe.locked-preview-media {
+            overflow: hidden;
+        }
+        .video-card .thumb.locked .locked-preview-shade {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(180deg, rgba(6,8,7,.10), rgba(6,8,7,.42));
+            pointer-events: none;
+        }
+        .video-card .locked-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            z-index: 2;
+            background: linear-gradient(180deg, rgba(8,10,9,.10), rgba(8,10,9,.38));
+            color: #fff;
+            text-align: center;
+            pointer-events: none;
+            filter: none;
+        }
+        .video-card .locked-overlay .lock-badge {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: rgba(10,12,11,.72);
+            border: 1px solid rgba(255,255,255,.25);
+            box-shadow: 0 8px 22px rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.12);
+            color: var(--gold);
+            font-size: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .video-card .locked-overlay .lock-label {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .02em;
+            text-shadow: 0 2px 8px rgba(0,0,0,.65);
+        }
+        .video-card .locked-overlay .lock-desc {
+            max-width: 86%;
+            font-size: 9px;
+            line-height: 1.3;
+            opacity: .92;
+            text-shadow: 0 2px 7px rgba(0,0,0,.65);
         }
         .video-card .thumb .play-overlay {
             position: absolute;
@@ -4700,12 +4849,15 @@
     <!-- ===== CANVAS BACKGROUND ===== -->
     <canvas id="bgCanvas"></canvas>
 
-    <div class="loader-overlay" id="globalLoader">
-        <div class="loader-sparkle" aria-label="Loading" role="status">
-            <span class="sparkle-core"></span>
-            <span class="sparkle-dot dot-1"></span>
-            <span class="sparkle-dot dot-2"></span>
-            <span class="sparkle-dot dot-3"></span>
+    <div class="loader-overlay" id="globalLoader" aria-hidden="true">
+        <div class="loader-card" role="status" aria-live="polite">
+            <span class="loader-sparkle" aria-hidden="true">
+                <span class="sparkle-core"></span>
+                <span class="sparkle-dot dot-1"></span>
+                <span class="sparkle-dot dot-2"></span>
+                <span class="sparkle-dot dot-3"></span>
+            </span>
+            <span class="loader-copy">Working<span class="loader-dots" aria-hidden="true">...</span></span>
         </div>
     </div>
     <div id="toast"><i class="fas fa-info-circle"></i><span class="msg">Message</span></div>
@@ -5206,7 +5358,10 @@
         .upload-batch-item .batch-name{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
         .upload-batch-item .batch-state{font-weight:700;white-space:nowrap;}
         .upload-batch-item.done .batch-state{color:var(--gold);}
+        .upload-batch-item.error{border-color:rgba(201,74,74,.32);}
         .upload-batch-item.error .batch-state{color:#c94a4a;}
+        .upload-batch-item.done > i{color:var(--gold);}
+        .upload-batch-item.error > i{color:#c94a4a;}
     </style>
     <script>
         // ============================================================
@@ -6540,11 +6695,22 @@
             const renderVideoGrid = async (category = state.selectedCategory) => {
                 const c = $('videoGrid');
                 try {
-                    let q = db.collection('videos').orderBy('createdAt', 'desc');
-                    if (category !== 'all') q = q.where('category', '==', category);
-                    const snap = await q.get();
+                    let snap;
+                    try {
+                        let q = db.collection('videos').orderBy('createdAt', 'desc');
+                        if (category !== 'all') q = q.where('category', '==', category);
+                        snap = await q.get();
+                    } catch (queryErr) {
+                        // Older records may not have createdAt or a composite index.
+                        // Fall back to an un-ordered query so the gallery still renders.
+                        console.warn('[Ethio Hub] Ordered video query failed; using fallback:', queryErr);
+                        let q = db.collection('videos');
+                        if (category !== 'all') q = q.where('category', '==', category);
+                        snap = await q.get();
+                    }
                     const videos = [];
                     snap.forEach(d => videos.push({ id: d.id, ...d.data() }));
+                    videos.sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
                     if (!videos.length) {
                         c.innerHTML =
                             `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-film"></i><h3>${t('noContentTitle')}</h3><p>${t('noContentDesc')}</p></div>`;
@@ -6553,13 +6719,61 @@
                     const isAdmin = state.user?.role === 'admin';
                     const locked = !state.user || (!isAdmin && state.user.paymentStatus !== 'approved');
                     c.innerHTML = videos.map(v => {
-                        const thumb = v.thumbnail ||
-                            `https://via.placeholder.com/640x360/0f3b2e/d4a017?text=${encodeURIComponent(v.title||'Ethio+Hub')}`;
+                        const thumb = v.thumbnail || '';
                         const cat = appCategories.find(c => c.id === v.category)?.name || v.category || 'Uncategorized';
                         const liked = state.user && v.likes?.includes(state.user.id);
                         const isLocked = locked && !v.isFree;
-                        return `<article class="video-card" data-id="${v.id}" aria-label="${escapeHtml(v.title)}${isLocked ? ' — locked premium content' : ''}"><div class="thumb ${isLocked?'locked':''}" style="background-image:url('${escapeHtml(thumb)}')">${isLocked ? `<div class="locked-overlay" aria-hidden="true"><span class="lock-badge"><i class="fas fa-lock"></i></span><span class="lock-label">Premium</span></div>` : `<div class="play-overlay"><i class="fas fa-circle-play"></i></div>`}</div><div class="body"><div class="title">${escapeHtml(v.title)}</div><div class="desc">${escapeHtml(v.description||t('noDescription'))}</div><div class="meta"><span class="cat">${cat}</span><div class="like-container" data-id="${v.id}"><i class="${liked?'fa-solid':'fa-regular'} fa-heart" style="${liked?'color:var(--gold)':''}"></i> ${v.likes?.length||0}</div></div></div></article>`;
+                        return `<article class="video-card" data-id="${v.id}" aria-label="${escapeHtml(v.title)}${isLocked ? ' — locked premium content' : ''}"><div class="thumb ${isLocked?'locked':''}" ${thumb ? `style="background-image:url('${escapeHtml(thumb)}')"` : ''}>${isLocked ? `<div class="locked-preview-slot" data-video-url="${escapeHtml(v.url || '')}" aria-hidden="true"></div><div class="locked-preview-shade"></div><div class="locked-overlay" aria-hidden="true"><span class="lock-badge"><i class="fas fa-lock"></i></span><span class="lock-label">🔒 Premium • 18+</span><span class="lock-desc">Pay to watch • አካውንትዎን ያረጋግጡ</span></div>` : `<div class="play-overlay"><i class="fas fa-circle-play"></i></div>`}</div><div class="body"><div class="title">${escapeHtml(v.title)}</div><div class="desc">${escapeHtml(v.description||t('noDescription'))}</div><div class="meta"><span class="cat">${escapeHtml(cat)}</span><div class="like-container" data-id="${v.id}"><i class="${liked?'fa-solid':'fa-regular'} fa-heart" style="${liked?'color:var(--gold)':''}"></i> ${v.likes?.length||0}</div></div></div></article>`;
                     }).join('');
+
+                    // Use the real hosted video as the locked preview. Upload18 play URLs
+                    // are embedded; direct MP4/WebM sources use a muted looping video.
+                    const mountLockedPreview = slot => {
+                        if (!slot || slot.dataset.mounted === '1') return;
+                        const src = slot.dataset.videoUrl || '';
+                        if (!src) return;
+                        slot.dataset.mounted = '1';
+                        const isUpload18 = /(^|\.)upload18\.(?:net|org)(\/|$)/i.test(src);
+                        const isDirect = /\.(?:mp4|webm|ogg)(?:$|[?#])/i.test(src);
+                        if (isUpload18) {
+                            const iframe = document.createElement('iframe');
+                            iframe.className = 'locked-preview-media';
+                            iframe.src = src;
+                            iframe.loading = 'lazy';
+                            iframe.setAttribute('title', 'Premium video preview');
+                            iframe.setAttribute('aria-hidden', 'true');
+                            iframe.tabIndex = -1;
+                            iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+                            iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+                            slot.replaceWith(iframe);
+                        } else if (isDirect) {
+                            const videoEl = document.createElement('video');
+                            videoEl.className = 'locked-preview-media';
+                            videoEl.src = src;
+                            videoEl.muted = true;
+                            videoEl.loop = true;
+                            videoEl.autoplay = true;
+                            videoEl.playsInline = true;
+                            videoEl.preload = 'metadata';
+                            videoEl.setAttribute('aria-hidden', 'true');
+                            videoEl.disablePictureInPicture = true;
+                            videoEl.play().catch(() => {});
+                            slot.replaceWith(videoEl);
+                        }
+                    };
+                    const previewObserver = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                mountLockedPreview(entry.target);
+                                previewObserver.unobserve(entry.target);
+                            }
+                        });
+                    }, { rootMargin: '120px 0px', threshold: 0.01 }) : null;
+                    c.querySelectorAll('.locked-preview-slot').forEach(slot => {
+                        if (previewObserver) previewObserver.observe(slot);
+                        else mountLockedPreview(slot);
+                    });
+
                     c.querySelectorAll('.video-card').forEach(card => card.addEventListener('click', e => {
                         if (e.target.closest('.like-container')) return;
                         const v = videos.find(x => x.id === card.dataset.id);
@@ -6620,8 +6834,11 @@
             };
 
             const upload18Request = async (path, options = {}) => {
-                const url = `${UPLOAD18_CONFIG.baseUrl}${path}`;
-                const response = await fetch(url, options);
+                // Use the documented legacy `apikey` query parameter for browser GETs.
+                // This avoids a CORS preflight caused by custom X-API-Key headers.
+                const separator = path.includes('?') ? '&' : '?';
+                const url = `${UPLOAD18_CONFIG.baseUrl}${path}${separator}apikey=${encodeURIComponent(UPLOAD18_CONFIG.apiKey)}`;
+                const response = await fetch(url, { ...options, credentials: 'omit' });
                 const text = await response.text();
                 let data = null;
                 try { data = text ? JSON.parse(text) : {}; } catch (_) {
@@ -6679,8 +6896,11 @@
                     Object.entries(fields || {}).forEach(([k, v]) => form.append(k, String(v)));
                     form.append('video', blob, filename || file.name);
                     const xhr = new XMLHttpRequest();
+                    // Keep the POST a simple multipart request: the API key is already
+                    // included as the legacy `apikey` form field, avoiding CORS preflight.
                     xhr.open('POST', `${UPLOAD18_CONFIG.baseUrl}/upload`, true);
                     xhr.responseType = 'text';
+                    xhr.withCredentials = false;
                     xhr.timeout = 30 * 60 * 1000;
                     xhr.upload.onprogress = e => {
                         if (e.lengthComputable) {
@@ -6756,7 +6976,7 @@
                 setProgress(mapProgress(88), 'Upload complete • processing video…');
 
                 for (let attempt = 0; attempt < UPLOAD18_CONFIG.maxPolls; attempt++) {
-                    const poll = await upload18Request(`/myvideo?per_page=100&apikey=${encodeURIComponent(UPLOAD18_CONFIG.apiKey)}`);
+                    const poll = await upload18Request('/myvideo?per_page=100');
                     const item = findUpload18Video(poll, vid);
                     const zt = Number(item?.zt ?? item?.status_code ?? item?.processing_status ?? -1);
                     const local = Math.min(98, 88 + Math.round(((attempt + 1) / UPLOAD18_CONFIG.maxPolls) * 10));
@@ -7172,18 +7392,15 @@
             $('showAddVideoForm').addEventListener('click', () => $('addVideoFormWrap').classList.toggle('hidden'));
 
             const makeGeneratedTitle = (file, index = 0) => {
-                const base = file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
-                const clean = base.replace(/^(VID(?:EO)?)[ _-]?\d+[ _-]*/i, '').trim();
-                const fallback = `Ethio Hub Premium Video ${String(index + 1).padStart(2,'0')}`;
-                return (clean || fallback).replace(/\b\w/g, ch => ch.toUpperCase()).slice(0, 90);
+                return `Habesha 18+ Video ${String(index + 1).padStart(2, '0')}`;
             };
             const makeGeneratedDescription = (title, categoryName, index = 0) => {
                 const variants = [
-                    `Enjoy ${title} — premium ${categoryName} content curated for Ethio Hub.`,
-                    `Watch ${title} on Ethio Hub. A fresh ${categoryName} release prepared for our community.`,
-                    `${title} is now available in ${categoryName}. Open the video to enjoy the full experience.`,
-                    `Discover ${title}, newly added to Ethio Hub ${categoryName}. Premium viewing starts here.`,
-                    `A new ${categoryName} addition: ${title}. Enjoy it directly through Ethio Hub.`
+                    `ለአባላት ብቻ — Pay to watch and enjoy ${title}. Verify your account and unlock the full premium video.`,
+                    `አዲስ የHabesha 18+ ይዘት። Pay to watch ${title}, verify your account, and get full access to premium content.`,
+                    `Premium ${categoryName} content for verified members. ክፍያዎን ያረጋግጡ — then unlock ${title} and watch in full.`,
+                    `Your premium viewing starts here. አካውንትዎን ያረጋግጡ እና ይክፈሉ — then watch ${title} in full.`,
+                    `Exclusive Habesha 18+ experience. Pay to watch, verify your account, and unlock ${title} instantly after approval.`
                 ];
                 return variants[index % variants.length];
             };
@@ -7220,7 +7437,7 @@
                 const title = $('videoTitle').value.trim(); const url = $('videoUrl').value.trim();
                 if (files.length > 50) { toast('Maximum 50 videos per batch.', 'error'); return; }
                 if (!files.length && !url) { toast(t('provideFileOrUrl'), 'error'); return; }
-                if (files.length === 1 && !title) { toast(t('titleRequired'), 'error'); return; }
+                if (!files.length && !title) { toast(t('titleRequired'), 'error'); return; }
 
                 const submitBtn = $('addVideoForm').querySelector('button[type="submit"]'); if (submitBtn?.disabled) return;
                 if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.originalText = submitBtn.innerHTML; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing…'; }
@@ -7228,25 +7445,51 @@
                 try {
                     const categoryId = $('videoCategory').value; const categoryName = appCategories.find(c=>c.id===categoryId)?.name || categoryId;
                     if (files.length > 1) {
+                        let completed = 0, failed = 0;
+                        const failures = [];
                         for (let i=0; i<files.length; i++) {
                             const file = files[i]; const item = document.querySelector(`.upload-batch-item[data-index="${i}"]`); const stateEl = item?.querySelector('.batch-state');
                             if (stateEl) stateEl.textContent = 'Uploading…';
-                            const videoUrl = await uploadVideoToUpload18(file, (i/files.length)*100, (1/files.length)*100);
-                            const generatedTitle = makeGeneratedTitle(file, i);
-                            const generatedDescription = makeGeneratedDescription(generatedTitle, categoryName, i);
-                            const sec = await readVideoDuration(file);
-                            await db.collection('videos').add({ title: generatedTitle, description: generatedDescription, category: categoryId, isFree: $('videoIsFree').checked, url: videoUrl, thumbnail: '', duration: formatDuration(sec), likes: [], source: 'upload18', sourceFileName: file.name, createdAt: Date.now(), updatedAt: Date.now() });
-                            if (item) item.classList.add('done'); if (stateEl) stateEl.textContent = 'Published';
+                            try {
+                                const videoUrl = await uploadVideoToUpload18(file, (i/files.length)*100, (1/files.length)*100);
+                                const generatedTitle = makeGeneratedTitle(file, i);
+                                const generatedDescription = makeGeneratedDescription(generatedTitle, categoryName, i);
+                                const sec = await readVideoDuration(file);
+                                await db.collection('videos').add({ title: generatedTitle, description: generatedDescription, category: categoryId, isFree: $('videoIsFree').checked, url: videoUrl, thumbnail: '', duration: formatDuration(sec), likes: [], source: 'upload18', sourceFileName: file.name, createdAt: Date.now(), updatedAt: Date.now() });
+                                completed++;
+                                if (item) item.classList.add('done'); if (stateEl) stateEl.textContent = 'Published';
+                            } catch (fileErr) {
+                                failed++;
+                                failures.push(`${file.name}: ${fileErr?.message || 'Upload failed'}`);
+                                if (item) item.classList.add('error'); if (stateEl) stateEl.textContent = 'Failed';
+                                console.error('[Ethio Hub] Batch item failed:', file.name, fileErr);
+                            }
                         }
-                        toast(`🎬 ${files.length} videos published successfully!`, 'success');
+                        if (failed) {
+                            toast(`Published ${completed}/${files.length}. ${failed} upload${failed > 1 ? 's' : ''} failed.`, 'error');
+                            if ($('videoUploadMessage')) $('videoUploadMessage').textContent = failures.slice(0, 2).join(' • ');
+                        } else {
+                            toast(`🎬 ${completed} videos published successfully!`, 'success');
+                        }
                     } else {
-                        let videoUrl = url; let finalTitle = title; let finalDesc = $('videoDesc').value.trim(); let duration = '00:00';
-                        if (files.length === 1) { videoUrl = await uploadVideoToUpload18(files[0]); duration = formatDuration(await readVideoDuration(files[0])); }
+                        let videoUrl = url;
+                        let finalTitle = title;
+                        let finalDesc = $('videoDesc').value.trim();
+                        let duration = '00:00';
+                        if (files.length === 1) {
+                            videoUrl = await uploadVideoToUpload18(files[0]);
+                            duration = formatDuration(await readVideoDuration(files[0]));
+                            if (!finalTitle) finalTitle = makeGeneratedTitle(files[0], 0);
+                            if (!finalDesc) finalDesc = makeGeneratedDescription(finalTitle, categoryName, 0);
+                        }
                         if (!finalDesc) finalDesc = makeGeneratedDescription(finalTitle, categoryName, 0);
                         await db.collection('videos').add({ title: finalTitle, description: finalDesc, category: categoryId, isFree: $('videoIsFree').checked, url: videoUrl, thumbnail: $('videoThumb').value.trim(), duration, likes: [], source: 'upload18', createdAt: Date.now(), updatedAt: Date.now() });
                         toast(t('videoPublished', { title: finalTitle }), 'success');
                     }
-                    $('addVideoForm').reset(); $('videoFileName').textContent = 'No files selected'; $('videoBatchList').innerHTML=''; $('videoUploadStatus').classList.remove('visible'); $('addVideoFormWrap').classList.add('hidden');
+                    const batchHadFailure = files.length > 1 && document.querySelector('.upload-batch-item.error');
+                    if (!batchHadFailure) {
+                        $('addVideoForm').reset(); $('videoFileName').textContent = 'No files selected'; $('videoBatchList').innerHTML=''; $('videoUploadStatus').classList.remove('visible'); $('addVideoFormWrap').classList.add('hidden');
+                    }
                     await Promise.allSettled([renderAdminVideos(), renderVideoGrid()]);
                 } catch (err) {
                     console.error('Video publish error:', err); toast(err?.message || t('videoSaveError'), 'error'); if ($('videoUploadMessage')) $('videoUploadMessage').textContent = err?.message || 'Upload18 upload failed';
@@ -7296,6 +7539,12 @@
                     if (typeof stopAdminPaymentsListener === 'function') stopAdminPaymentsListener();
                 }
                 originalNavigate(page);
+                if (page === 'gallery' && typeof renderVideoGrid === 'function') {
+                    // Always reload the gallery when it becomes visible so newly
+                    // published videos are present without requiring a hard refresh.
+                    renderCategoryTabs?.();
+                    renderVideoGrid(state.selectedCategory || 'all');
+                }
                 if (page === 'admin') {
                     filterAdminTabs();
                     refreshAdmin();
@@ -7617,6 +7866,28 @@
             else refresh();
             window.addEventListener('ethio:pagechange', refresh);
             document.addEventListener('click', () => setTimeout(refresh, 80), { passive: true });
+        })();
+    </script>
+
+
+    <script>
+        // ===== GALLERY LIFECYCLE / FAST REFRESH =====
+        (() => {
+            let refreshTimer = null;
+            const refreshGallerySafely = () => {
+                if (document.hidden) return;
+                const page = document.getElementById('page-gallery');
+                if (!page || !page.classList.contains('active') || typeof renderVideoGrid !== 'function') return;
+                clearTimeout(refreshTimer);
+                refreshTimer = setTimeout(() => {
+                    try { renderCategoryTabs?.(); } catch (_) {}
+                    try { renderVideoGrid(state.selectedCategory || 'all'); } catch (e) { console.warn(e); }
+                }, 60);
+            };
+            window.addEventListener('pageshow', refreshGallerySafely);
+            window.addEventListener('online', refreshGallerySafely);
+            window.addEventListener('ethio:pagechange', refreshGallerySafely);
+            document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshGallerySafely(); });
         })();
     </script>
 

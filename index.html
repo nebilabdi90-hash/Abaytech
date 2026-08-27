@@ -5268,7 +5268,7 @@
                     <div class="admin-form">
                         <h4 style="margin-bottom:14px;"><span class="lang-en">Add New Premium Video</span><span class="lang-am">አዲስ ቪዲዮ ጨምር</span><span class="lang-ar">إضافة فيديو مميز جديد</span></h4>
                         <form id="addVideoForm">
-                            <label><span class="lang-en">Video Title</span><span class="lang-am">የቪዲዮ ርዕስ</span><span class="lang-ar">عنوان الفيديو</span></label><input type="text" id="videoTitle" placeholder="Enter title" required />
+                            <label><span class="lang-en">Video Title</span><span class="lang-am">የቪዲዮ ርዕስ</span><span class="lang-ar">عنوان الفيديو</span></label><input type="text" id="videoTitle" placeholder="Optional — titles are generated automatically for uploads" />
                             <label><span class="lang-en">Description</span><span class="lang-am">መግለጫ</span><span class="lang-ar">الوصف</span></label><textarea id="videoDesc" placeholder="Describe this content..."></textarea>
                             <label><span class="lang-en">Category</span><span class="lang-am">ምድብ</span><span class="lang-ar">الفئة</span></label><select id="videoCategory"><option value="exclusive">Exclusive Hub</option><option value="training">Training</option></select>
 
@@ -7438,6 +7438,9 @@
                 if (files.length > 50) { toast('Maximum 50 videos per batch.', 'error'); return; }
                 if (!files.length && !url) { toast(t('provideFileOrUrl'), 'error'); return; }
                 if (!files.length && !title) { toast(t('titleRequired'), 'error'); return; }
+                // File uploads do not require a title: each uploaded file gets an
+                // automatic Habesha 18+ title below. This also prevents native
+                // browser validation from silently blocking multi-file uploads.
 
                 const submitBtn = $('addVideoForm').querySelector('button[type="submit"]'); if (submitBtn?.disabled) return;
                 if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.originalText = submitBtn.innerHTML; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing…'; }

@@ -20,23 +20,24 @@
            CSS VARIABLES & THEME SYSTEM
            ============================================================ */
         :root {
-            --bg-body: #0a0f0e;
-            --bg-app: #141e1b;
-            --bg-card: #1b2a24;
-            --bg-input: #22332c;
-            --bg-glass: rgba(28, 43, 38, 0.45);
-            --text-main: #e8edea;
-            --text-muted: #8ea198;
-            --text-error: #f28b82;
-            --text-success: #6fcf97;
-            --border-color: #2a4038;
-            --shadow-heavy: 0 12px 48px rgba(0, 0, 0, 0.7);
-            --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.4);
-            --primary: #0f3b2e;
+            /* Premium dark: deep charcoal + warm gold + restrained emerald */
+            --bg-body: #090908;
+            --bg-app: #12110f;
+            --bg-card: #1a1815;
+            --bg-input: #24211c;
+            --bg-glass: rgba(30, 27, 22, 0.52);
+            --text-main: #f3efe6;
+            --text-muted: #a8a398;
+            --text-error: #ef8b82;
+            --text-success: #72d6a0;
+            --border-color: #373229;
+            --shadow-heavy: 0 12px 48px rgba(0, 0, 0, 0.72);
+            --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.42);
+            --primary: #0d4d3a;
             --gold: #d4a017;
-            --gold-light: #f0c040;
-            --gold-glow: rgba(212, 160, 23, 0.25);
-            --red: #b22222;
+            --gold-light: #f2c653;
+            --gold-glow: rgba(212, 160, 23, 0.22);
+            --red: #a92b2b;
             --radius: 20px;
             --radius-sm: 14px;
             --radius-pill: 999px;
@@ -46,19 +47,20 @@
             --touch-target: 44px;
         }
         html.light-theme {
-            --bg-body: #f0f3f2;
-            --bg-app: #ffffff;
-            --bg-card: #f8faf9;
-            --bg-input: #f0f3f2;
-            --bg-glass: rgba(255, 255, 255, 0.50);
-            --text-main: #1a2522;
-            --text-muted: #4d6b63;
-            --text-error: #c0392b;
-            --text-success: #27ae60;
-            --border-color: #dce3e1;
-            --shadow-heavy: 0 12px 48px rgba(0, 0, 0, 0.08);
-            --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.04);
-            --gold-glow: rgba(212, 160, 23, 0.15);
+            /* Premium light: warm ivory + soft cream + gold/emerald accents */
+            --bg-body: #f4f1e9;
+            --bg-app: #fffdf8;
+            --bg-card: #fcfaf4;
+            --bg-input: #f1eee5;
+            --bg-glass: rgba(255, 253, 248, 0.72);
+            --text-main: #1c2421;
+            --text-muted: #5b6963;
+            --text-error: #b9322b;
+            --text-success: #238457;
+            --border-color: #e4ddcf;
+            --shadow-heavy: 0 12px 48px rgba(50, 43, 29, 0.10);
+            --shadow-light: 0 4px 16px rgba(50, 43, 29, 0.055);
+            --gold-glow: rgba(212, 160, 23, 0.14);
         }
         * {
             margin: 0;
@@ -5847,6 +5849,164 @@
     }
 }
 </style>
+
+<style id="smooth-polish-layer">
+/* ============================================================
+   ETHIO HUB — SMOOTH POLISH / DISPLAY QUALITY LAYER
+   Functionality and theme colors intentionally unchanged.
+   ============================================================ */
+html { scroll-behavior: smooth; }
+body, button, input, select, textarea { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+button, a, input, select, textarea { touch-action: manipulation; }
+
+#page-admin {
+    overflow: visible;
+    contain: layout style;
+}
+#page-admin .admin-tabs,
+#page-admin .admin-form,
+#page-admin .admin-table-wrap {
+    will-change: transform;
+}
+#page-admin .admin-table-wrap {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+}
+#page-admin .admin-table {
+    table-layout: fixed;
+}
+#page-admin .admin-table th,
+#page-admin .admin-table td {
+    min-width: 0;
+}
+#page-admin .admin-table td strong,
+#page-admin .admin-table td code,
+#page-admin .admin-table td .status {
+    max-width: 100%;
+}
+#page-admin .admin-table tbody tr {
+    transition: background-color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+#page-admin .admin-table tbody tr:hover { transform: translateY(-1px); }
+#page-admin .admin-table .actions { white-space: nowrap; }
+#page-admin .admin-table .actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+/* Prevent layout jumps while live Firestore data replaces rows. */
+#adminVideoList, #adminUserList, #adminPaymentList {
+    min-height: 44px;
+    contain: layout paint;
+}
+
+/* Compact desktop widths: use available space without giant stretched cards. */
+@media (min-width: 761px) {
+    #page-admin .admin-panel > h3,
+    #page-admin .admin-panel > .flex-between { margin-left: 2px; margin-right: 2px; }
+    #page-admin .admin-table-wrap { padding: 6px; }
+    #page-admin .admin-table th,
+    #page-admin .admin-table td { padding: 11px 13px; }
+}
+
+/* Mobile: stable two-column label/value rows with no text collisions. */
+@media (max-width: 700px) {
+    #page-admin { width: 100%; max-width: 100%; }
+    #page-admin .admin-tabs { position: sticky; top: 6px; }
+    #page-admin .admin-panel { overflow: visible; }
+    #page-admin .admin-table-wrap {
+        padding: 5px !important;
+        border-radius: 18px;
+        overflow: visible;
+    }
+    #page-admin .admin-table thead { display: none !important; }
+    #page-admin .admin-table tbody { display: grid !important; gap: 10px !important; }
+    #page-admin .admin-table tbody tr {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 9px 13px !important;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+    #page-admin .admin-table td {
+        display: grid !important;
+        grid-template-columns: minmax(70px, 82px) minmax(0, 1fr) !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        padding: 9px 0 !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        text-align: left !important;
+    }
+    #page-admin .admin-table td::before {
+        width: auto !important;
+        min-width: 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    #page-admin .admin-table td > * {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+    #page-admin .admin-table td strong,
+    #page-admin .admin-table td code {
+        display: block !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+        line-height: 1.35 !important;
+    }
+    #page-admin .admin-table td .status {
+        width: fit-content;
+        max-width: 100%;
+        white-space: normal;
+        line-height: 1.25;
+    }
+    #page-admin .admin-table td.actions {
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin-top: 4px !important;
+        padding: 11px 0 2px !important;
+        border-top: 1px solid color-mix(in srgb, var(--border-color) 65%, transparent) !important;
+    }
+    #page-admin .admin-table td.actions::before {
+        margin-right: auto !important;
+    }
+    #page-admin .admin-table .actions button {
+        flex: 0 0 42px;
+        width: 42px;
+        min-width: 42px;
+        min-height: 42px;
+    }
+    #page-admin .admin-payment-table .payment-user-cell strong,
+    #page-admin .admin-payment-table .payment-txn-cell code {
+        max-width: 100% !important;
+    }
+    #page-admin .admin-payment-table td { grid-template-columns: minmax(74px, 84px) minmax(0, 1fr) !important; }
+}
+
+@media (max-width: 380px) {
+    #page-admin .admin-tabs { gap: 4px; padding: 5px; }
+    #page-admin .admin-tabs button { padding-left: 6px; padding-right: 6px; font-size: 11px; }
+    #page-admin .admin-table td { grid-template-columns: 72px minmax(0,1fr) !important; gap: 8px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    #page-admin .admin-table tbody tr { transition: none !important; }
+}
+</style>
+
 </head>
 <body>
 
@@ -6181,8 +6341,20 @@
                                         <h4><i class="fas fa-info-circle"></i> Account Details</h4>
                                         <div class="section-desc">Send payment to the following accounts</div>
                                         <div class="payment-info-box">
-                                            <p><i class="fas fa-mobile-screen-button"></i> Telebirr / eBirr: <strong>0986318990</strong></p>
-                                            <p><i class="fas fa-building-columns"></i> CBE: <strong>1000392469657</strong></p>
+                                            <p class="copy-account-row">
+                                                <i class="fas fa-mobile-screen-button"></i>
+                                                <span>Telebirr / eBirr:</span>
+                                                <button type="button" class="copy-account-btn" data-copy-account="0986318990" aria-label="Copy Telebirr / eBirr account number" title="Copy account number">
+                                                    <strong>0986318990</strong><i class="fas fa-copy copy-icon" aria-hidden="true"></i><span class="copy-label">Copy</span>
+                                                </button>
+                                            </p>
+                                            <p class="copy-account-row">
+                                                <i class="fas fa-building-columns"></i>
+                                                <span>CBE:</span>
+                                                <button type="button" class="copy-account-btn" data-copy-account="1000392469657" aria-label="Copy CBE account number" title="Copy account number">
+                                                    <strong>1000392469657</strong><i class="fas fa-copy copy-icon" aria-hidden="true"></i><span class="copy-label">Copy</span>
+                                                </button>
+                                            </p>
                                         </div>
                                     </div>
                                     <!-- PAYMENT METHOD: placed above payment details -->
@@ -8874,6 +9046,104 @@
         })();
     </script>
 
+    <style id="copy-account-styles">
+        .copy-account-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: nowrap;
+        }
+        .copy-account-row > span {
+            white-space: nowrap;
+        }
+        .copy-account-btn {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-width: 0;
+            max-width: 100%;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+            padding: 5px 8px;
+            border-radius: 10px;
+            transition: transform .18s ease, background .18s ease;
+        }
+        .copy-account-btn:hover { background: rgba(212,175,55,.10); }
+        .copy-account-btn:active { transform: scale(.97); }
+        .copy-account-btn strong { white-space: nowrap; letter-spacing: .2px; }
+        .copy-account-btn .copy-icon { opacity: .65; font-size: .82em; }
+        .copy-account-btn .copy-label {
+            font-size: .72em;
+            font-weight: 700;
+            opacity: .72;
+        }
+        .copy-account-btn.copied .copy-icon::before { content: "\f00c"; }
+        @media (max-width: 480px) {
+            .copy-account-row { gap: 7px; }
+            .copy-account-row > span { font-size: .92em; }
+            .copy-account-btn { gap: 5px; padding: 5px 4px; }
+            .copy-account-btn .copy-label { display: none; }
+        }
+    </style>
+
+    <script id="copy-payment-accounts">
+        (function () {
+            'use strict';
+            function fallbackCopy(text) {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                ta.setSelectionRange(0, ta.value.length);
+                let ok = false;
+                try { ok = document.execCommand('copy'); } catch (_) {}
+                ta.remove();
+                return ok;
+            }
+
+            async function copyAccount(button) {
+                const value = button.dataset.copyAccount;
+                if (!value) return;
+                let copied = false;
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(value);
+                        copied = true;
+                    }
+                } catch (_) {}
+                if (!copied) copied = fallbackCopy(value);
+
+                const icon = button.querySelector('.copy-icon');
+                const label = button.querySelector('.copy-label');
+                button.classList.toggle('copied', copied);
+                if (icon) icon.className = 'fas ' + (copied ? 'fa-check copy-icon' : 'fa-copy copy-icon');
+                if (label) label.textContent = copied ? 'Copied' : 'Copy failed';
+
+                if (typeof window.toast === 'function') {
+                    window.toast(copied ? 'Account number copied to clipboard.' : 'Could not copy the account number.', copied ? 'success' : 'error');
+                }
+                window.setTimeout(() => {
+                    button.classList.remove('copied');
+                    if (icon) icon.className = 'fas fa-copy copy-icon';
+                    if (label) label.textContent = 'Copy';
+                }, 1800);
+            }
+
+            document.addEventListener('click', function (event) {
+                const button = event.target.closest('.copy-account-btn');
+                if (button) copyAccount(button);
+            });
+        })();
+    </script>
+
     <script id="ethio-premium-motion">
         (function() {
             'use strict';
@@ -8945,6 +9215,32 @@
             updateGlassState();
         })();
     </script>
+
+
+<script id="smooth-runtime-layer">
+(function () {
+    'use strict';
+
+    /* Give live dashboard updates one animation frame to batch DOM paints. */
+    let paintQueued = false;
+    const queuePaint = () => {
+        if (paintQueued) return;
+        paintQueued = true;
+        requestAnimationFrame(() => { paintQueued = false; });
+    };
+    window.addEventListener('resize', queuePaint, { passive: true });
+
+    /* Keep the viewport stable when the mobile keyboard opens/closes. */
+    if (window.visualViewport) {
+        let lastHeight = window.visualViewport.height;
+        window.visualViewport.addEventListener('resize', () => {
+            const h = window.visualViewport.height;
+            if (Math.abs(h - lastHeight) > 80) document.documentElement.style.setProperty('--vh-safe', h + 'px');
+            lastHeight = h;
+        }, { passive: true });
+    }
+})();
+</script>
 
 </body>
 </html>

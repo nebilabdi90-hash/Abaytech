@@ -3714,40 +3714,139 @@
             }
         }
     
-        /* Clean compact loading system */
+        /* ===== CLEAN UNIVERSAL LOADER ===== */
+        .loader-overlay { background: rgba(0,0,0,.28) !important; backdrop-filter: blur(3px) !important; -webkit-backdrop-filter: blur(3px) !important; }
+        .loader-content { min-width: 72px !important; width: 72px !important; height: 72px !important; padding: 0 !important; border-radius: 22px !important; background: color-mix(in srgb, var(--bg-app) 82%, transparent) !important; border: 1px solid rgba(212,175,55,.20) !important; box-shadow: 0 14px 42px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.07) !important; }
+        .loader-sparkle { width: 54px !important; height: 54px !important; }
+        .loader-label { display:none !important; }
+        .loader-sparkle::before { inset: 7px !important; }
+        .loader-sparkle::after { inset: 17px !important; }
+        .loader-sparkle .sparkle-core { width: 17px !important; height: 17px !important; }
+        .loader-sparkle .sparkle-dot { width: 3px !important; height: 3px !important; }
+        @media (max-width:600px) { .loader-content { width:66px !important; height:66px !important; border-radius:20px !important; } .loader-sparkle { transform:scale(.94); } }
+
+        /* ===== FINAL LOADING + NOTIFICATION DISPLAY POLISH ===== */
         .loader-overlay {
             position: fixed !important;
-            left: 50% !important;
-            right: auto !important;
-            top: auto !important;
-            bottom: 18px !important;
-            inset: auto !important;
-            transform: translateX(-50%) translateY(16px) !important;
-            width: min(320px, calc(100vw - 28px)) !important;
-            min-height: 54px !important;
-            padding: 9px 13px !important;
+            inset: 0 !important;
             display: flex !important;
             align-items: center !important;
-            justify-content: flex-start !important;
-            gap: 11px !important;
-            background: rgba(18,18,18,.86) !important;
-            border: 1px solid rgba(212,175,55,.20) !important;
-            border-radius: 16px !important;
-            box-shadow: 0 12px 34px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.06) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            background: rgba(5, 7, 6, .48) !important;
+            backdrop-filter: blur(5px) !important;
+            -webkit-backdrop-filter: blur(5px) !important;
             opacity: 0 !important;
             visibility: hidden !important;
             pointer-events: none !important;
-            transition: opacity .22s ease, transform .22s ease, visibility .22s ease !important;
+            transform: none !important;
+            z-index: 100000 !important;
+            transition: opacity .24s ease, visibility .24s ease !important;
         }
-        .loader-overlay.active { display:flex !important; opacity:1 !important; visibility:visible !important; transform:translateX(-50%) translateY(0) !important; }
-        .loader-sparkle { width:24px !important; height:24px !important; flex:0 0 24px !important; animation: loaderFloat 1.5s ease-in-out infinite !important; }
-        .loader-sparkle::before { inset:2px !important; border-color:rgba(212,160,23,.20) !important; }
-        .loader-sparkle::after { inset:7px !important; border-color:rgba(212,160,23,.14) !important; }
-        .loader-sparkle .sparkle-core { width:11px !important; height:11px !important; filter:drop-shadow(0 0 5px var(--gold-glow)) !important; }
-        .loader-sparkle .sparkle-dot { width:2px !important; height:2px !important; }
-        @media (prefers-reduced-motion: reduce) { .loader-overlay, .loader-sparkle { transition:none !important; animation:none !important; } }
+        .loader-overlay.active {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+        }
+        .loader-sparkle {
+            position: relative !important;
+            width: 58px !important;
+            height: 58px !important;
+            flex: 0 0 58px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            animation: loaderFloat 1.55s ease-in-out infinite !important;
+        }
+        .loader-sparkle::before,
+        .loader-sparkle::after {
+            border-color: rgba(212,160,23,.30) !important;
+        }
+        .loader-sparkle .sparkle-core {
+            width: 18px !important;
+            height: 18px !important;
+            filter: drop-shadow(0 0 7px var(--gold-glow)) drop-shadow(0 0 15px var(--gold-glow)) !important;
+        }
+        .loader-sparkle .sparkle-dot {
+            width: 3px !important;
+            height: 3px !important;
+        }
+        .loader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 92px;
+            padding: 15px 18px 13px;
+            border: 1px solid rgba(212,175,55,.24);
+            border-radius: 20px;
+            background: color-mix(in srgb, var(--bg-app) 88%, transparent);
+            box-shadow: 0 18px 55px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.07);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            animation: loaderCardIn .28s cubic-bezier(.2,.8,.2,1) both;
+        }
+        .loader-label {
+            color: var(--text-main);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .35px;
+        }
+        @keyframes loaderCardIn {
+            from { opacity: 0; transform: translateY(8px) scale(.94); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Notifications stay independent from the loading layer. */
+        #toast {
+            position: fixed !important;
+            top: max(76px, calc(env(safe-area-inset-top) + 70px)) !important;
+            left: 50% !important;
+            right: auto !important;
+            bottom: auto !important;
+            width: min(390px, calc(100vw - 28px)) !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 12px 14px !important;
+            min-height: 50px;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            border-radius: 16px !important;
+            transform: translate(-50%, -14px) scale(.96) !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            z-index: 100001 !important;
+            box-shadow: 0 16px 45px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.08) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            transition: opacity .24s ease, transform .24s cubic-bezier(.2,.8,.2,1), visibility .24s ease !important;
+        }
+        #toast.show {
+            transform: translate(-50%, 0) scale(1) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        #toast.success { border-color: rgba(39,174,96,.42) !important; }
+        #toast.error { border-color: rgba(192,57,43,.48) !important; }
+        #toast.info { border-color: rgba(212,160,23,.34) !important; }
+        #toast i { font-size: 18px !important; flex: 0 0 18px; }
+        #toast .msg { font-size: 12px !important; font-weight: 650 !important; line-height: 1.4 !important; }
+
+        @media (max-width: 600px) {
+            #toast {
+                top: max(66px, calc(env(safe-area-inset-top) + 62px)) !important;
+                width: min(360px, calc(100vw - 22px)) !important;
+                padding: 11px 13px !important;
+            }
+            .loader-content { padding: 14px 16px 12px; border-radius: 18px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .loader-overlay, .loader-sparkle, .loader-content, #toast { animation: none !important; transition: none !important; }
+        }
 </style>
 
     <style id="locked-video-ui-polish">
@@ -5437,6 +5536,316 @@
     #page-admin .admin-table tbody tr,
     #page-admin .admin-table .actions button { transition:none !important; }
 }
+
+
+/* ============================================================
+   ETHIO HUB — FINAL ADMIN DASHBOARD RESPONSIVE SYSTEM
+   Compact, screen-fitting, mobile-first and realtime-ready.
+   ============================================================ */
+#page-admin {
+    width: 100%;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding-bottom: 4px;
+}
+#page-admin .admin-tabs {
+    position: sticky;
+    top: 8px;
+    z-index: 40;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin: 0 0 14px;
+    padding: 6px;
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--bg-glass) 94%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border-color) 82%, var(--gold));
+    box-shadow: 0 10px 28px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.34);
+    backdrop-filter: blur(18px) saturate(135%);
+    -webkit-backdrop-filter: blur(18px) saturate(135%);
+}
+#page-admin .admin-tabs button {
+    min-width: 0;
+    min-height: 42px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    gap: 7px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+#page-admin .admin-tabs button i { flex: 0 0 auto; }
+#page-admin .admin-tabs button.active {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--gold) 18%, var(--bg-input)), color-mix(in srgb, var(--gold) 7%, var(--bg-input)));
+    border-color: color-mix(in srgb, var(--gold) 42%, var(--border-color));
+}
+#page-admin .admin-tabs::after {
+    content: none;
+    position: absolute;
+    top: -7px;
+    right: 12px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--bg-app);
+    border: 1px solid color-mix(in srgb, var(--gold) 45%, var(--border-color));
+    color: var(--gold);
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+#page-admin .admin-panel {
+    width: 100%;
+    margin: 0;
+    padding: 18px;
+    border-radius: 18px;
+    border: 1px solid color-mix(in srgb, var(--border-color) 86%, transparent);
+    background: color-mix(in srgb, var(--bg-glass) 94%, transparent);
+    box-shadow: 0 14px 38px rgba(0,0,0,.065), inset 0 1px 0 rgba(255,255,255,.22);
+}
+#page-admin .admin-panel > .flex-between {
+    min-height: 42px;
+    margin-bottom: 12px;
+}
+#page-admin .admin-panel > h3,
+#page-admin .admin-panel > .flex-between h3 {
+    font-size: 18px;
+    line-height: 1.25;
+}
+#page-admin .admin-panel > .flex-between h3 i,
+#page-admin .admin-panel > h3 i { margin-right: 7px; }
+#page-admin .admin-form {
+    width: 100%;
+    max-width: 760px;
+    margin: 12px auto 0;
+    padding: 17px;
+    border-radius: 16px;
+}
+#page-admin .admin-table-wrap {
+    width: 100%;
+    margin-top: 12px;
+    overflow-x: auto;
+    overflow-y: visible;
+    border-radius: 16px;
+    -webkit-overflow-scrolling: touch;
+}
+#page-admin .admin-table {
+    width: 100%;
+    min-width: 0;
+    table-layout: auto;
+}
+#page-admin .admin-table th {
+    padding: 10px 12px;
+    font-size: 10px;
+}
+#page-admin .admin-table td {
+    padding: 11px 12px;
+    font-size: 12px;
+}
+#page-admin .admin-table td:first-child { max-width: 330px; }
+#page-admin .admin-table .actions button {
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    border-radius: 9px;
+}
+#page-admin .admin-payment-table { min-width: 0 !important; }
+#page-admin .admin-payment-table .payment-user-cell,
+#page-admin .admin-payment-table .payment-txn-cell { min-width: 0; }
+#page-admin .admin-payment-table .payment-txn-cell code { max-width: 100%; }
+#page-admin .admin-form input,
+#page-admin .admin-form select,
+#page-admin .admin-form textarea { width: 100%; }
+#page-admin .empty-state { padding: 28px 14px; }
+
+@media (max-width: 700px) {
+    body { padding: 6px; }
+    #app { width: 100%; padding: 10px 10px 14px; border-radius: 18px; }
+    #page-admin { max-width: none; }
+    #page-admin .admin-tabs {
+        top: 4px;
+        gap: 3px;
+        padding: 4px;
+        margin-bottom: 10px;
+        border-radius: 15px;
+    }
+    #page-admin .admin-tabs button {
+        min-height: 40px;
+        padding: 7px 4px;
+        font-size: 10px;
+        gap: 4px;
+    }
+    #page-admin .admin-tabs button i { font-size: 12px; width: 14px; }
+    #page-admin .admin-panel {
+        padding: 13px;
+        border-radius: 15px;
+    }
+    #page-admin .admin-panel > .flex-between { gap: 8px; }
+    #page-admin .admin-panel > h3,
+    #page-admin .admin-panel > .flex-between h3 { font-size: 16px; }
+    #page-admin .admin-panel > .flex-between .btn-primary,
+    #page-admin #showAddVideoForm {
+        min-height: 38px;
+        padding: 7px 11px !important;
+        font-size: 11px;
+    }
+    #page-admin .admin-form { padding: 13px; margin-top: 10px; border-radius: 14px; }
+    #page-admin .admin-form label { font-size: 11px; margin: 11px 0 5px; }
+    #page-admin .admin-form input,
+    #page-admin .admin-form select,
+    #page-admin .admin-form textarea { min-height: 39px; padding: 8px 10px; font-size: 13px; }
+    #page-admin .admin-form textarea { min-height: 76px; }
+    #page-admin .file-input-group { padding: 11px; margin: 12px 0; }
+    #page-admin .file-picker { min-height: 43px; padding: 6px 8px; }
+    #page-admin .admin-table-wrap {
+        overflow: visible;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+    #page-admin .admin-table,
+    #page-admin .admin-table thead,
+    #page-admin .admin-table tbody,
+    #page-admin .admin-table tr,
+    #page-admin .admin-table td { display: block; width: 100%; }
+    #page-admin .admin-table thead { display: none; }
+    #page-admin .admin-table tbody { display: grid; gap: 8px; }
+    #page-admin .admin-table tbody tr {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0 12px;
+        padding: 10px 11px;
+        border: 1px solid var(--border-color);
+        border-radius: 13px;
+        background: color-mix(in srgb, var(--bg-input) 58%, transparent);
+        box-shadow: 0 6px 18px rgba(0,0,0,.035);
+    }
+    #page-admin .admin-table td {
+        display: grid;
+        grid-template-columns: 88px minmax(0,1fr);
+        align-items: center;
+        gap: 7px;
+        padding: 7px 0;
+        border: 0;
+        min-width: 0;
+        font-size: 12px;
+    }
+    #page-admin .admin-table td::before {
+        content: attr(data-label);
+        color: var(--text-muted);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+    #page-admin .admin-table td:first-child { max-width: none; }
+    #page-admin .admin-table td.actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 5px;
+        padding-top: 8px;
+        grid-column: 1 / -1;
+        border-top: 1px solid color-mix(in srgb, var(--border-color) 65%, transparent);
+    }
+    #page-admin .admin-table td.actions::before { content: attr(data-label); margin-right: auto; }
+    #page-admin .admin-table .actions button { width: 34px; height: 34px; }
+    #page-admin .admin-table .status { justify-self: start; }
+    #page-admin .admin-payment-table .payment-user-cell strong { font-size: 12px; }
+    #page-admin .admin-payment-table .cell-label { display: none; }
+    #page-admin .admin-payment-table .payment-txn-cell code { font-size: 10px; padding: 5px 7px; }
+    #page-admin .admin-payment-table td.actions { white-space: normal; }
+    #page-admin .admin-payment-table td { grid-template-columns: 82px minmax(0,1fr); }
+    #page-admin .admin-table .empty-state { display: block; }
+    #page-admin .site-footer { margin-top: 12px; }
+}
+
+@media (min-width: 701px) {
+    #page-admin .admin-panel { min-height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #page-admin .admin-tabs,
+    #page-admin .admin-panel,
+    #page-admin .admin-table tbody tr { transition: none !important; }
+}
+
+/* ===== FINAL MOBILE ADMIN TEXT / LAYOUT FIX ===== */
+#page-admin .admin-tabs::after { display:none !important; content:none !important; }
+@media (max-width: 700px) {
+    #page-admin .admin-table {
+        min-width: 0 !important;
+        width: 100% !important;
+    }
+    #page-admin .admin-table tbody {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+    #page-admin .admin-table tbody tr {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        gap: 0 !important;
+        padding: 10px 12px !important;
+        box-sizing: border-box !important;
+    }
+    #page-admin .admin-table td {
+        display: grid !important;
+        grid-template-columns: 86px minmax(0, 1fr) !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        align-items: center !important;
+        gap: 10px !important;
+        padding: 8px 0 !important;
+        overflow: hidden !important;
+    }
+    #page-admin .admin-table td::before {
+        width: 86px !important;
+        min-width: 86px !important;
+        white-space: nowrap !important;
+    }
+    #page-admin .admin-table td > *:not(.status):not(.actions) {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+    #page-admin .admin-table td strong,
+    #page-admin .admin-table td code,
+    #page-admin .admin-table td {
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+    }
+    #page-admin .admin-table td.actions {
+        display: flex !important;
+        width: 100% !important;
+        grid-column: auto !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        gap: 7px !important;
+        margin-top: 5px !important;
+        padding: 10px 0 2px !important;
+        border-top: 1px solid color-mix(in srgb, var(--border-color) 65%, transparent) !important;
+    }
+    #page-admin .admin-table td.actions::before {
+        margin-right: auto !important;
+    }
+    #page-admin .admin-payment-table .payment-user-cell strong,
+    #page-admin .admin-payment-table .payment-txn-cell code {
+        display: block !important;
+        max-width: 100% !important;
+        overflow-wrap: anywhere !important;
+        white-space: normal !important;
+    }
+    #page-admin .admin-payment-table td {
+        grid-template-columns: 86px minmax(0, 1fr) !important;
+    }
+    #page-admin .admin-payment-table {
+        min-width: 0 !important;
+    }
+}
 </style>
 </head>
 <body>
@@ -5444,15 +5853,18 @@
     <!-- ===== CANVAS BACKGROUND ===== -->
     <canvas id="bgCanvas"></canvas>
 
-    <div class="loader-overlay" id="globalLoader">
-        <div class="loader-sparkle" aria-label="Loading" role="status">
-            <span class="sparkle-core"></span>
-            <span class="sparkle-dot dot-1"></span>
-            <span class="sparkle-dot dot-2"></span>
-            <span class="sparkle-dot dot-3"></span>
+    <div class="loader-overlay" id="globalLoader" aria-hidden="true">
+        <div class="loader-content" role="status" aria-live="polite">
+            <div class="loader-sparkle" aria-label="Loading">
+                <span class="sparkle-core"></span>
+                <span class="sparkle-dot dot-1"></span>
+                <span class="sparkle-dot dot-2"></span>
+                <span class="sparkle-dot dot-3"></span>
+            </div>
+            <span class="loader-label" id="loaderLabel">Loading…</span>
         </div>
     </div>
-    <div id="toast"><i class="fas fa-info-circle"></i><span class="msg">Message</span></div>
+    <div id="toast" role="status" aria-live="polite" aria-atomic="true"><i class="fas fa-info-circle" aria-hidden="true"></i><span class="msg">Message</span></div>
     <div class="payment-status-overlay" id="paymentStatusOverlay" role="dialog" aria-modal="true" aria-labelledby="paymentStatusTitle">
         <div class="payment-status-card">
             <div class="payment-status-icon" id="paymentStatusIcon"><i class="fas fa-check"></i></div>
@@ -5949,22 +6361,80 @@
 
         (function() {
             'use strict';
+            // Keep display layers deterministic on every fresh load.
+            document.documentElement.classList.add('ui-ready');
             const uid = () => Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
             const $ = (id) => document.getElementById(id);
-            const toast = (msg, type = 'info') => {
+            const toast = (msg, type = 'info', duration = 3600) => {
                 const el = $('toast');
+                if (!el) return;
                 const icon = el.querySelector('i');
                 const span = el.querySelector('.msg');
-                span.textContent = msg;
-                el.className = type;
-                icon.className = { success: 'fas fa-check-circle', error: 'fas fa-times-circle', info: 'fas fa-info-circle' } [
-                    type] || 'fas fa-info-circle';
-                el.classList.add('show');
+                const safeType = ['success', 'error', 'info'].includes(type) ? type : 'info';
+
                 clearTimeout(el._timer);
-                el._timer = setTimeout(() => el.classList.remove('show'), 3400);
+                el.className = '';
+                el.classList.add(safeType);
+                span.textContent = String(msg || '');
+                icon.className = {
+                    success: 'fas fa-check-circle',
+                    error: 'fas fa-times-circle',
+                    info: 'fas fa-info-circle'
+                }[safeType];
+
+                // Restart the entrance animation even when notifications arrive quickly.
+                el.classList.remove('show');
+                void el.offsetWidth;
+                el.classList.add('show');
+
+                el._timer = setTimeout(() => {
+                    el.classList.remove('show');
+                }, Math.max(1800, duration));
             };
-            const showLoader = () => $('globalLoader').classList.add('active');
-            const hideLoader = () => $('globalLoader').classList.remove('active');
+
+            let loaderDepth = 0;
+            let loaderStartedAt = 0;
+            let loaderTimer = null;
+            const LOADER_MIN_MS = 4000;
+
+            const showLoader = (label = 'Loading…') => {
+                const el = $('globalLoader');
+                const labelEl = $('loaderLabel');
+                if (!el) return;
+
+                loaderDepth++;
+                if (loaderDepth === 1) {
+                    loaderStartedAt = performance.now();
+                    if (labelEl) labelEl.textContent = label;
+                    el.classList.add('active');
+                    el.setAttribute('aria-hidden', 'false');
+                } else if (labelEl && label) {
+                    labelEl.textContent = label;
+                }
+
+                clearTimeout(loaderTimer);
+            };
+
+            const hideLoader = (force = false) => {
+                const el = $('globalLoader');
+                if (!el) return;
+
+                if (force) loaderDepth = 0;
+                else loaderDepth = Math.max(0, loaderDepth - 1);
+
+                if (loaderDepth > 0) return;
+
+                // Prevent a one-frame flash when Firebase responds very quickly.
+                const elapsed = performance.now() - loaderStartedAt;
+                const wait = Math.max(0, LOADER_MIN_MS - elapsed);
+
+                clearTimeout(loaderTimer);
+                loaderTimer = setTimeout(() => {
+                    if (loaderDepth !== 0) return;
+                    el.classList.remove('active');
+                    el.setAttribute('aria-hidden', 'true');
+                }, wait);
+            };
             const escapeHtml = (str) => String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;',
                 '>': '&gt;', '"': '&quot;', "'": '&#39;' } [c]));
 
@@ -7120,6 +7590,19 @@
             });
 
             // ===== VIDEO MODAL – view limit removed for Basic =====
+            const normalizeVideoSource = (value) => {
+                let url = String(value || '').trim();
+                if (!url) return '';
+                try {
+                    const parsed = new URL(url, window.location.href);
+                    // Upload18 player pages must be embedded as pages, not fed into <video>.
+                    if (/upload18\.(?:org|net)$/i.test(parsed.hostname) && /\/play\/index\//i.test(parsed.pathname)) {
+                        return parsed.href;
+                    }
+                } catch (_) {}
+                return url;
+            };
+
             async function openVideoModal(videoId) {
                 // Basic plan now has unlimited viewing – no limit check
 
@@ -7134,7 +7617,7 @@
                     downloadContainer.innerHTML = '';
                     if (!video.url) { toast(t('noVideoSource'), 'error'); return; }
 
-                    let u = video.url;
+                    let u = normalizeVideoSource(video.url);
                     if (u.includes('watch?v=')) {
                         const id = u.split('v=')[1]?.split('&')[0];
                         if (id) u = `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`;
@@ -7142,7 +7625,7 @@
                         const id = u.split('youtu.be/')[1]?.split('?')[0];
                         if (id) u = `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`;
                     }
-                    const isUpload18 = /(^|\.)upload18\.net(\/|$)/i.test(u);
+                    const isUpload18 = /(^|\.)upload18\.(?:org|net)(\/|$)/i.test(u);
                     const isVimeo = /(^|\.)vimeo\.com(\/|$)/i.test(u);
                     if (u.includes('youtube.com/embed/') || isUpload18 || isVimeo) {
                         const iframe = document.createElement('iframe');
@@ -7153,6 +7636,10 @@
                         iframe.style.width = '100%';
                         iframe.style.aspectRatio = '16/9';
                         iframe.style.border = 'none';
+                        iframe.setAttribute('title', video.title || 'Ethio Hub video');
+                        iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+                        iframe.addEventListener('load', () => container.classList.add('video-ready'), { once: true });
+                        iframe.addEventListener('error', () => toast('The video host could not be loaded. Check that the player link is valid.', 'error', 5000));
                         container.appendChild(iframe);
                     } else {
                         const shell = document.createElement('div');
@@ -7346,6 +7833,26 @@
                 }
             };
 
+            let publicVideosUnsubscribe = null;
+            let publicVideosListenerActive = false;
+            const stopPublicVideosListener = () => {
+                if (typeof publicVideosUnsubscribe === 'function') publicVideosUnsubscribe();
+                publicVideosUnsubscribe = null;
+                publicVideosListenerActive = false;
+            };
+            const startPublicVideosListener = () => {
+                if (publicVideosListenerActive) return;
+                publicVideosListenerActive = true;
+                publicVideosUnsubscribe = db.collection('videos').orderBy('createdAt', 'desc').onSnapshot(() => {
+                    renderVideoGrid();
+                }, e => {
+                    console.error('[Ethio Hub] Real-time public video listener error:', e);
+                    publicVideosListenerActive = false;
+                    publicVideosUnsubscribe = null;
+                });
+            };
+            startPublicVideosListener();
+
             const categoryTabs = $('categoryTabs');
             document.querySelectorAll('#categoryTabs button').forEach(b => b.addEventListener('click', () => {
                 document.querySelectorAll('#categoryTabs button').forEach(x => { x.classList.remove('active');
@@ -7501,99 +8008,103 @@
                 return `https://upload18.org/play/index/${encodeURIComponent(vid)}`;
             };
 
+            let adminVideosUnsubscribe = null;
+            let adminVideosListenerActive = false;
+
+            const stopAdminVideosListener = () => {
+                if (typeof adminVideosUnsubscribe === 'function') adminVideosUnsubscribe();
+                adminVideosUnsubscribe = null;
+                adminVideosListenerActive = false;
+            };
+
+            const renderAdminVideoRows = (vids) => {
+                const c = $('adminVideoList');
+                if (!c) return;
+                if (!vids.length) {
+                    c.innerHTML = `<div class="empty-state"><i class="fas fa-video"></i><h3>${t('noVideos')}</h3></div>`;
+                    return;
+                }
+                c.innerHTML = `<table class="admin-table admin-video-table"><thead><tr><th>${t('thTitle')}</th><th>${t('thCategory')}</th><th>${t('thType')}</th><th>${t('thDuration')}</th><th>${t('thActions')}</th></tr></thead><tbody>${vids.map(v => `
+                    <tr>
+                        <td data-label="${escapeHtml(t('thTitle'))}"><strong>${escapeHtml(v.title)}</strong></td>
+                        <td data-label="${escapeHtml(t('thCategory'))}"><span class="status approved">${v.category === 'exclusive' ? t('catExclusive') : t('catTraining')}</span></td>
+                        <td data-label="${escapeHtml(t('thType'))}">${v.isFree ? t('free') : t('premium')}</td>
+                        <td data-label="${escapeHtml(t('thDuration'))}">${escapeHtml(v.duration || '00:00')}</td>
+                        <td data-label="${escapeHtml(t('thActions'))}" class="actions">
+                            <button class="approve edit-video" data-id="${v.id}" title="Edit video" aria-label="Edit video"><i class="fas fa-edit"></i></button>
+                            <button class="del delete-video" data-id="${v.id}" title="Delete video" aria-label="Delete video"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`).join('')}</tbody></table>`;
+
+                c.querySelectorAll('.delete-video').forEach(b => b.addEventListener('click', async () => {
+                    if (!confirm(t('confirmDeleteVideo'))) return;
+                    showLoader();
+                    try {
+                        await db.collection('videos').doc(b.dataset.id).delete();
+                        toast(t('videoDeleted'), 'success');
+                    } catch (e) {
+                        toast('Could not delete the video.', 'error');
+                    } finally {
+                        hideLoader();
+                    }
+                }));
+
+                c.querySelectorAll('.edit-video').forEach(b => b.addEventListener('click', async () => {
+                    const v = vids.find(x => x.id === b.dataset.id);
+                    if (!v) return;
+                    const title = prompt(t('promptEditTitle'), v.title || '');
+                    if (title === null) return;
+                    const desc = prompt(t('promptEditDesc'), v.description || '');
+                    if (desc === null) return;
+                    const category = prompt('Category (exclusive/training):', v.category || 'exclusive');
+                    if (category === null) return;
+                    const normalizedCategory = category.trim().toLowerCase();
+                    if (!['exclusive', 'training'].includes(normalizedCategory)) {
+                        toast('Category must be exclusive or training.', 'error');
+                        return;
+                    }
+                    const freeAnswer = prompt('Free to watch? (yes/no):', v.isFree ? 'yes' : 'no');
+                    if (freeAnswer === null) return;
+                    const isFree = ['yes', 'y', 'true', '1'].includes(freeAnswer.trim().toLowerCase());
+                    const url = prompt('Video URL (leave unchanged if you do not want to replace it):', v.url || '');
+                    if (url === null) return;
+                    const thumbnail = prompt('Thumbnail URL (leave unchanged if you do not want to replace it):', v.thumbnail || '');
+                    if (thumbnail === null) return;
+                    showLoader();
+                    try {
+                        await db.collection('videos').doc(v.id).update({
+                            title: title.trim(), description: desc.trim(), category: normalizedCategory,
+                            isFree, url: url.trim(), thumbnail: thumbnail.trim(), updatedAt: Date.now()
+                        });
+                        toast(t('videoUpdated'), 'success');
+                    } catch (e) {
+                        toast('Could not update the video.', 'error');
+                    } finally {
+                        hideLoader();
+                    }
+                }));
+            };
+
             const renderAdminVideos = async () => {
                 const c = $('adminVideoList');
                 if (!c) return;
                 try {
-                    const snap = await db.collection('videos').orderBy('createdAt', 'desc').get();
-                    const vids = [];
-                    snap.forEach(d => vids.push({ id: d.id, ...d.data() }));
-
-                    if (!vids.length) {
-                        c.innerHTML =
-                            `<div class="empty-state"><i class="fas fa-video"></i><h3>${t('noVideos')}</h3></div>`;
-                        return;
-                    }
-
-                    c.innerHTML =
-                        `<table class="admin-table"><thead><tr><th>${t('thTitle')}</th><th>${t('thCategory')}</th><th>${t('thType')}</th><th>${t('thDuration')}</th><th>${t('thActions')}</th></tr></thead><tbody>${vids.map(v => `
-                        <tr>
-                            <td><strong>${escapeHtml(v.title)}</strong></td>
-                            <td><span class="status approved">${v.category === 'exclusive' ? t('catExclusive') : t('catTraining')}</span></td>
-                            <td>${v.isFree ? t('free') : t('premium')}</td>
-                            <td>${escapeHtml(v.duration || '00:00')}</td>
-                            <td class="actions">
-                                <button class="approve edit-video" data-id="${v.id}" title="Edit video" aria-label="Edit video"><i class="fas fa-edit"></i></button>
-                                <button class="del delete-video" data-id="${v.id}" title="Delete video" aria-label="Delete video"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>`).join('')}</tbody></table>`;
-
-                    c.querySelectorAll('.delete-video').forEach(b => b.addEventListener('click', async () => {
-                        if (!confirm(t('confirmDeleteVideo'))) return;
-                        showLoader();
-                        try {
-                            await db.collection('videos').doc(b.dataset.id).delete();
-                            await Promise.allSettled([renderAdminVideos(), renderVideoGrid()]);
-                            toast(t('videoDeleted'), 'success');
-                        } catch (e) {
-                            toast('Could not delete the video.', 'error');
-                        } finally {
-                            hideLoader();
-                        }
-                    }));
-
-                    c.querySelectorAll('.edit-video').forEach(b => b.addEventListener('click', async () => {
-                        const v = vids.find(x => x.id === b.dataset.id);
-                        if (!v) return;
-
-                        const title = prompt(t('promptEditTitle'), v.title || '');
-                        if (title === null) return;
-
-                        const desc = prompt(t('promptEditDesc'), v.description || '');
-                        if (desc === null) return;
-
-                        const category = prompt('Category (exclusive/training):', v.category || 'exclusive');
-                        if (category === null) return;
-                        const normalizedCategory = category.trim().toLowerCase();
-                        if (!['exclusive', 'training'].includes(normalizedCategory)) {
-                            toast('Category must be exclusive or training.', 'error');
-                            return;
-                        }
-
-                        const freeAnswer = prompt('Free to watch? (yes/no):', v.isFree ? 'yes' : 'no');
-                        if (freeAnswer === null) return;
-                        const isFree = ['yes', 'y', 'true', '1'].includes(freeAnswer.trim().toLowerCase());
-
-                        const url = prompt('Video URL (leave unchanged if you do not want to replace it):', v
-                            .url || '');
-                        if (url === null) return;
-
-                        const thumbnail = prompt('Thumbnail URL (leave unchanged if you do not want to replace it):',
-                            v.thumbnail || '');
-                        if (thumbnail === null) return;
-
-                        showLoader();
-                        try {
-                            await db.collection('videos').doc(v.id).update({
-                                title: title.trim(),
-                                description: desc.trim(),
-                                category: normalizedCategory,
-                                isFree,
-                                url: url.trim(),
-                                thumbnail: thumbnail.trim(),
-                                updatedAt: Date.now()
-                            });
-                            await Promise.allSettled([renderAdminVideos(), renderVideoGrid()]);
-                            toast(t('videoUpdated'), 'success');
-                        } catch (e) {
-                            toast('Could not update the video.', 'error');
-                        } finally {
-                            hideLoader();
-                        }
-                    }));
+                    if (adminVideosListenerActive) return;
+                    adminVideosListenerActive = true;
+                    adminVideosUnsubscribe = db.collection('videos').orderBy('createdAt', 'desc').onSnapshot(snap => {
+                        const vids = [];
+                        snap.forEach(d => vids.push({ id: d.id, ...d.data() }));
+                        renderAdminVideoRows(vids);
+                    }, e => {
+                        console.error('[Ethio Hub] Real-time videos listener error:', e);
+                        adminVideosListenerActive = false;
+                        adminVideosUnsubscribe = null;
+                        c.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Unable to sync videos</h3><p>Check your connection and admin permissions.</p></div>`;
+                    });
                 } catch (e) {
-                    c.innerHTML =
-                        `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Unable to load videos</h3><p>Check your connection and try again.</p></div>`;
+                    adminVideosListenerActive = false;
+                    adminVideosUnsubscribe = null;
+                    c.innerHTML = `<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Unable to load videos</h3><p>Check your connection and try again.</p></div>`;
                 }
             };
 
@@ -7632,10 +8143,10 @@
                         c.innerHTML =
                             `<table class="admin-table"><thead><tr><th>${t('thEmail')}</th><th>${t('thRole')}</th><th>${t('thPayment')}</th><th>${t('thActions')}</th></tr></thead><tbody>${users.map(u => `
                         <tr>
-                            <td>${escapeHtml(u.email || '')}</td>
-                            <td>${escapeHtml(u.role || 'user')}</td>
-                            <td><span class="status ${u.paymentStatus || 'pending'}">${escapeHtml(u.paymentStatus || 'pending')}</span></td>
-                            <td class="actions">${u.role === 'admin'
+                            <td data-label="${escapeHtml(t('thEmail'))}">${escapeHtml(u.email || '')}</td>
+                            <td data-label="${escapeHtml(t('thRole'))}">${escapeHtml(u.role || 'user')}</td>
+                            <td data-label="${escapeHtml(t('thPayment'))}"><span class="status ${u.paymentStatus || 'pending'}">${escapeHtml(u.paymentStatus || 'pending')}</span></td>
+                            <td data-label="${escapeHtml(t('thActions'))}" class="actions">${u.role === 'admin'
                                 ? t('systemAdmin')
                                 : `<button class="approve approve-user" data-id="${u.id}" title="Approve" aria-label="Approve"><i class="fas fa-check"></i></button>
                                    <button class="reject reject-user" data-id="${u.id}" title="Reject" aria-label="Reject"><i class="fas fa-times"></i></button>
@@ -7733,13 +8244,13 @@
                         const transactionId = p.txnId || p.transactionId || p.transactionID || '—';
                         return `
                         <tr>
-                            <td class="payment-user-cell"><span class="cell-label">Email</span><strong>${escapeHtml(paymentEmail)}</strong></td>
-                            <td>${p.plan === 'premium' ? '<span class="status approved">Premium</span>' : '<span class="status pending">Basic</span>'}</td>
-                            <td>${escapeHtml(p.method || '—')}</td>
-                            <td class="payment-txn-cell"><span class="cell-label">Transaction ID</span><code>${escapeHtml(transactionId)}</code></td>
-                            <td>${p.screenshotUrl ? `<button class="view-link view-screenshot" data-id="${p.id}">${t('view')}</button>` : t('none')}</td>
-                            <td><span class="status ${p.status || 'pending'}">${escapeHtml(p.status || 'pending')}</span></td>
-                            <td class="actions">${p.status === 'pending'
+                            <td data-label="${escapeHtml(t('thUser'))}" class="payment-user-cell"><span class="cell-label">Email</span><strong>${escapeHtml(paymentEmail)}</strong></td>
+                            <td data-label="Plan">${p.plan === 'premium' ? '<span class="status approved">Premium</span>' : '<span class="status pending">Basic</span>'}</td>
+                            <td data-label="${escapeHtml(t('thMethod'))}">${escapeHtml(p.method || '—')}</td>
+                            <td data-label="${escapeHtml(t('thTxnId'))}" class="payment-txn-cell"><span class="cell-label">Transaction ID</span><code>${escapeHtml(transactionId)}</code></td>
+                            <td data-label="${escapeHtml(t('thScreenshot'))}">${p.screenshotUrl ? `<button class="view-link view-screenshot" data-id="${p.id}">${t('view')}</button>` : t('none')}</td>
+                            <td data-label="Status"><span class="status ${p.status || 'pending'}">${escapeHtml(p.status || 'pending')}</span></td>
+                            <td data-label="${escapeHtml(t('thActions'))}" class="actions">${p.status === 'pending'
                                 ? `<button class="approve approve-payment" data-id="${p.id}" title="Approve" aria-label="Approve"><i class="fas fa-check"></i></button>
                                    <button class="reject reject-payment" data-id="${p.id}" title="Reject" aria-label="Reject"><i class="fas fa-times"></i></button>`
                                 : '—'}</td>
@@ -8058,11 +8569,15 @@
                 if (page !== 'admin') {
                     if (typeof stopAdminUsersListener === 'function') stopAdminUsersListener();
                     if (typeof stopAdminPaymentsListener === 'function') stopAdminPaymentsListener();
+                    if (typeof stopAdminVideosListener === 'function') stopAdminVideosListener();
                 }
                 originalNavigate(page);
                 if (page === 'admin') {
                     filterAdminTabs();
                     refreshAdmin();
+                    renderAdminVideos();
+                    renderAdminUsers();
+                    renderAdminPayments();
                 }
             };
             window.EthioHubNavigate = (page) => navigate(page);
@@ -8076,7 +8591,10 @@
                 if (b.dataset.tab === 'videos') renderAdminVideos();
                 if (b.dataset.tab === 'users') renderAdminUsers();
                 if (b.dataset.tab === 'payments') renderAdminPayments();
-                else if (typeof stopAdminPaymentsListener === 'function') stopAdminPaymentsListener();
+                // Keep all admin listeners alive so every dashboard section stays live.
+                if (typeof renderAdminVideos === 'function') renderAdminVideos();
+                if (typeof renderAdminUsers === 'function') renderAdminUsers();
+                if (typeof renderAdminPayments === 'function') renderAdminPayments();
             }));
 
             async function loadSettings() {
@@ -8095,6 +8613,39 @@
                     console.warn('[Ethio Hub] Settings could not be loaded:', e);
                 }
             }
+
+            let settingsUnsubscribe = null;
+            let settingsListenerActive = false;
+            const stopSettingsListener = () => {
+                if (typeof settingsUnsubscribe === 'function') settingsUnsubscribe();
+                settingsUnsubscribe = null;
+                settingsListenerActive = false;
+            };
+            const startSettingsListener = () => {
+                if (settingsListenerActive) return;
+                settingsListenerActive = true;
+                settingsUnsubscribe = db.collection('settings').doc('general').onSnapshot(snap => {
+                    if (!snap.exists) return;
+                    const data = snap.data() || {};
+                    if (data.siteTitle) {
+                        if ($('siteTitle')) $('siteTitle').value = data.siteTitle;
+                        if ($('siteTitleText')) $('siteTitleText').textContent = data.siteTitle;
+                    }
+                    if (data.basicPrice !== undefined) {
+                        if ($('basicPrice')) $('basicPrice').value = data.basicPrice;
+                        if ($('basicPriceDisplay')) $('basicPriceDisplay').textContent = data.basicPrice;
+                    }
+                    if (data.premiumPrice !== undefined) {
+                        if ($('premiumPrice')) $('premiumPrice').value = data.premiumPrice;
+                        if ($('premiumPriceDisplay')) $('premiumPriceDisplay').textContent = data.premiumPrice;
+                    }
+                }, e => {
+                    console.error('[Ethio Hub] Real-time settings listener error:', e);
+                    settingsListenerActive = false;
+                    settingsUnsubscribe = null;
+                });
+            };
+            startSettingsListener();
 
             $('settingsForm').addEventListener('submit', async e => {
                 e.preventDefault();
@@ -8177,6 +8728,7 @@
                     stopUserProfileListener();
                     stopAdminUsersListener();
                     stopAdminPaymentsListener();
+                    stopAdminVideosListener();
                     state.user = null;
                     updateUserBadge();
                     setAuthMode(false);

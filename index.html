@@ -16,22 +16,22 @@
      THEMES — card is always the OPPOSITE tone of the screen
      ========================================================= */
   :root{
-    --page:#0d0a0b;
-    --top-glow:#3a0b16; --scr-a:#050304; --scr-b:#0b0608; --scr-c:#1c0a10;
-    --glow:rgba(225,29,72,.24);
-    --ink:#f6f1e6; --ink-soft:rgba(246,241,230,.66);
-    --tile-border:#f6f1e6;
-    --halo:rgba(225,29,72,.34);
+    --page:#07080c;
+    --top-glow:#1e1838; --scr-a:#07080c; --scr-b:#0c0e15; --scr-c:#131428;
+    --glow:rgba(139,120,255,.18);
+    --ink:#f2f3f8; --ink-soft:rgba(242,243,248,.64);
+    --tile-border:#f2f3f8;
+    --halo:rgba(244,63,94,.30);
     --wm1:#fb7185; --wm2:#e11d48;
 
-    --card:#f6f1e7; --card-text:#16130f; --card-muted:#7d7667; --card-line:#e0d7c4;
-    --field:#ece4d2; --field-hover:#e2d9c4;
+    --card:#f6f7fb; --card-text:#12141c; --card-muted:#6b7184; --card-line:#e2e5ef;
+    --field:#eceef6; --field-hover:#e2e5f0;
     --btn-bg:#e11d48; --btn-text:#ffffff;
     --ring:rgba(22,19,15,.14); --danger:#cf3b3b; --danger-bg:#fdf0ee;
     --shadow:0 2px 4px rgba(0,0,0,.30),0 22px 44px -8px rgba(0,0,0,.70),0 44px 80px -22px rgba(0,0,0,.80);
 
-    --toggle-bg:#000; --toggle-border:#27272a; --toggle-text:#fff;
-    --topbar-ink:#a1a1aa; --topbar-hover:#fff;
+    --toggle-bg:#0a0b10; --toggle-border:#262a38; --toggle-text:#fff;
+    --topbar-ink:#9aa1b6; --topbar-hover:#fff;
 
     --blend-mode:screen;
     --layer-opacity:.75;
@@ -81,7 +81,7 @@
   }
   .brand,.header-nav > *{pointer-events:auto}
   .brand{display:flex;align-items:center;min-width:0}
-  .brand .logo-slot{width:104px;height:68px;filter:drop-shadow(0 8px 18px rgba(225,29,72,.5))}
+  .brand .logo-slot{width:104px;height:68px;filter:drop-shadow(0 8px 18px rgba(225,29,72,.32))}
   .header-nav{display:flex;align-items:center;gap:10px;flex:none}
 
   .nav-link,.icon-circle,.theme-pill,.tg-link{
@@ -412,7 +412,7 @@
   @keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
   .vthumb{
     position:relative;display:block;width:100%;border-radius:18px;overflow:hidden;
-    background:radial-gradient(120% 80% at var(--hx,50%) var(--hy,40%),rgba(225,29,72,.22),transparent 62%),linear-gradient(165deg,#121014 0%,#050506 70%);
+    background:radial-gradient(120% 80% at var(--hx,50%) var(--hy,40%),rgba(139,120,255,.20),transparent 62%),linear-gradient(165deg,#14172a 0%,#07080c 70%);
     border:1px solid rgba(255,255,255,.1);
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 12px 28px -14px rgba(0,0,0,.65);
     transition:transform .3s var(--ease),border-color .3s,box-shadow .3s;
@@ -456,7 +456,7 @@
      ========================================================= */
   .player{
     position:absolute;inset:0;z-index:12;padding-top:54px;display:flex;flex-direction:column;color:#fff;
-    background:radial-gradient(120% 55% at 50% 0%,#33091381 0%,transparent 62%),#050304;
+    background:radial-gradient(120% 55% at 50% 0%,#2b1d5266 0%,transparent 62%),#07080c;
     opacity:0;visibility:hidden;transition:opacity .35s ease,visibility 0s .35s;
   }
   .player.open{opacity:1;visibility:visible;transition:opacity .35s ease,visibility 0s}
@@ -884,6 +884,28 @@
   .soc:active{transform:scale(.95)}
   .soc svg{width:21px;height:21px}
 
+
+  /* ---- liquid glass tab toggle v2 (round thumb, icon only) ---- */
+  .tabbar{--tw:62px;width:calc(var(--tw) * 3 + 12px);height:58px;padding:6px;border-radius:99px;grid-template-columns:repeat(3,var(--tw));gap:0;
+    background:color-mix(in srgb,var(--ink) 8%,transparent);border:1px solid color-mix(in srgb,var(--ink) 16%,transparent);
+    -webkit-backdrop-filter:blur(22px) saturate(1.7);backdrop-filter:blur(22px) saturate(1.7);
+    box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 22%,transparent) inset,0 -8px 14px -10px color-mix(in srgb,var(--ink) 18%,transparent) inset,0 18px 36px -14px rgba(0,0,0,.55)}
+  .tab{width:var(--tw);height:46px;padding:0;display:grid;place-items:center;border-radius:50%;color:color-mix(in srgb,var(--ink) 66%,transparent);transition:color .3s}
+  .tab span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .tab .ic{width:23px;height:23px;stroke-width:1.8}
+  .tab:active .ic{transform:scale(.9)}
+  .tab .ic{transition:transform .2s}
+  .tab[aria-current="page"],.tab[aria-current="page"] .ic{color:#fff}
+  .tab-thumb{top:6px;bottom:auto;left:calc(6px + (var(--tw) - 46px) / 2);width:46px;height:46px;border-radius:50%;
+    background:radial-gradient(70% 55% at 32% 20%,rgba(255,255,255,.62),rgba(255,255,255,0) 70%),linear-gradient(160deg,#fb7185 0%,#e11d48 62%,#be123c 100%);
+    border:1px solid rgba(255,255,255,.38);
+    box-shadow:0 1.5px 1px rgba(255,255,255,.6) inset,0 -7px 10px rgba(120,10,45,.4) inset,0 10px 22px -8px rgba(225,29,72,.75),0 0 0 4px rgba(225,29,72,.12);
+    -webkit-backdrop-filter:none;backdrop-filter:none;
+    transform:translateX(calc(var(--i,0) * var(--tw)));transition:transform .55s cubic-bezier(.34,1.45,.5,1)}
+  .tab-thumb::before{left:20%;right:20%;top:2px;height:34%;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,0))}
+  .tab-thumb.squish{animation:blob .55s cubic-bezier(.34,1.4,.5,1)}
+  @keyframes blob{0%{scale:1}35%{scale:1.13}70%{scale:.97}100%{scale:1}}
+
   /* =========================================================
      RESPONSIVE
      ========================================================= */
@@ -969,14 +991,16 @@
   <symbol id="s-signal" viewBox="0 0 17 11"><g fill="currentColor"><rect x="0" y="7" width="3" height="4" rx=".8"/><rect x="4.5" y="5" width="3" height="6" rx=".8"/><rect x="9" y="2.5" width="3" height="8.5" rx=".8"/><rect x="13.5" y="0" width="3" height="11" rx=".8"/></g></symbol>
   <symbol id="s-wifi" viewBox="0 0 16 11"><path fill="currentColor" d="M8 2.2c2.2 0 4.2.9 5.7 2.3l1-1.1A9.6 9.6 0 0 0 8 .7 9.6 9.6 0 0 0 1.3 3.4l1 1.1A8.1 8.1 0 0 1 8 2.2Zm0 3.3c1.3 0 2.4.5 3.3 1.3l1-1.1A6.6 6.6 0 0 0 8 4a6.6 6.6 0 0 0-4.3 1.7l1 1.1c.9-.8 2-1.3 3.3-1.3Zm0 3.2c.6 0 1.1.2 1.5.6L8 11 6.5 9.3c.4-.4.9-.6 1.5-.6Z"/></symbol>
   <symbol id="s-battery" viewBox="0 0 25 12"><rect x=".5" y=".5" width="21" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".5"/><rect x="2" y="2" width="18" height="8" rx="2" fill="currentColor"/><path d="M23 4v4c.8-.3 1.5-1.1 1.5-2S23.8 4.3 23 4Z" fill="currentColor" opacity=".6"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
-  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
-  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
-  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
-  <symbol id="i-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></symbol>
-  <symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3.5"/><path d="m10.5 9.5 4 2.5-4 2.5z"/></symbol>
-  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.2-3.6 4.2-5.5 8-5.5s6.8 1.9 8 5.5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2.5"/><path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></symbol>
   <symbol id="i-bolt" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
 </svg>
 
@@ -1228,7 +1252,7 @@
 
       <section class="feed" id="feed" inert aria-hidden="true" aria-label="Videos" data-i18n-aria="feed">
         <div class="scroller" id="scroller">
-          <button type="button" class="promo" id="promo" hidden><span class="promo-ic"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg></span><span class="promo-tx"><b data-i18n="promo_t">Unlock every video</b><small data-i18n="promo_s">Plans from 750 Birr · pay with telebirr, CBE or ebirr</small></span><svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></button>
+          <button type="button" class="promo" id="promo" hidden><span class="promo-ic"><svg class="ic" aria-hidden="true"><use href="#i-crown"/></svg></span><span class="promo-tx"><b data-i18n="promo_t">Unlock every video</b><small data-i18n="promo_s">Plans from 750 Birr · pay with telebirr, CBE or ebirr</small></span><svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></button>
           <div class="masonry" id="masonry"><div class="col"></div><div class="col"></div></div>
           <div class="sentinel" id="sentinel" aria-hidden="true"></div>
           <p class="end-note" id="endNote" hidden></p>
@@ -1274,7 +1298,7 @@
       <nav class="tabbar" id="tabbar" aria-label="Main">
         <span class="tab-thumb" id="tabThumb" aria-hidden="true"></span>
         <button type="button" class="tab" data-tab="videos" aria-current="page"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg><span data-i18n="tab_videos">Videos</span></button>
-        <button type="button" class="tab" data-tab="premium"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg><span data-i18n="premium">Premium</span></button>
+        <button type="button" class="tab" data-tab="premium"><svg class="ic" aria-hidden="true"><use href="#i-crown"/></svg><span data-i18n="premium">Premium</span></button>
         <button type="button" class="tab" data-tab="account"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg><span data-i18n="account">Account</span></button>
       </nav>
       <div class="home-bar"></div>
@@ -2029,7 +2053,7 @@
     if (session.pending){
       return '<div class="stat wait"><span class="stat-ic">' + I('i-clock') + '</span><div><b>' + t('stat_wait') + '</b><span class="s">' + t('stat_wait_sub') + '</span></div></div>';
     }
-    return withBtn ? '<div class="stat"><span class="stat-ic">' + I('i-star') + '</span><div><b>' + t('free_plan') + '</b><span class="s">' + t('promo_s') + '</span></div>' +
+    return withBtn ? '<div class="stat"><span class="stat-ic">' + I('i-crown') + '</span><div><b>' + t('free_plan') + '</b><span class="s">' + t('promo_s') + '</span></div>' +
       '<button type="button" class="mini" data-act="premium">' + t('get_prem') + '</button></div>' : '';
   }
   function planCard(key){
@@ -2108,7 +2132,7 @@
         '<div class="r"><b>' + fmtBirr(p.amount) + '</b><span class="pill ' + s[0] + '">' + t(s[1]) + '</span></div></div>';
     }).join('') : '<div class="empty">' + t('hist_empty') + '</div>';
     h += '<div class="sec-t">' + t('support') + '</div>' +
-      '<a class="rowlink" href="https://t.me/ethiohubved" target="_blank" rel="noopener noreferrer">' + I('i-star') + '<span>' + t('support') + '</span>' + I('i-chev') + '</a>' +
+      '<a class="rowlink" href="https://t.me/ethiohubved" target="_blank" rel="noopener noreferrer">' + I('i-help') + '<span>' + t('support') + '</span>' + I('i-chev') + '</a>' +
       '<button type="button" class="btn danger" style="margin-top:14px" data-act="signout">' + I('i-out') + '<span>' + t('signout') + '</span></button>';
     pageBody.innerHTML = '<div class="pbox">' + h + '</div>';
     pageFoot.innerHTML = ''; pageFoot.hidden = true;

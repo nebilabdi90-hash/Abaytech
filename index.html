@@ -1812,7 +1812,7 @@
     const secs = 35 + Math.floor(rnd() * 3560);
     return {
       id:i, r:RATIOS[Math.floor(rnd() * RATIOS.length)], dur:fmt(secs),
-      views:(rnd() * 96 + 1.2).toFixed(1) + 'K',
+      views:String(1 + Math.floor(rnd() * 69)),
       hx:Math.round(rnd() * 100) + '%', hy:Math.round(rnd() * 100) + '%',
       n:String(i + 1).padStart(3, '0')
     };
